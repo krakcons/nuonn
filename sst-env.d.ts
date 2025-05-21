@@ -29,6 +29,10 @@ declare module "sst" {
       "type": "sst.aws.TanstackStart"
       "url": string
     }
+    "Vpc": {
+      "bastion": string
+      "type": "sst.aws.Vpc"
+    }
   }
 }
 /// <reference path="sst-env.d.ts" />

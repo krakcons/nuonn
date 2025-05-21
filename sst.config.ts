@@ -32,6 +32,7 @@ export default $config({
 				: `${$app.stage}.${ROOT_DOMAIN}`;
 		const emailDomain = `email.${domain}`;
 
+		sst.aws.Vpc.get("Vpc", "vpc-08c28b23ee20f3975");
 		const aurora = sst.aws.Aurora.get("Aurora", "krak-prod-auroracluster");
 
 		const dns = sst.cloudflare.dns({

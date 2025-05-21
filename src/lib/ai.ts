@@ -31,24 +31,11 @@ export const PersonaSchema = z.object({
 	disibility: z.string().optional(),
 	occupation: z.string().optional(),
 	relationships: z.string().optional(),
-	languages: z
-		.object({
-			name: z.string(),
-			spoken: StatLevelSchema.optional(),
-			written: StatLevelSchema.optional(),
-		})
-		.array(),
-	religion: z.object({
-		name: z.string(),
-		commitment: StatLevelSchema.optional(),
-	}),
-	politics: z.object({
-		name: z.string(),
-		commitment: StatLevelSchema.optional(),
-	}),
+	appearance: z.string().optional(),
+	religion: z.string().optional(),
+	politics: z.string().optional(),
 	// Stats
 	intelligence: StatLevelSchema.optional(),
-	appearance: StatLevelSchema.optional(),
 	memory: StatLevelSchema.optional(),
 	wealth: StatLevelSchema.optional(),
 	health: StatLevelSchema.optional(),
@@ -60,7 +47,16 @@ export const PersonaSchema = z.object({
 	dislikes: z.string().optional(),
 	backstory: z.string().optional(),
 	behaviour: z.string().optional(),
+	// Languages
+	languages: z
+		.object({
+			name: z.string(),
+			spoken: StatLevelSchema.optional(),
+			written: StatLevelSchema.optional(),
+		})
+		.array(),
 });
+export type PersonaType = z.infer<typeof PersonaSchema>;
 
 export const ScenarioSchema = z.object({
 	persona: z.object({
