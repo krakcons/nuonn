@@ -11,60 +11,206 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as IndexImport } from './routes/index'
+import { Route as LocaleIndexImport } from './routes/$locale/index'
+import { Route as LocaleAdminImport } from './routes/$locale/admin'
+import { Route as LocaleAdminIndexImport } from './routes/$locale/admin/index'
+import { Route as LocaleAdminScenariosCreateImport } from './routes/$locale/admin/scenarios.create'
+import { Route as LocaleAdminScenariosIdImport } from './routes/$locale/admin/scenarios.$id'
+import { Route as LocaleAdminPersonasCreateImport } from './routes/$locale/admin/personas.create'
+import { Route as LocaleAdminPersonasIdImport } from './routes/$locale/admin/personas.$id'
 
 // Create/Update Routes
 
-const IndexRoute = IndexImport.update({
+const LocaleIndexRoute = LocaleIndexImport.update({
+  id: '/$locale/',
+  path: '/$locale/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const LocaleAdminRoute = LocaleAdminImport.update({
+  id: '/$locale/admin',
+  path: '/$locale/admin',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const LocaleAdminIndexRoute = LocaleAdminIndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => LocaleAdminRoute,
+} as any)
+
+const LocaleAdminScenariosCreateRoute = LocaleAdminScenariosCreateImport.update(
+  {
+    id: '/scenarios/create',
+    path: '/scenarios/create',
+    getParentRoute: () => LocaleAdminRoute,
+  } as any,
+)
+
+const LocaleAdminScenariosIdRoute = LocaleAdminScenariosIdImport.update({
+  id: '/scenarios/$id',
+  path: '/scenarios/$id',
+  getParentRoute: () => LocaleAdminRoute,
+} as any)
+
+const LocaleAdminPersonasCreateRoute = LocaleAdminPersonasCreateImport.update({
+  id: '/personas/create',
+  path: '/personas/create',
+  getParentRoute: () => LocaleAdminRoute,
+} as any)
+
+const LocaleAdminPersonasIdRoute = LocaleAdminPersonasIdImport.update({
+  id: '/personas/$id',
+  path: '/personas/$id',
+  getParentRoute: () => LocaleAdminRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
+    '/$locale/admin': {
+      id: '/$locale/admin'
+      path: '/$locale/admin'
+      fullPath: '/$locale/admin'
+      preLoaderRoute: typeof LocaleAdminImport
       parentRoute: typeof rootRoute
+    }
+    '/$locale/': {
+      id: '/$locale/'
+      path: '/$locale'
+      fullPath: '/$locale'
+      preLoaderRoute: typeof LocaleIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/$locale/admin/': {
+      id: '/$locale/admin/'
+      path: '/'
+      fullPath: '/$locale/admin/'
+      preLoaderRoute: typeof LocaleAdminIndexImport
+      parentRoute: typeof LocaleAdminImport
+    }
+    '/$locale/admin/personas/$id': {
+      id: '/$locale/admin/personas/$id'
+      path: '/personas/$id'
+      fullPath: '/$locale/admin/personas/$id'
+      preLoaderRoute: typeof LocaleAdminPersonasIdImport
+      parentRoute: typeof LocaleAdminImport
+    }
+    '/$locale/admin/personas/create': {
+      id: '/$locale/admin/personas/create'
+      path: '/personas/create'
+      fullPath: '/$locale/admin/personas/create'
+      preLoaderRoute: typeof LocaleAdminPersonasCreateImport
+      parentRoute: typeof LocaleAdminImport
+    }
+    '/$locale/admin/scenarios/$id': {
+      id: '/$locale/admin/scenarios/$id'
+      path: '/scenarios/$id'
+      fullPath: '/$locale/admin/scenarios/$id'
+      preLoaderRoute: typeof LocaleAdminScenariosIdImport
+      parentRoute: typeof LocaleAdminImport
+    }
+    '/$locale/admin/scenarios/create': {
+      id: '/$locale/admin/scenarios/create'
+      path: '/scenarios/create'
+      fullPath: '/$locale/admin/scenarios/create'
+      preLoaderRoute: typeof LocaleAdminScenariosCreateImport
+      parentRoute: typeof LocaleAdminImport
     }
   }
 }
 
 // Create and export the route tree
 
+interface LocaleAdminRouteChildren {
+  LocaleAdminIndexRoute: typeof LocaleAdminIndexRoute
+  LocaleAdminPersonasIdRoute: typeof LocaleAdminPersonasIdRoute
+  LocaleAdminPersonasCreateRoute: typeof LocaleAdminPersonasCreateRoute
+  LocaleAdminScenariosIdRoute: typeof LocaleAdminScenariosIdRoute
+  LocaleAdminScenariosCreateRoute: typeof LocaleAdminScenariosCreateRoute
+}
+
+const LocaleAdminRouteChildren: LocaleAdminRouteChildren = {
+  LocaleAdminIndexRoute: LocaleAdminIndexRoute,
+  LocaleAdminPersonasIdRoute: LocaleAdminPersonasIdRoute,
+  LocaleAdminPersonasCreateRoute: LocaleAdminPersonasCreateRoute,
+  LocaleAdminScenariosIdRoute: LocaleAdminScenariosIdRoute,
+  LocaleAdminScenariosCreateRoute: LocaleAdminScenariosCreateRoute,
+}
+
+const LocaleAdminRouteWithChildren = LocaleAdminRoute._addFileChildren(
+  LocaleAdminRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/$locale/admin': typeof LocaleAdminRouteWithChildren
+  '/$locale': typeof LocaleIndexRoute
+  '/$locale/admin/': typeof LocaleAdminIndexRoute
+  '/$locale/admin/personas/$id': typeof LocaleAdminPersonasIdRoute
+  '/$locale/admin/personas/create': typeof LocaleAdminPersonasCreateRoute
+  '/$locale/admin/scenarios/$id': typeof LocaleAdminScenariosIdRoute
+  '/$locale/admin/scenarios/create': typeof LocaleAdminScenariosCreateRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/$locale': typeof LocaleIndexRoute
+  '/$locale/admin': typeof LocaleAdminIndexRoute
+  '/$locale/admin/personas/$id': typeof LocaleAdminPersonasIdRoute
+  '/$locale/admin/personas/create': typeof LocaleAdminPersonasCreateRoute
+  '/$locale/admin/scenarios/$id': typeof LocaleAdminScenariosIdRoute
+  '/$locale/admin/scenarios/create': typeof LocaleAdminScenariosCreateRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/': typeof IndexRoute
+  '/$locale/admin': typeof LocaleAdminRouteWithChildren
+  '/$locale/': typeof LocaleIndexRoute
+  '/$locale/admin/': typeof LocaleAdminIndexRoute
+  '/$locale/admin/personas/$id': typeof LocaleAdminPersonasIdRoute
+  '/$locale/admin/personas/create': typeof LocaleAdminPersonasCreateRoute
+  '/$locale/admin/scenarios/$id': typeof LocaleAdminScenariosIdRoute
+  '/$locale/admin/scenarios/create': typeof LocaleAdminScenariosCreateRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/$locale/admin'
+    | '/$locale'
+    | '/$locale/admin/'
+    | '/$locale/admin/personas/$id'
+    | '/$locale/admin/personas/create'
+    | '/$locale/admin/scenarios/$id'
+    | '/$locale/admin/scenarios/create'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/$locale'
+    | '/$locale/admin'
+    | '/$locale/admin/personas/$id'
+    | '/$locale/admin/personas/create'
+    | '/$locale/admin/scenarios/$id'
+    | '/$locale/admin/scenarios/create'
+  id:
+    | '__root__'
+    | '/$locale/admin'
+    | '/$locale/'
+    | '/$locale/admin/'
+    | '/$locale/admin/personas/$id'
+    | '/$locale/admin/personas/create'
+    | '/$locale/admin/scenarios/$id'
+    | '/$locale/admin/scenarios/create'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  LocaleAdminRoute: typeof LocaleAdminRouteWithChildren
+  LocaleIndexRoute: typeof LocaleIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  LocaleAdminRoute: LocaleAdminRouteWithChildren,
+  LocaleIndexRoute: LocaleIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -77,11 +223,42 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/"
+        "/$locale/admin",
+        "/$locale/"
       ]
     },
-    "/": {
-      "filePath": "index.tsx"
+    "/$locale/admin": {
+      "filePath": "$locale/admin.tsx",
+      "children": [
+        "/$locale/admin/",
+        "/$locale/admin/personas/$id",
+        "/$locale/admin/personas/create",
+        "/$locale/admin/scenarios/$id",
+        "/$locale/admin/scenarios/create"
+      ]
+    },
+    "/$locale/": {
+      "filePath": "$locale/index.tsx"
+    },
+    "/$locale/admin/": {
+      "filePath": "$locale/admin/index.tsx",
+      "parent": "/$locale/admin"
+    },
+    "/$locale/admin/personas/$id": {
+      "filePath": "$locale/admin/personas.$id.tsx",
+      "parent": "/$locale/admin"
+    },
+    "/$locale/admin/personas/create": {
+      "filePath": "$locale/admin/personas.create.tsx",
+      "parent": "/$locale/admin"
+    },
+    "/$locale/admin/scenarios/$id": {
+      "filePath": "$locale/admin/scenarios.$id.tsx",
+      "parent": "/$locale/admin"
+    },
+    "/$locale/admin/scenarios/create": {
+      "filePath": "$locale/admin/scenarios.create.tsx",
+      "parent": "/$locale/admin"
     }
   }
 }

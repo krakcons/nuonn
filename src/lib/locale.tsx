@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import type enMessages from "@/messages/en";
 import { createContext, useContext } from "react";
-import { redirect, ParsedLocation } from "@tanstack/react-router";
+import { redirect, type ParsedLocation } from "@tanstack/react-router";
 import { createMiddleware, createServerFn } from "@tanstack/react-start";
 import { getCookie, getHeader, setCookie } from "@tanstack/react-start/server";
 
