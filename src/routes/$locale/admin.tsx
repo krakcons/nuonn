@@ -23,6 +23,7 @@ import {
 	SidebarProvider,
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { getPersonasFn } from "@/lib/handlers/personas";
 import {
 	locales,
 	LocaleSchema,
@@ -41,6 +42,7 @@ import {
 	LayoutDashboard,
 	MessagesSquare,
 	Plus,
+	User,
 	Users,
 } from "lucide-react";
 import { z } from "zod";
@@ -50,6 +52,9 @@ export const Route = createFileRoute("/$locale/admin")({
 	validateSearch: z.object({
 		locale: LocaleSchema.optional(),
 	}),
+	loader: async () => {
+		return Promise.all([getPersonasFn()]);
+	},
 });
 
 function RouteComponent() {
@@ -58,6 +63,7 @@ function RouteComponent() {
 	const search = Route.useSearch();
 	const editingLocale = search.locale ?? locale;
 	const navigate = useNavigate();
+	const [personas] = Route.useLoaderData();
 
 	return (
 		<div>
@@ -106,7 +112,25 @@ function RouteComponent() {
 								</SidebarGroupAction>
 							</Link>
 							<SidebarGroupContent>
-								<SidebarMenu></SidebarMenu>
+								<SidebarMenu>
+									{personas.map((persona) => (
+										<SidebarMenuItem key={persona.id}>
+											<Link
+												to={`/$locale/admin/personas/${persona.id}`}
+												from={Route.fullPath}
+											>
+												{({ isActive }) => (
+													<SidebarMenuButton
+														isActive={isActive}
+													>
+														<User />
+														{persona.data.name}
+													</SidebarMenuButton>
+												)}
+											</Link>
+										</SidebarMenuItem>
+									))}
+								</SidebarMenu>
 							</SidebarGroupContent>
 						</SidebarGroup>
 						<SidebarGroup>

@@ -6,6 +6,7 @@ import {
 	text,
 	timestamp,
 } from "drizzle-orm/pg-core";
+import type { PersonaType } from "../ai";
 
 // Enums
 
@@ -90,14 +91,14 @@ export const teamTranslations = pgTable(
 export const personas = pgTable("personas", {
 	id: text("id").primaryKey(),
 	// TODO: teamId
-	json: jsonb("json").notNull(),
+	data: jsonb("data").$type<PersonaType>().notNull(),
 	...dates,
 });
 
 export const scenarios = pgTable("scenarios", {
 	id: text("id").primaryKey(),
 	// TODO: teamId
-	json: jsonb("json").notNull(),
+	data: jsonb("data").notNull(),
 	...dates,
 });
 
