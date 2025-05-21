@@ -16,10 +16,6 @@ declare module "sst" {
       "type": "sst.aws.Aurora"
       "username": string
     }
-    "CLOUDFLARE_API_TOKEN": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
     "Email": {
       "configSet": string
       "sender": string
