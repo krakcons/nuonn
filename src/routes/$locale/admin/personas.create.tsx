@@ -32,7 +32,7 @@ function RouteComponent() {
 				description="Create a new persona that can be used in a scenario"
 			/>
 			<PersonaForm
-				onSubmit={(value) =>
+				onSubmit={({ value }) =>
 					createPersonaFn.mutateAsync({
 						data: value,
 					})

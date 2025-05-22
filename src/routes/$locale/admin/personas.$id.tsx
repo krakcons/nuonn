@@ -67,7 +67,7 @@ function RouteComponent() {
 			<PersonaForm
 				key={id}
 				defaultValues={data}
-				onSubmit={(value) =>
+				onSubmit={({ value }) =>
 					updatePersona.mutateAsync({
 						data: {
 							...value,

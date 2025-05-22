@@ -59,6 +59,7 @@ export const PersonaSchema = z.object({
 export type PersonaType = z.infer<typeof PersonaSchema>;
 
 export const ScenarioSchema = z.object({
+	name: z.string(),
 	persona: z.object({
 		role: z.string(),
 		context: z.string(),
@@ -73,6 +74,7 @@ export const ScenarioSchema = z.object({
 		}).array(),
 	}),
 });
+export type ScenarioType = z.infer<typeof ScenarioSchema>;
 
 export const MessageSchema = z.object({
 	id: z.string(),

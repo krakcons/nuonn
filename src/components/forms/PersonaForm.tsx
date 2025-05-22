@@ -2,14 +2,21 @@ import { PageSubHeader } from "@/components/Page";
 import { Button } from "@/components/ui/button";
 import { useAppForm } from "@/components/ui/form";
 import { PersonaSchema, type PersonaType } from "@/lib/ai";
-import { Minus, Plus } from "lucide-react";
+import { Minus, Plus, Trash } from "lucide-react";
+import {
+	Card,
+	CardAction,
+	CardContent,
+	CardHeader,
+	CardTitle,
+} from "../ui/card";
 
 export const PersonaForm = ({
 	defaultValues,
 	onSubmit,
 }: {
 	defaultValues?: PersonaType;
-	onSubmit: (value: PersonaType) => Promise<any>;
+	onSubmit: ({ value }: { value: PersonaType }) => Promise<any>;
 }) => {
 	const form = useAppForm({
 		defaultValues: {
@@ -31,9 +38,7 @@ export const PersonaForm = ({
 		validators: {
 			onSubmit: PersonaSchema,
 		},
-		onSubmit: ({ value }) => {
-			onSubmit(value);
-		},
+		onSubmit,
 	});
 
 	const statOptions = [
@@ -53,10 +58,7 @@ export const PersonaForm = ({
 	return (
 		<form.AppForm>
 			<form
-				onSubmit={(e) => {
-					e.preventDefault();
-					form.handleSubmit();
-				}}
+				onSubmit={(e) => e.preventDefault()}
 				className="flex flex-col gap-4"
 			>
 				<form.AppField
@@ -275,47 +277,52 @@ export const PersonaForm = ({
 								</Button>
 							</PageSubHeader>
 							{field.state?.value?.map((_, i) => (
-								<div
-									key={i}
-									className="flex gap-4 border p-4 rounded items-end"
-								>
-									<form.AppField
-										name={`languages[${i}].name`}
-										children={(subField) => (
-											<div className="flex-1">
-												<subField.TextField label="Name" />
-											</div>
-										)}
-									/>
-									<form.AppField
-										name={`languages[${i}].spoken`}
-										children={(subField) => (
-											<subField.SelectField
-												label="Spoken"
-												options={statOptions}
-											/>
-										)}
-									/>
-									<form.AppField
-										name={`languages[${i}].written`}
-										children={(subField) => (
-											<subField.SelectField
-												label="Written"
-												options={statOptions}
-											/>
-										)}
-									/>
-									<Button
-										onClick={(e) => {
-											e.preventDefault();
-											field.removeValue(i);
-										}}
-										variant="secondary"
-									>
-										<Minus />
-										Remove
-									</Button>
-								</div>
+								<Card key={i}>
+									<CardHeader>
+										<CardTitle>Language {i + 1}</CardTitle>
+										<CardAction>
+											<Button
+												onClick={(e) => {
+													e.preventDefault();
+													field.removeValue(i);
+												}}
+												variant="secondary"
+												size="sm"
+											>
+												<Trash />
+												Delete
+											</Button>
+										</CardAction>
+									</CardHeader>
+									<CardContent className="flex gap-4">
+										<form.AppField
+											name={`languages[${i}].name`}
+											children={(subField) => (
+												<div className="flex-1">
+													<subField.TextField label="Name" />
+												</div>
+											)}
+										/>
+										<form.AppField
+											name={`languages[${i}].spoken`}
+											children={(subField) => (
+												<subField.SelectField
+													label="Spoken"
+													options={statOptions}
+												/>
+											)}
+										/>
+										<form.AppField
+											name={`languages[${i}].written`}
+											children={(subField) => (
+												<subField.SelectField
+													label="Written"
+													options={statOptions}
+												/>
+											)}
+										/>
+									</CardContent>
+								</Card>
 							))}
 						</div>
 					)}

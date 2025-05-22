@@ -17,13 +17,13 @@ import {
 	SidebarHeader,
 	SidebarInset,
 	SidebarMenu,
-	SidebarMenuAction,
 	SidebarMenuButton,
 	SidebarMenuItem,
 	SidebarProvider,
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { getPersonasFn } from "@/lib/handlers/personas";
+import { getScenariosFn } from "@/lib/handlers/scenarios";
 import {
 	locales,
 	LocaleSchema,
@@ -37,14 +37,7 @@ import {
 	Outlet,
 	useNavigate,
 } from "@tanstack/react-router";
-import {
-	FileVideo,
-	LayoutDashboard,
-	MessagesSquare,
-	Plus,
-	User,
-	Users,
-} from "lucide-react";
+import { FileVideo, MessagesSquare, Plus, User } from "lucide-react";
 import { z } from "zod";
 
 export const Route = createFileRoute("/$locale/admin")({
@@ -53,7 +46,7 @@ export const Route = createFileRoute("/$locale/admin")({
 		locale: LocaleSchema.optional(),
 	}),
 	loader: async () => {
-		return Promise.all([getPersonasFn()]);
+		return Promise.all([getPersonasFn(), getScenariosFn()]);
 	},
 });
 
@@ -63,7 +56,7 @@ function RouteComponent() {
 	const search = Route.useSearch();
 	const editingLocale = search.locale ?? locale;
 	const navigate = useNavigate();
-	const [personas] = Route.useLoaderData();
+	const [personas, scenarios] = Route.useLoaderData();
 
 	return (
 		<div>
@@ -144,7 +137,25 @@ function RouteComponent() {
 								</SidebarGroupAction>
 							</Link>
 							<SidebarGroupContent>
-								<SidebarMenu></SidebarMenu>
+								<SidebarMenu>
+									{scenarios.map((scenario) => (
+										<SidebarMenuItem key={scenario.id}>
+											<Link
+												to={`/$locale/admin/scenarios/${scenario.id}`}
+												from={Route.fullPath}
+											>
+												{({ isActive }) => (
+													<SidebarMenuButton
+														isActive={isActive}
+													>
+														<FileVideo />
+														{scenario.data.name}
+													</SidebarMenuButton>
+												)}
+											</Link>
+										</SidebarMenuItem>
+									))}
+								</SidebarMenu>
 							</SidebarGroupContent>
 						</SidebarGroup>
 					</SidebarContent>
