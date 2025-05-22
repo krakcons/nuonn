@@ -7,12 +7,7 @@ import {
 	updatePersonaFn,
 } from "@/lib/handlers/personas";
 import { useMutation } from "@tanstack/react-query";
-import {
-	createFileRoute,
-	notFound,
-	useNavigate,
-	useRouter,
-} from "@tanstack/react-router";
+import { createFileRoute, notFound, useRouter } from "@tanstack/react-router";
 import { Trash } from "lucide-react";
 
 export const Route = createFileRoute("/$locale/admin/personas/$id")({
@@ -49,7 +44,7 @@ function RouteComponent() {
 
 	return (
 		<Page>
-			<PageHeader title={data.name} description="">
+			<PageHeader title={data.name} description="Edit this persona">
 				<Button
 					variant="secondary"
 					onClick={() => {

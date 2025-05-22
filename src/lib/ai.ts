@@ -60,6 +60,7 @@ export type PersonaType = z.infer<typeof PersonaSchema>;
 
 export const ScenarioSchema = z.object({
 	name: z.string(),
+	description: z.string(),
 	persona: z.object({
 		role: z.string(),
 		context: z.string(),
@@ -82,16 +83,15 @@ export const MessageSchema = z.object({
 	content: z.string(),
 });
 
-export const AssistantInputSchema = z.object({
-	model: z.enum(["gpt-4o", "gpt-4o-mini"]),
-	persona: PersonaSchema,
-	scenario: ScenarioSchema,
+export const ChatInputSchema = z.object({
+	scenarioId: z.string(),
+	personaId: z.string(),
 });
-export type AssistantInputType = z.infer<typeof AssistantInputSchema>;
+export type ChatInputType = z.infer<typeof ChatInputSchema>;
 
-export const AssistantResponseSchema = z.object({
+export const ChatResponseSchema = z.object({
 	content: z.string(),
 	stats: DataOutputSchema.array(),
 	evaluations: DataOutputSchema.array(),
 });
-export type AssistantResponseType = z.infer<typeof AssistantResponseSchema>;
+export type ChatResponseType = z.infer<typeof ChatResponseSchema>;

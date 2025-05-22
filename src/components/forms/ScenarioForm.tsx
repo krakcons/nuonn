@@ -57,6 +57,12 @@ export const ScenarioForm = ({
 					name="name"
 					children={(field) => <field.TextField label="Name" />}
 				/>
+				<form.AppField
+					name="description"
+					children={(field) => (
+						<field.TextAreaField label="Description" />
+					)}
+				/>
 				<PageSubHeader
 					title="User"
 					description="Describe the users role in the scenario"
