@@ -1,11 +1,10 @@
 import { type InferSelectModel, sql } from "drizzle-orm";
 import {
-	jsonb,
-	pgTable,
+	sqliteTable,
 	primaryKey,
 	text,
-	timestamp,
-} from "drizzle-orm/pg-core";
+	integer,
+} from "drizzle-orm/sqlite-core";
 import type { PersonaType, ScenarioType } from "../ai";
 
 // Enums
@@ -14,73 +13,73 @@ export const localeEnum = text("locale", { enum: ["en", "fr"] });
 export const roleEnum = text("role", { enum: ["owner", "member"] });
 
 const dates = {
-	createdAt: timestamp("created_at", {
-		withTimezone: true,
+	createdAt: integer({
+		mode: "timestamp",
 	})
 		.notNull()
-		.default(sql`now()`),
-	updatedAt: timestamp("updated_at", {
-		withTimezone: true,
+		.default(sql`(unixepoch())`),
+	updatedAt: integer({
+		mode: "timestamp",
 	})
 		.notNull()
-		.default(sql`now()`),
+		.default(sql`(unixepoch())`),
 };
 
 // USERS //
 
-export const users = pgTable("users", {
-	id: text("id").primaryKey(),
-	email: text("email").unique().notNull(),
-	firstName: text("firstName"),
-	lastName: text("lastName"),
+export const users = sqliteTable("users", {
+	id: text().primaryKey(),
+	email: text().unique().notNull(),
+	firstName: text(),
+	lastName: text(),
 	...dates,
 });
-export const sessions = pgTable("sessions", {
-	id: text("id").primaryKey(),
-	userId: text("userId")
+export const sessions = sqliteTable("sessions", {
+	id: text().primaryKey(),
+	userId: text()
 		.notNull()
 		.references(() => users.id, {
 			onDelete: "cascade",
 		}),
-	expiresAt: timestamp("expiresAt", {
-		withTimezone: true,
-		mode: "date",
-	}).notNull(),
-});
-export const emailVerifications = pgTable("email_verifications", {
-	id: text("id").primaryKey(),
-	userId: text("user_id")
-		.notNull()
-		.references(() => users.id, {
-			onDelete: "cascade",
-		}),
-	code: text("code").notNull(),
-	expiresAt: timestamp("expires_at", {
-		withTimezone: true,
-		mode: "date",
+	expiresAt: integer({
+		mode: "timestamp",
 	})
-		.$default(() => new Date(Date.now() + 1000 * 60 * 15))
+		.default(sql`(unixepoch() + 15 * 60)`)
+		.notNull(),
+});
+export const emailVerifications = sqliteTable("email_verifications", {
+	id: text().primaryKey(),
+	userId: text()
+		.notNull()
+		.references(() => users.id, {
+			onDelete: "cascade",
+		}),
+	code: text().notNull(),
+	expiresAt: integer({
+		mode: "timestamp",
+	})
+		.default(sql`(unixepoch() + 15 * 60)`)
 		.notNull(),
 });
 
 // TEAMS //
 
-export const teams = pgTable("teams", {
-	id: text("id").primaryKey(),
+export const teams = sqliteTable("teams", {
+	id: text().primaryKey(),
 	...dates,
 });
-export const teamTranslations = pgTable(
+export const teamTranslations = sqliteTable(
 	"team_translations",
 	{
-		teamId: text("teamId")
+		teamId: text()
 			.notNull()
 			.references(() => teams.id, {
 				onDelete: "cascade",
 			}),
 		locale: localeEnum.notNull(),
-		name: text("name").notNull(),
-		logo: text("logo"),
-		favicon: text("favicon"),
+		name: text().notNull(),
+		logo: text(),
+		favicon: text(),
 		...dates,
 	},
 	(t) => [primaryKey({ columns: [t.teamId, t.locale] })],
@@ -88,17 +87,17 @@ export const teamTranslations = pgTable(
 
 // CONTENT //
 
-export const personas = pgTable("personas", {
-	id: text("id").primaryKey(),
+export const personas = sqliteTable("personas", {
+	id: text().primaryKey(),
 	// TODO: teamId
-	data: jsonb("data").$type<PersonaType>().notNull(),
+	data: text({ mode: "json" }).$type<PersonaType>().notNull(),
 	...dates,
 });
 
-export const scenarios = pgTable("scenarios", {
-	id: text("id").primaryKey(),
+export const scenarios = sqliteTable("scenarios", {
+	id: text().primaryKey(),
 	// TODO: teamId
-	data: jsonb("data").$type<ScenarioType>().notNull(),
+	data: text({ mode: "json" }).$type<ScenarioType>().notNull(),
 	...dates,
 });
 
