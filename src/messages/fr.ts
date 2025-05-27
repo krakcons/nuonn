@@ -74,6 +74,33 @@ const fr: Messages = {
 			label: "Code",
 		},
 	},
+	TeamSwitcher: {
+		title: "Teams",
+		create: "Create team",
+	},
+	TeamForm: {
+		name: "Name",
+		logo: "Logo",
+		create: {
+			title: "Create Team",
+			description: "Enter the details of your team below.",
+		},
+	},
+	UserForm: {
+		title: "Account",
+		description: "Manage your account settings.",
+		name: "Nom",
+	},
+	UserButton: {
+		theme: {
+			label: "Theme",
+			light: "Light",
+			dark: "Dark",
+			system: "System",
+		},
+		account: "Account",
+		signout: "Sign out",
+	},
 	// Custom
 	AdminSidebar: {
 		dashboard: "Dashboard",

@@ -16,6 +16,7 @@ import { Route as LocaleAdminImport } from './routes/$locale/admin'
 import { Route as LocaleAdminIndexImport } from './routes/$locale/admin/index'
 import { Route as LocaleAuthVerifyEmailImport } from './routes/$locale/auth.verify-email'
 import { Route as LocaleAuthLoginImport } from './routes/$locale/auth.login'
+import { Route as LocaleAuthCreateTeamImport } from './routes/$locale/auth.create-team'
 import { Route as LocaleAdminScenariosCreateImport } from './routes/$locale/admin/scenarios.create'
 import { Route as LocaleAdminScenariosIdImport } from './routes/$locale/admin/scenarios.$id'
 import { Route as LocaleAdminPersonasCreateImport } from './routes/$locale/admin/personas.create'
@@ -50,6 +51,12 @@ const LocaleAuthVerifyEmailRoute = LocaleAuthVerifyEmailImport.update({
 const LocaleAuthLoginRoute = LocaleAuthLoginImport.update({
   id: '/$locale/auth/login',
   path: '/$locale/auth/login',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const LocaleAuthCreateTeamRoute = LocaleAuthCreateTeamImport.update({
+  id: '/$locale/auth/create-team',
+  path: '/$locale/auth/create-team',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -95,6 +102,13 @@ declare module '@tanstack/react-router' {
       path: '/$locale'
       fullPath: '/$locale'
       preLoaderRoute: typeof LocaleIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/$locale/auth/create-team': {
+      id: '/$locale/auth/create-team'
+      path: '/$locale/auth/create-team'
+      fullPath: '/$locale/auth/create-team'
+      preLoaderRoute: typeof LocaleAuthCreateTeamImport
       parentRoute: typeof rootRoute
     }
     '/$locale/auth/login': {
@@ -174,6 +188,7 @@ const LocaleAdminRouteWithChildren = LocaleAdminRoute._addFileChildren(
 export interface FileRoutesByFullPath {
   '/$locale/admin': typeof LocaleAdminRouteWithChildren
   '/$locale': typeof LocaleIndexRoute
+  '/$locale/auth/create-team': typeof LocaleAuthCreateTeamRoute
   '/$locale/auth/login': typeof LocaleAuthLoginRoute
   '/$locale/auth/verify-email': typeof LocaleAuthVerifyEmailRoute
   '/$locale/admin/': typeof LocaleAdminIndexRoute
@@ -185,6 +200,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/$locale': typeof LocaleIndexRoute
+  '/$locale/auth/create-team': typeof LocaleAuthCreateTeamRoute
   '/$locale/auth/login': typeof LocaleAuthLoginRoute
   '/$locale/auth/verify-email': typeof LocaleAuthVerifyEmailRoute
   '/$locale/admin': typeof LocaleAdminIndexRoute
@@ -198,6 +214,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/$locale/admin': typeof LocaleAdminRouteWithChildren
   '/$locale/': typeof LocaleIndexRoute
+  '/$locale/auth/create-team': typeof LocaleAuthCreateTeamRoute
   '/$locale/auth/login': typeof LocaleAuthLoginRoute
   '/$locale/auth/verify-email': typeof LocaleAuthVerifyEmailRoute
   '/$locale/admin/': typeof LocaleAdminIndexRoute
@@ -212,6 +229,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/$locale/admin'
     | '/$locale'
+    | '/$locale/auth/create-team'
     | '/$locale/auth/login'
     | '/$locale/auth/verify-email'
     | '/$locale/admin/'
@@ -222,6 +240,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/$locale'
+    | '/$locale/auth/create-team'
     | '/$locale/auth/login'
     | '/$locale/auth/verify-email'
     | '/$locale/admin'
@@ -233,6 +252,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/$locale/admin'
     | '/$locale/'
+    | '/$locale/auth/create-team'
     | '/$locale/auth/login'
     | '/$locale/auth/verify-email'
     | '/$locale/admin/'
@@ -246,6 +266,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   LocaleAdminRoute: typeof LocaleAdminRouteWithChildren
   LocaleIndexRoute: typeof LocaleIndexRoute
+  LocaleAuthCreateTeamRoute: typeof LocaleAuthCreateTeamRoute
   LocaleAuthLoginRoute: typeof LocaleAuthLoginRoute
   LocaleAuthVerifyEmailRoute: typeof LocaleAuthVerifyEmailRoute
 }
@@ -253,6 +274,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   LocaleAdminRoute: LocaleAdminRouteWithChildren,
   LocaleIndexRoute: LocaleIndexRoute,
+  LocaleAuthCreateTeamRoute: LocaleAuthCreateTeamRoute,
   LocaleAuthLoginRoute: LocaleAuthLoginRoute,
   LocaleAuthVerifyEmailRoute: LocaleAuthVerifyEmailRoute,
 }
@@ -269,6 +291,7 @@ export const routeTree = rootRoute
       "children": [
         "/$locale/admin",
         "/$locale/",
+        "/$locale/auth/create-team",
         "/$locale/auth/login",
         "/$locale/auth/verify-email"
       ]
@@ -285,6 +308,9 @@ export const routeTree = rootRoute
     },
     "/$locale/": {
       "filePath": "$locale/index.tsx"
+    },
+    "/$locale/auth/create-team": {
+      "filePath": "$locale/auth.create-team.tsx"
     },
     "/$locale/auth/login": {
       "filePath": "$locale/auth.login.tsx"

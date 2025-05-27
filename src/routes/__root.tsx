@@ -13,6 +13,7 @@ import {
 	IntlProvider,
 	rootLocaleMiddleware,
 } from "@/lib/locale.tsx";
+import { useTheme } from "@/lib/theme";
 
 interface MyRouterContext {
 	queryClient: QueryClient;
@@ -60,8 +61,10 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
 function RootDocument() {
 	const { i18n } = Route.useLoaderData();
+	const { theme, systemTheme } = useTheme();
+
 	return (
-		<html lang="en">
+		<html className={theme === "system" ? systemTheme : theme}>
 			<head>
 				<HeadContent />
 			</head>

@@ -1,3 +1,5 @@
+import { TeamSwitcher } from "@/components/auth/TeamSwitcher";
+import { UserButton } from "@/components/auth/UserButton";
 import { LocaleToggle } from "@/components/LocaleToggle";
 import {
 	Select,
@@ -10,6 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import {
 	Sidebar,
 	SidebarContent,
+	SidebarFooter,
 	SidebarGroup,
 	SidebarGroupAction,
 	SidebarGroupContent,
@@ -48,14 +51,21 @@ export const Route = createFileRoute("/$locale/admin")({
 		locale: LocaleSchema.optional(),
 	}),
 	beforeLoad: async () => {
-		const session = await getSessionFn();
-		console.log("SESSION", session);
-		return { session };
+		const { session, user } = await getSessionFn();
+		return { session, user };
 	},
 	loader: async ({ context: { session }, params }) => {
+		console.log(session);
 		if (!session) {
 			throw redirect({
 				to: "/$locale/auth/login",
+				params,
+			});
+		}
+
+		if (!session.activeOrganizationId) {
+			throw redirect({
+				to: "/$locale/auth/create-team",
 				params,
 			});
 		}
@@ -77,12 +87,7 @@ function RouteComponent() {
 			<SidebarProvider>
 				<Sidebar className="list-none">
 					<SidebarHeader className="flex gap-2 items-center flex-row py-4">
-						<img
-							src="/logo512.png"
-							alt="Nuonn Logo"
-							className="h-10"
-						/>
-						<h1 className="text-2xl font-bold">Nuonn</h1>
+						<TeamSwitcher />
 					</SidebarHeader>
 					<Separator />
 					<SidebarContent>
@@ -173,6 +178,9 @@ function RouteComponent() {
 							</SidebarGroupContent>
 						</SidebarGroup>
 					</SidebarContent>
+					<SidebarFooter>
+						<UserButton />
+					</SidebarFooter>
 				</Sidebar>
 				<SidebarInset className="max-w-full overflow-hidden">
 					<header className="p-4 flex flex-row w-full items-center justify-between">
