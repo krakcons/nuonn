@@ -2,46 +2,78 @@ import { db } from "@/lib/db";
 import { scenarios } from "@/lib/db/schema";
 import { createServerFn } from "@tanstack/react-start";
 import { ScenarioSchema } from "../ai";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { z } from "zod";
+import { protectedMiddleware } from "./auth";
 
-export const getScenariosFn = createServerFn().handler(async () => {
-	return await db.query.scenarios.findMany();
-});
+export const getScenariosFn = createServerFn()
+	.middleware([protectedMiddleware])
+	.handler(async ({ context }) => {
+		return await db.query.scenarios.findMany({
+			where: eq(
+				scenarios.organizationId,
+				context.session.activeOrganizationId,
+			),
+		});
+	});
 
 export const getScenarioFn = createServerFn()
+	.middleware([protectedMiddleware])
 	.validator(
 		z.object({
 			id: z.string(),
 		}),
 	)
-	.handler(async ({ data: { id } }) => {
+	.handler(async ({ data: { id }, context }) => {
 		return await db.query.scenarios.findFirst({
-			where: eq(scenarios.id, id),
+			where: and(
+				eq(scenarios.id, id),
+				eq(
+					scenarios.organizationId,
+					context.session.activeOrganizationId,
+				),
+			),
 		});
 	});
 
 export const deleteScenarioFn = createServerFn()
+	.middleware([protectedMiddleware])
 	.validator(z.object({ id: z.string() }))
-	.handler(async ({ data: { id } }) => {
-		await db.delete(scenarios).where(eq(scenarios.id, id));
+	.handler(async ({ data: { id }, context }) => {
+		await db
+			.delete(scenarios)
+			.where(
+				and(
+					eq(scenarios.id, id),
+					eq(
+						scenarios.organizationId,
+						context.session.activeOrganizationId,
+					),
+				),
+			);
 	});
 
 export const updateScenarioFn = createServerFn()
+	.middleware([protectedMiddleware])
 	.validator(ScenarioSchema.extend({ id: z.string().optional() }))
-	.handler(async ({ data }) => {
+	.handler(async ({ data, context }) => {
 		const id = data.id ?? Bun.randomUUIDv7();
 		await db
 			.insert(scenarios)
 			.values({
 				id,
 				data,
+				organizationId: context.session.activeOrganizationId,
 			})
 			.onConflictDoUpdate({
 				target: [scenarios.id],
 				set: {
 					data,
 				},
+				setWhere: eq(
+					scenarios.organizationId,
+					context.session.activeOrganizationId,
+				),
 			});
 		return {
 			id,

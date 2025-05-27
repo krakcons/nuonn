@@ -26,14 +26,14 @@ const dates = {
 
 export const personas = sqliteTable("personas", {
 	id: text().primaryKey(),
-	// TODO: teamId
+	organizationId: text().notNull(),
 	data: text({ mode: "json" }).$type<PersonaType>().notNull(),
 	...dates,
 });
 
 export const scenarios = sqliteTable("scenarios", {
 	id: text().primaryKey(),
-	// TODO: teamId
+	organizationId: text().notNull(),
 	data: text({ mode: "json" }).$type<ScenarioType>().notNull(),
 	...dates,
 });

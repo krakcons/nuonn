@@ -4,7 +4,7 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/ui/sidebar";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -20,6 +20,7 @@ import { ChevronsUpDown, Plus } from "lucide-react";
 
 export const TeamSwitcher = () => {
 	const { isMobile } = useSidebar();
+	const router = useRouter();
 	const locale = useLocale();
 	const t = useTranslations("TeamSwitcher");
 	const { data: organizations } = authClient.useListOrganizations();
@@ -64,6 +65,11 @@ export const TeamSwitcher = () => {
 								onClick={() => {
 									authClient.organization.setActive({
 										organizationId: organization.id,
+										fetchOptions: {
+											onSuccess: () => {
+												router.invalidate();
+											},
+										},
 									});
 								}}
 								className="gap-2 p-2"

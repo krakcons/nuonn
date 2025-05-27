@@ -14,6 +14,26 @@ export const authMiddleware = createMiddleware().server(async ({ next }) => {
 	});
 });
 
+export const protectedMiddleware = createMiddleware()
+	.middleware([authMiddleware])
+	.server(async ({ next, context }) => {
+		if (!context.session || !context.user) {
+			throw new Error("Not authenticated");
+		}
+		if (!context.session.activeOrganizationId) {
+			throw new Error("No active organization");
+		}
+		return next({
+			context: {
+				session: {
+					...context.session,
+					activeOrganizationId: context.session.activeOrganizationId,
+				},
+				user: context.user,
+			},
+		});
+	});
+
 export const getSessionFn = createServerFn()
 	.middleware([authMiddleware])
 	.handler(async ({ context }) => {

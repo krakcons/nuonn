@@ -15,6 +15,13 @@
       "when": 1748382171692,
       "tag": "0001_previous_doctor_doom",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1748386914378,
+      "tag": "0002_minor_inhumans",
+      "breakpoints": true
     }
   ]
 }
