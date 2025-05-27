@@ -1,11 +1,8 @@
-import { type InferSelectModel, sql } from "drizzle-orm";
-import {
-	sqliteTable,
-	primaryKey,
-	text,
-	integer,
-} from "drizzle-orm/sqlite-core";
+import { sql } from "drizzle-orm";
+import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 import type { PersonaType, ScenarioType } from "../ai";
+import * as authSchema from "./auth";
+export * from "./auth";
 
 // Enums
 
@@ -25,66 +22,6 @@ const dates = {
 		.default(sql`(unixepoch())`),
 };
 
-// USERS //
-
-export const users = sqliteTable("users", {
-	id: text().primaryKey(),
-	email: text().unique().notNull(),
-	firstName: text(),
-	lastName: text(),
-	...dates,
-});
-export const sessions = sqliteTable("sessions", {
-	id: text().primaryKey(),
-	userId: text()
-		.notNull()
-		.references(() => users.id, {
-			onDelete: "cascade",
-		}),
-	expiresAt: integer({
-		mode: "timestamp",
-	})
-		.default(sql`(unixepoch() + 15 * 60)`)
-		.notNull(),
-});
-export const emailVerifications = sqliteTable("email_verifications", {
-	id: text().primaryKey(),
-	userId: text()
-		.notNull()
-		.references(() => users.id, {
-			onDelete: "cascade",
-		}),
-	code: text().notNull(),
-	expiresAt: integer({
-		mode: "timestamp",
-	})
-		.default(sql`(unixepoch() + 15 * 60)`)
-		.notNull(),
-});
-
-// TEAMS //
-
-export const teams = sqliteTable("teams", {
-	id: text().primaryKey(),
-	...dates,
-});
-export const teamTranslations = sqliteTable(
-	"team_translations",
-	{
-		teamId: text()
-			.notNull()
-			.references(() => teams.id, {
-				onDelete: "cascade",
-			}),
-		locale: localeEnum.notNull(),
-		name: text().notNull(),
-		logo: text(),
-		favicon: text(),
-		...dates,
-	},
-	(t) => [primaryKey({ columns: [t.teamId, t.locale] })],
-);
-
 // CONTENT //
 
 export const personas = sqliteTable("personas", {
@@ -102,19 +39,10 @@ export const scenarios = sqliteTable("scenarios", {
 });
 
 export const tableSchemas = {
-	// USERS
-	users,
-	sessions,
-	emailVerifications,
-	// TEAMS
-	teams,
-	teamTranslations,
+	...authSchema,
 	// CONTENT
 	personas,
 	scenarios,
 };
 
 export const relationSchemas = {};
-
-export type User = InferSelectModel<typeof users>;
-export type Session = InferSelectModel<typeof sessions>;

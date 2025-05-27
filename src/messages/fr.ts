@@ -51,6 +51,29 @@ const fr: Messages = {
 		goToNextPage: "Aller à la page suivante",
 		goToLastPage: "Aller à la dernière page",
 	},
+	// Auth
+	OTP: {
+		subject: "Email Verification Code",
+		content: "Here is your verification code:",
+	},
+	AuthLoginForm: {
+		email: {
+			label: "Email",
+		},
+	},
+	AuthLogin: {
+		title: "Login",
+		description: "Enter your email below and submit to login",
+	},
+	AuthVerifyEmail: {
+		title: "Verify Email",
+		description: "Enter the code we sent you to verify your email",
+	},
+	AuthVerifyEmailForm: {
+		code: {
+			label: "Code",
+		},
+	},
 	// Custom
 	AdminSidebar: {
 		dashboard: "Dashboard",

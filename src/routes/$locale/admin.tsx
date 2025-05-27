@@ -22,6 +22,7 @@ import {
 	SidebarProvider,
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { getSessionFn } from "@/lib/handlers/auth";
 import { getPersonasFn } from "@/lib/handlers/personas";
 import { getScenariosFn } from "@/lib/handlers/scenarios";
 import {
@@ -35,6 +36,7 @@ import {
 	createFileRoute,
 	Link,
 	Outlet,
+	redirect,
 	useNavigate,
 } from "@tanstack/react-router";
 import { FileVideo, MessagesSquare, Plus, User } from "lucide-react";
@@ -45,7 +47,19 @@ export const Route = createFileRoute("/$locale/admin")({
 	validateSearch: z.object({
 		locale: LocaleSchema.optional(),
 	}),
-	loader: async () => {
+	beforeLoad: async () => {
+		const session = await getSessionFn();
+		console.log("SESSION", session);
+		return { session };
+	},
+	loader: async ({ context: { session }, params }) => {
+		if (!session) {
+			throw redirect({
+				to: "/$locale/auth/login",
+				params,
+			});
+		}
+
 		return Promise.all([getPersonasFn(), getScenariosFn()]);
 	},
 });
