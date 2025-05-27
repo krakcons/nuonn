@@ -53,21 +53,23 @@ const fr: Messages = {
 	},
 	// Auth
 	OTP: {
-		subject: "Email Verification Code",
-		content: "Here is your verification code:",
+		subject: "Code de vérification de l'e-mail",
+		content: "Voici votre code de vérification :",
 	},
 	AuthLoginForm: {
 		email: {
-			label: "Email",
+			label: "E-mail",
 		},
 	},
 	AuthLogin: {
-		title: "Login",
-		description: "Enter your email below and submit to login",
+		title: "Se connecter",
+		description:
+			"Entrez votre email ci-dessous et soumettez pour vous connecter",
 	},
 	AuthVerifyEmail: {
-		title: "Verify Email",
-		description: "Enter the code we sent you to verify your email",
+		title: "Vérification de l'email",
+		description:
+			"Entrez le code que nous vous avons envoyé pour vérifier votre email",
 	},
 	AuthVerifyEmailForm: {
 		code: {
@@ -75,39 +77,45 @@ const fr: Messages = {
 		},
 	},
 	TeamSwitcher: {
-		title: "Teams",
-		create: "Create team",
+		title: "Équipes",
+		create: "Créer une équipe",
 	},
 	TeamForm: {
-		name: "Name",
+		name: "Nom",
 		logo: "Logo",
 		create: {
-			title: "Create Team",
-			description: "Enter the details of your team below.",
+			title: "Créer une équipe",
+			description: "Entrez les informations de votre équipe ci-dessous.",
 		},
 	},
 	UserForm: {
-		title: "Account",
-		description: "Manage your account settings.",
+		title: "Compte",
+		description: "Gérez les paramètres de votre compte.",
 		name: "Nom",
 	},
 	UserButton: {
 		theme: {
-			label: "Theme",
-			light: "Light",
-			dark: "Dark",
-			system: "System",
+			label: "Thème",
+			light: "Clair",
+			dark: "Sombre",
+			system: "Système",
 		},
-		account: "Account",
-		signout: "Sign out",
+		account: "Compte",
+		signout: "Se déconnecter",
 	},
 	// Custom
 	AdminSidebar: {
-		dashboard: "Dashboard",
-		personas: "Personas",
-		scenarios: "Scenarios",
-		editing: "Editing",
+		dashboard: "Tableau de bord",
+		personas: "Personnages",
+		scenarios: "Scénarios",
+		editing: "Édition",
 		chat: "Chat",
+	},
+	Home: {
+		title: "Moteur de Chat IA",
+		description:
+			"Nuonn est un outil de création de chats pour les scénarios de communication IA et les évaluations.",
+		getStarted: "Commencer",
 	},
 };
 

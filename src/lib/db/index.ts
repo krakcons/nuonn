@@ -7,8 +7,6 @@ const schema = {
 	...relationSchemas,
 };
 
-console.log(Bun.version);
-
 const sqlite = new Database("./persist/sqlite.db");
 export const db = drizzle({
 	client: sqlite,

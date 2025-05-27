@@ -107,6 +107,12 @@ const en = {
 		editing: "Editing",
 		chat: "Chat",
 	},
+	Home: {
+		title: "AI Chat Engine",
+		description:
+			"Nuonn is a chat creation tool for AI communication scenarios and evaluations.",
+		getStarted: "Get Started",
+	},
 };
 
 export default en;

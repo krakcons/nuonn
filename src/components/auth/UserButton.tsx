@@ -93,6 +93,8 @@ export const UserButton = () => {
 	const navigate = useNavigate();
 
 	const user = data?.user;
+	const initials =
+		user?.name[0]?.toUpperCase() ?? user?.email[0].toUpperCase() ?? "U";
 
 	const changeTheme = () => {
 		const themeIndex = themes.indexOf(theme);
@@ -114,9 +116,9 @@ export const UserButton = () => {
 							size="lg"
 							className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
 						>
-							<Avatar className="h-8 w-8 rounded-lg grayscale">
-								<AvatarFallback className="rounded-lg">
-									{user.name.toUpperCase()[0]}
+							<Avatar className="rounded-none">
+								<AvatarFallback className="rounded-none bg-primary text-primary-foreground">
+									{initials}
 								</AvatarFallback>
 							</Avatar>
 							<div className="grid flex-1 text-left text-sm leading-tight">
@@ -145,9 +147,9 @@ export const UserButton = () => {
 					>
 						<DropdownMenuLabel className="p-0 font-normal">
 							<div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-								<Avatar className="h-8 w-8 rounded-lg">
-									<AvatarFallback className="rounded-lg">
-										{user.name.toUpperCase()[0]}
+								<Avatar className="rounded-none">
+									<AvatarFallback className="rounded-none bg-primary text-primary-foreground">
+										{initials}
 									</AvatarFallback>
 								</Avatar>
 								<div className="grid flex-1 text-left text-sm leading-tight">
