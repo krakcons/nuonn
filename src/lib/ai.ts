@@ -58,6 +58,14 @@ export const PersonaSchema = z.object({
 });
 export type PersonaType = z.infer<typeof PersonaSchema>;
 
+const EvaluationSchema = z.object({
+	name: z.string(),
+	description: z.string(),
+	type: z.enum(["message", "session"]),
+	initialValue: z.string(),
+	measure: z.string(),
+});
+
 export const ScenarioSchema = z.object({
 	name: z.string(),
 	description: z.string(),
@@ -65,14 +73,13 @@ export const ScenarioSchema = z.object({
 		role: z.string(),
 		context: z.string(),
 		goals: z.string(),
-		stats: DataSchema.array(),
+		evaluations: EvaluationSchema.array(),
 	}),
 	user: z.object({
 		role: z.string(),
 		context: z.string(),
-		evaluations: DataSchema.extend({
-			type: z.enum(["session", "message"]),
-		}).array(),
+		goals: z.string(),
+		evaluations: EvaluationSchema.array(),
 	}),
 });
 export type ScenarioType = z.infer<typeof ScenarioSchema>;
