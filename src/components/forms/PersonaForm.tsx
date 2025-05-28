@@ -219,37 +219,37 @@ export const PersonaForm = ({
 				<form.AppField
 					name="traits"
 					children={(field) => (
-						<field.TextField label="Traits" optional />
+						<field.TextAreaField label="Traits" optional />
 					)}
 				/>
 				<form.AppField
 					name="hobbies"
 					children={(field) => (
-						<field.TextField label="Hobbies" optional />
+						<field.TextAreaField label="Hobbies" optional />
 					)}
 				/>
 				<form.AppField
 					name="likes"
 					children={(field) => (
-						<field.TextField label="Likes" optional />
+						<field.TextAreaField label="Likes" optional />
 					)}
 				/>
 				<form.AppField
 					name="dislikes"
 					children={(field) => (
-						<field.TextField label="Dislikes" optional />
+						<field.TextAreaField label="Dislikes" optional />
 					)}
 				/>
 				<form.AppField
 					name="backstory"
 					children={(field) => (
-						<field.TextField label="Backstory" optional />
+						<field.TextAreaField label="Backstory" optional />
 					)}
 				/>
 				<form.AppField
 					name="behaviour"
 					children={(field) => (
-						<field.TextField label="Behaviour" optional />
+						<field.TextAreaField label="Behaviour" optional />
 					)}
 				/>
 

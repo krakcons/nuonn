@@ -69,7 +69,7 @@ export const ScenarioForm = ({
 				/>
 				<form.AppField
 					name="user.role"
-					children={(field) => <field.TextField label="Role" />}
+					children={(field) => <field.TextAreaField label="Role" />}
 				/>
 				<form.AppField
 					name="user.context"
@@ -174,15 +174,17 @@ export const ScenarioForm = ({
 				/>
 				<form.AppField
 					name="persona.role"
-					children={(field) => <field.TextField label="Role" />}
+					children={(field) => <field.TextAreaField label="Role" />}
 				/>
 				<form.AppField
 					name="persona.context"
-					children={(field) => <field.TextField label="Context" />}
+					children={(field) => (
+						<field.TextAreaField label="Context" />
+					)}
 				/>
 				<form.AppField
 					name="persona.goals"
-					children={(field) => <field.TextField label="Goals" />}
+					children={(field) => <field.TextAreaField label="Goals" />}
 				/>
 				<form.AppField
 					name="persona.stats"
