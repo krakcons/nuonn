@@ -12,6 +12,7 @@ import {
 } from "@/lib/ai";
 import { getPersonasFn } from "@/lib/handlers/personas";
 import { getScenariosFn } from "@/lib/handlers/scenarios";
+import { useState } from "react";
 
 export const Route = createFileRoute("/$locale/admin/")({
 	component: RouteComponent,
@@ -41,8 +42,8 @@ const parseAssistantMessage = (
 };
 
 function RouteComponent() {
-	const navigate = Route.useNavigate();
 	const [personas, scenarios] = Route.useLoaderData();
+	const [personaId, setPersonaId] = useState<string | null>(null);
 	const { append, status, messages } = useChat({
 		initialMessages: [],
 		// @ts-ignore
@@ -56,20 +57,30 @@ function RouteComponent() {
 	const form = useAppForm({
 		defaultValues: {
 			content: "",
-			personaId: personas.length ? personas[0].id : null,
 			scenarioId: scenarios.length ? scenarios[0].id : null,
+			personaId: "random",
 		} as ChatInputType & { content: string },
 		validators: {
 			onSubmit: ChatInputSchema.extend({ content: z.string().min(1) }),
 		},
 		onSubmit: ({ value: { content, ...body }, formApi }) => {
+			let p = personaId ?? body.personaId;
+
+			if (p === "random") {
+				p = personas[Math.floor(Math.random() * personas.length)].id;
+			}
+			setPersonaId(p);
+
 			append(
 				{
 					role: "user",
 					content,
 				},
 				{
-					body,
+					body: {
+						...body,
+						personaId: p,
+					},
 				},
 			);
 			formApi.reset();
@@ -77,7 +88,6 @@ function RouteComponent() {
 	});
 
 	const reversedMessages = messages.slice().reverse();
-	console.log(form.getAllErrors());
 
 	return (
 		<Page>
@@ -107,26 +117,34 @@ function RouteComponent() {
 						/>
 						<div className="flex gap-2 items-center">
 							<form.AppField
-								name="personaId"
-								children={(field) => (
-									<field.SelectField
-										label="Persona"
-										options={personas.map((p) => ({
-											label: p.data.name,
-											value: p.id,
-										}))}
-									/>
-								)}
-							/>
-							<form.AppField
 								name="scenarioId"
 								children={(field) => (
 									<field.SelectField
+										disabled={!!personaId}
 										label="Scenario"
 										options={scenarios.map((s) => ({
 											label: s.data.name,
 											value: s.id,
 										}))}
+									/>
+								)}
+							/>
+							<form.AppField
+								name="personaId"
+								children={(field) => (
+									<field.SelectField
+										disabled={!!personaId}
+										label="Persona"
+										options={[
+											{
+												label: "Random",
+												value: "random",
+											},
+											...personas.map((p) => ({
+												label: p.data.name,
+												value: p.id,
+											})),
+										]}
 									/>
 								)}
 							/>
@@ -157,7 +175,9 @@ function RouteComponent() {
 								<p className="whitespace-pre-line">
 									{json?.content}
 								</p>
-								{(json.stats || json.evaluations) && (
+								{((json.stats && json.stats.length > 0) ||
+									(json.evaluations &&
+										json.evaluations.length > 0)) && (
 									<div className="border px-3 py-2 rounded flex flex-col gap-2">
 										{json.stats &&
 											json.stats.map((s) => (

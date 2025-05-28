@@ -4,25 +4,40 @@ import { openai } from "@ai-sdk/openai";
 import { createServerFn } from "@tanstack/react-start";
 import { personas, scenarios } from "@/lib/db/schema";
 import { db } from "@/lib/db";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { z } from "zod";
+import { protectedMiddleware } from "./auth";
 
 export const getChatResponseFn = createServerFn({
 	method: "POST",
 	response: "raw",
 })
+	.middleware([protectedMiddleware])
 	.validator(
 		ChatInputSchema.extend({
 			messages: z.any(),
 		}),
 	)
-	.handler(async ({ data: { messages, scenarioId, personaId } }) => {
+	.handler(async ({ data: { messages, scenarioId, personaId }, context }) => {
+		console.log(personaId);
 		const [scenario, persona] = await Promise.all([
 			db.query.scenarios.findFirst({
-				where: eq(scenarios.id, scenarioId),
+				where: and(
+					eq(scenarios.id, scenarioId),
+					eq(
+						scenarios.organizationId,
+						context.session.activeOrganizationId,
+					),
+				),
 			}),
 			db.query.personas.findFirst({
-				where: eq(personas.id, personaId),
+				where: and(
+					eq(personas.id, personaId),
+					eq(
+						personas.organizationId,
+						context.session.activeOrganizationId,
+					),
+				),
 			}),
 		]);
 		if (!scenario || !persona)
@@ -32,13 +47,12 @@ export const getChatResponseFn = createServerFn({
 			// INTRO
 			`You are a roleplaying system. You should respond as if you were the following persona and respond naturally to the user based on the scenario.`,
 			// PERSONA
-			`The persona you should become is defined here: ${persona.data}. Make sure you stay in character.`,
+			`PERSONA: ${JSON.stringify(persona.data)}. You "The AI" need to embody the previous data, take its name, info, only speak in the languages provided etc. Make sure you stay in character as the persona only. Do not deviate from the persona in any circumstances and no matter what the user says. If the user pretends to be you, do not become the user.`,
 			// SCENARIO
-			`You should respond in context of this specific scenario ${JSON.stringify(scenario.data)}.`,
-			// STATS
-			`The character you are portraying should maintain and manage personal stats like a video game: ${JSON.stringify(scenario.data.persona.stats)}. Use previous messages to see where your stats are and adjust them according to the messages from users (ex: Mood could be a stat and if the user says something to offend you, you can lower mood)`,
+			`SCENARIO: ${JSON.stringify(scenario.data)}.`,
 			// EVALUATIONS
-			`You should also evaluate the user responses based on these evaluations: ${JSON.stringify(scenario.data.user.evaluations)}. A type of message means the evaluation should be calculated for each user message (example. Politness, Tone, etc). A type of session should be calculated based on the newest user message, should be stateful, and therefore maintained in responses after completion. (example. Has the user asked for X, once it is true, keep it as that etc). Do not duplicate evaluations in response.`,
+			`You should evaluate the persona based on these evaluations: ${JSON.stringify(scenario.data.persona.evaluations)}. A type of message means the evaluation should be calculated for each message (example. Politness, Tone, etc). A type of session should be calculated based on the newest message, should be stateful, and therefore maintained in responses after completion. (example. Have they asked for X, once it is true, keep it as that etc). Do not duplicate evaluations in response.`,
+			`You should also evaluate the user responses based on these evaluations: ${JSON.stringify(scenario.data.user.evaluations)}. `,
 		];
 		try {
 			const result = streamText({

@@ -30,6 +30,7 @@ import type { InputHTMLAttributes } from "react";
 import { Checkbox } from "./checkbox";
 import { Loader2 } from "lucide-react";
 import { useTranslations } from "@/lib/locale";
+import type { SelectProps } from "@radix-ui/react-select";
 const { fieldContext, useFieldContext, formContext, useFormContext } =
 	createFormHookContexts();
 
@@ -159,12 +160,13 @@ const CheckboxField = (props: DefaultOptions) => {
 const SelectField = ({
 	options,
 	...props
-}: DefaultOptions & {
-	options: {
-		label: string;
-		value: string;
-	}[];
-}) => {
+}: React.ComponentProps<React.FC<SelectProps>> &
+	DefaultOptions & {
+		options: {
+			label: string;
+			value: string;
+		}[];
+	}) => {
 	const field = useFieldContext<string>();
 	return (
 		<Field>
@@ -172,6 +174,7 @@ const SelectField = ({
 			<Select
 				onValueChange={(value) => field.handleChange(value)}
 				defaultValue={field.state.value}
+				{...props}
 			>
 				<SelectTrigger className="gap-1" id={field.name}>
 					<SelectValue />

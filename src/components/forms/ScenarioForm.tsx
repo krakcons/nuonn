@@ -20,9 +20,15 @@ export const ScenarioForm = ({
 }) => {
 	const form = useAppForm({
 		defaultValues: {
+			name: "",
+			description: "",
 			user: {
 				evaluations: [
 					{
+						name: "",
+						description: "",
+						measure: "",
+						initialValue: "",
 						type: "message",
 					},
 				],
@@ -30,6 +36,10 @@ export const ScenarioForm = ({
 			persona: {
 				evaluations: [
 					{
+						name: "",
+						description: "",
+						measure: "",
+						initialValue: "",
 						type: "session",
 					},
 				],
@@ -41,6 +51,8 @@ export const ScenarioForm = ({
 		},
 		onSubmit,
 	});
+
+	console.log(form.state);
 
 	return (
 		<form.AppForm>

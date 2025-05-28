@@ -66,18 +66,21 @@ const EvaluationSchema = z.object({
 	measure: z.string(),
 });
 
+export const ContextSchema = z.object({
+	personaContext: z.string(),
+	userContext: z.string(),
+});
+
 export const ScenarioSchema = z.object({
 	name: z.string(),
 	description: z.string(),
 	persona: z.object({
 		role: z.string(),
-		context: z.string(),
 		goals: z.string(),
 		evaluations: EvaluationSchema.array(),
 	}),
 	user: z.object({
 		role: z.string(),
-		context: z.string(),
 		goals: z.string(),
 		evaluations: EvaluationSchema.array(),
 	}),
