@@ -4,6 +4,7 @@ import {
 	useQueryClient,
 	useSuspenseQuery,
 } from "@tanstack/react-query";
+import { useLoaderData, useRouter } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { getCookie, setCookie } from "@tanstack/react-start/server";
 import { z } from "zod";
@@ -52,18 +53,16 @@ export const getThemeQueryOptions = queryOptions({
 });
 
 export const useTheme = () => {
-	const queryClient = useQueryClient();
+	const router = useRouter();
 
 	const {
-		data: { theme, systemTheme },
-	} = useSuspenseQuery(getThemeQueryOptions);
+		theme: { theme, systemTheme },
+	} = useLoaderData({ from: "__root__" });
 
 	const updateTheme = useMutation({
 		mutationFn: setThemeFn,
 		onSuccess: () => {
-			queryClient.invalidateQueries({
-				queryKey: getThemeQueryOptions.queryKey,
-			});
+			router.invalidate();
 		},
 	});
 

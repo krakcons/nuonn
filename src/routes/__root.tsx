@@ -13,7 +13,7 @@ import {
 	IntlProvider,
 	rootLocaleMiddleware,
 } from "@/lib/locale.tsx";
-import { getThemeQueryOptions } from "@/lib/theme";
+import { getThemeFn, getThemeQueryOptions } from "@/lib/theme";
 
 interface MyRouterContext {
 	queryClient: QueryClient;
@@ -58,31 +58,31 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 		],
 	}),
 	beforeLoad: async ({ location }) => {
+		// LOCALE
 		return rootLocaleMiddleware({
 			location,
 		});
 	},
-	loader: async ({ context: { locale, queryClient } }) => {
-		await queryClient.ensureQueryData(getThemeQueryOptions);
-
-		const i18n = await getI18nFn({
-			headers: {
-				locale,
-			},
-		});
-
+	loader: async ({ context: { locale } }) => {
 		return {
-			i18n,
+			// LOCALE
+			i18n: await getI18nFn({
+				headers: {
+					locale,
+				},
+			}),
+			// THEME
+			theme: await getThemeFn(),
 		};
 	},
 	component: RootDocument,
 });
 
 function RootDocument() {
-	const { i18n } = Route.useLoaderData();
 	const {
-		data: { theme, systemTheme },
-	} = useSuspenseQuery(getThemeQueryOptions);
+		i18n,
+		theme: { theme, systemTheme },
+	} = Route.useLoaderData();
 
 	return (
 		<html className={theme === "system" ? systemTheme : theme}>
