@@ -25,7 +25,7 @@ import {
 	SidebarProvider,
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { getSessionFn } from "@/lib/handlers/auth";
+import { getOrganizationsFn, getSessionFn } from "@/lib/handlers/auth";
 import { getPersonasFn } from "@/lib/handlers/personas";
 import { getScenariosFn } from "@/lib/handlers/scenarios";
 import {
@@ -54,9 +54,8 @@ export const Route = createFileRoute("/$locale/admin")({
 		const { session, user } = await getSessionFn();
 		return { session, user };
 	},
-	loader: async ({ context: { session }, params }) => {
-		console.log(session);
-		if (!session) {
+	loader: async ({ context: { session, user }, params }) => {
+		if (!session || !user) {
 			throw redirect({
 				to: "/$locale/auth/login",
 				params,
@@ -70,7 +69,22 @@ export const Route = createFileRoute("/$locale/admin")({
 			});
 		}
 
-		return Promise.all([getPersonasFn(), getScenariosFn()]);
+		const [personas, scenarios, organizations] = await Promise.all([
+			getPersonasFn(),
+			getScenariosFn(),
+			getOrganizationsFn(),
+		]);
+
+		return {
+			personas,
+			scenarios,
+			organizations,
+			user,
+			session: {
+				...session,
+				activeOrganizationId: session.activeOrganizationId,
+			},
+		};
 	},
 });
 
@@ -80,14 +94,18 @@ function RouteComponent() {
 	const search = Route.useSearch();
 	const editingLocale = search.locale ?? locale;
 	const navigate = useNavigate();
-	const [personas, scenarios] = Route.useLoaderData();
+	const { personas, scenarios, organizations, user, session } =
+		Route.useLoaderData();
 
 	return (
 		<div>
 			<SidebarProvider>
 				<Sidebar className="list-none">
 					<SidebarHeader className="flex gap-2 items-center flex-row py-4">
-						<TeamSwitcher />
+						<TeamSwitcher
+							organizations={organizations}
+							activeOrganizationId={session.activeOrganizationId}
+						/>
 					</SidebarHeader>
 					<Separator />
 					<SidebarContent>
@@ -179,7 +197,7 @@ function RouteComponent() {
 						</SidebarGroup>
 					</SidebarContent>
 					<SidebarFooter>
-						<UserButton />
+						<UserButton user={user} />
 					</SidebarFooter>
 				</Sidebar>
 				<SidebarInset className="max-w-full overflow-hidden">

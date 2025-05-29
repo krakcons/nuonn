@@ -31,11 +31,12 @@ import {
 } from "../ui/dialog";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "@/lib/locale";
-import { type Theme, themes, useTheme } from "@/lib/theme";
 import { authClient } from "@/lib/auth.client";
 import { useState } from "react";
 import { useAppForm } from "@/components/ui/form";
 import { useNavigate } from "@tanstack/react-router";
+import { useTheme, type Theme } from "@/lib/theme";
+import type { Session, User } from "better-auth";
 
 type UserFormType = {
 	name: string;
@@ -64,7 +65,7 @@ export const UserForm = ({
 			<form.BlockNavigation />
 			<form onSubmit={(e) => e.preventDefault()} className="space-y-8">
 				<form.AppField name="name">
-					{(field) => <field.TextField label={"Name"} />}
+					{(field) => <field.TextField label={t.name} />}
 				</form.AppField>
 				<form.SubmitButton />
 			</form>
@@ -83,27 +84,16 @@ const ThemeIcon = ({ theme }: { theme: Theme }) => {
 	}
 };
 
-export const UserButton = () => {
-	const { theme, setTheme } = useTheme();
+export const UserButton = ({ user }: { user: User }) => {
+	const { theme, changeTheme } = useTheme();
 	const { isMobile } = useSidebar();
-	const { data } = authClient.useSession();
 	const [accountDialog, setAccountDialog] = useState(false);
 	const t = useTranslations("UserButton");
 	const tUserForm = useTranslations("UserForm");
 	const navigate = useNavigate();
 
-	const user = data?.user;
 	const initials =
 		user?.name[0]?.toUpperCase() ?? user?.email[0].toUpperCase() ?? "U";
-
-	const changeTheme = () => {
-		const themeIndex = themes.indexOf(theme);
-		if (themeIndex === themes.length - 1) {
-			setTheme(themes[0]);
-		} else {
-			setTheme(themes[themeIndex + 1]);
-		}
-	};
 
 	if (!user) return null;
 

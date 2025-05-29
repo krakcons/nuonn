@@ -17,14 +17,25 @@ import { useLocale, useTranslations } from "@/lib/locale";
 import { authClient } from "@/lib/auth.client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ChevronsUpDown, Plus } from "lucide-react";
+import type { Organization } from "better-auth/plugins";
 
-export const TeamSwitcher = () => {
+export const TeamSwitcher = ({
+	organizations,
+	activeOrganizationId,
+}: {
+	organizations: Organization[];
+	activeOrganizationId: string;
+}) => {
 	const { isMobile } = useSidebar();
 	const router = useRouter();
 	const locale = useLocale();
 	const t = useTranslations("TeamSwitcher");
-	const { data: organizations } = authClient.useListOrganizations();
-	const { data: organization } = authClient.useActiveOrganization();
+
+	const organization = organizations.find(
+		(organization) => organization.id === activeOrganizationId,
+	);
+
+	if (!organization) return null;
 
 	return (
 		<SidebarMenu>

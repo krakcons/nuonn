@@ -39,3 +39,9 @@ export const getSessionFn = createServerFn()
 	.handler(async ({ context }) => {
 		return context;
 	});
+
+export const getOrganizationsFn = createServerFn().handler(() => {
+	return auth.api.listOrganizations({
+		headers: getHeaders() as unknown as Headers,
+	});
+});

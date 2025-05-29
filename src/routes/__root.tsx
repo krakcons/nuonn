@@ -7,13 +7,13 @@ import {
 
 import appCss from "../styles.css?url";
 
-import type { QueryClient } from "@tanstack/react-query";
+import { useSuspenseQuery, type QueryClient } from "@tanstack/react-query";
 import {
 	getI18nFn,
 	IntlProvider,
 	rootLocaleMiddleware,
 } from "@/lib/locale.tsx";
-import { useTheme } from "@/lib/theme";
+import { getThemeQueryOptions } from "@/lib/theme";
 
 interface MyRouterContext {
 	queryClient: QueryClient;
@@ -62,7 +62,9 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 			location,
 		});
 	},
-	loader: async ({ context: { locale } }) => {
+	loader: async ({ context: { locale, queryClient } }) => {
+		await queryClient.ensureQueryData(getThemeQueryOptions);
+
 		const i18n = await getI18nFn({
 			headers: {
 				locale,
@@ -78,7 +80,9 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
 function RootDocument() {
 	const { i18n } = Route.useLoaderData();
-	const { theme, systemTheme } = useTheme();
+	const {
+		data: { theme, systemTheme },
+	} = useSuspenseQuery(getThemeQueryOptions);
 
 	return (
 		<html className={theme === "system" ? systemTheme : theme}>
