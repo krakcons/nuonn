@@ -157,7 +157,7 @@ function RouteComponent() {
 							return (
 								<div
 									key={m.id}
-									className="self-end bg-blue-500 text-white px-3 py-2 rounded sm:max-w-[70%] max-w-[90%] whitespace-pre-line"
+									className="self-end bg-blue-500 text-white px-3 py-2 sm:max-w-[70%] max-w-[90%] whitespace-pre-line"
 								>
 									{m.content}
 								</div>
@@ -178,7 +178,7 @@ function RouteComponent() {
 								{((json.stats && json.stats.length > 0) ||
 									(json.evaluations &&
 										json.evaluations.length > 0)) && (
-									<div className="border px-3 py-2 rounded flex flex-col gap-2">
+									<div className="border px-3 py-2 flex flex-col gap-2">
 										{json.stats &&
 											json.stats.map((s) => (
 												<p key={s.name}>
