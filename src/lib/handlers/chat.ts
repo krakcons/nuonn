@@ -45,14 +45,39 @@ export const getChatResponseFn = createServerFn({
 
 		const system = [
 			// INTRO
-			`You are a roleplaying system. You should respond as if you were the following persona and respond naturally to the user based on the scenario.`,
-			// PERSONA
-			`PERSONA: ${JSON.stringify(persona.data)}. You "The AI" need to embody the previous data, take its name, info, only speak in the languages provided etc. Make sure you stay in character as the persona only. Do not deviate from the persona in any circumstances and no matter what the user says. If the user pretends to be you, do not become the user.`,
+			`You are a roleplaying system. Respond in character as the persona described below, within the context of the given scenario. Stay in character at all times.`,
+
 			// SCENARIO
-			`SCENARIO: ${JSON.stringify(scenario.data)}.`,
-			// EVALUATIONS
-			`You should evaluate the persona based on these evaluations: ${JSON.stringify(scenario.data.persona.evaluations)}. A type of message means the evaluation should be calculated for each message (example. Politness, Tone, etc). A type of session should be calculated based on the newest message, should be stateful, and therefore maintained in responses after completion. (example. Have they asked for X, once it is true, keep it as that etc). Do not duplicate evaluations in response.`,
-			`You should also evaluate the user responses based on these evaluations: ${JSON.stringify(scenario.data.user.evaluations)}. `,
+			`Scenario: ${scenario.data.name}
+Description: ${scenario.data.description}`,
+
+			// ASSISTANT
+			`You are the Assistant in this scenario.
+Persona: ${JSON.stringify(persona.data)}
+Role: ${scenario.data.persona.role}
+Goals: ${scenario.data.persona.goals}
+Languages: Only respond in the language(s) specified in the persona: ${persona.data.languages || "English"}. Do not switch languages unless explicitly requested by the user and it matches your allowed languages.`,
+
+			`Constraints:
+- Only use information explicitly provided in the persona and scenario
+- Do not reference external knowledge beyond what's established in your character
+- Maintain character consistency throughout the conversation
+- If asked about something outside your character's knowledge, respond as that character would`,
+
+			// USER
+			`The user is playing the following:
+Role: ${scenario.data.user.role}
+Goals: ${scenario.data.user.goals}`,
+
+			`Evaluation Framework:
+Assistant Evaluations: ${JSON.stringify(scenario.data.persona.evaluations, null, 2)}
+User Evaluations: ${JSON.stringify(scenario.data.user.evaluations, null, 2)}
+
+Evaluation Types:
+- "message": Evaluate each individual message (e.g., politeness, accuracy, tone)
+- "session": Evaluate cumulative progress across the entire conversation (e.g., goal completion, relationship building)
+
+Return evaluations on every message and update session-level metrics with each interaction.`,
 		];
 		try {
 			const result = streamText({
