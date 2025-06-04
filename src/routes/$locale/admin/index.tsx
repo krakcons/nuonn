@@ -13,6 +13,7 @@ import {
 import { getPersonasFn } from "@/lib/handlers/personas";
 import { getScenariosFn } from "@/lib/handlers/scenarios";
 import { useState } from "react";
+import { getContextsFn } from "@/lib/handlers/contexts";
 
 export const Route = createFileRoute("/$locale/admin/")({
 	component: RouteComponent,
@@ -20,7 +21,11 @@ export const Route = createFileRoute("/$locale/admin/")({
 		options: ChatInputSchema.optional(),
 	}),
 	loader: async () => {
-		return Promise.all([getPersonasFn(), getScenariosFn()]);
+		return Promise.all([
+			getPersonasFn(),
+			getScenariosFn(),
+			getContextsFn(),
+		]);
 	},
 });
 
@@ -42,8 +47,9 @@ const parseAssistantMessage = (
 };
 
 function RouteComponent() {
-	const [personas, scenarios] = Route.useLoaderData();
+	const [personas, scenarios, contexts] = Route.useLoaderData();
 	const [personaId, setPersonaId] = useState<string | null>(null);
+	const [contextId, setContextId] = useState<string | null>(null);
 	const { append, status, messages } = useChat({
 		initialMessages: [],
 		// @ts-ignore
@@ -59,6 +65,7 @@ function RouteComponent() {
 			content: "",
 			scenarioId: scenarios.length ? scenarios[0].id : null,
 			personaId: "random",
+			contextId: "random",
 		} as ChatInputType & { content: string },
 		validators: {
 			onSubmit: ChatInputSchema.extend({ content: z.string().min(1) }),
@@ -71,6 +78,12 @@ function RouteComponent() {
 			}
 			setPersonaId(p);
 
+			let c = contextId ?? body.contextId;
+			if (c === "random") {
+				c = contexts[Math.floor(Math.random() * contexts.length)].id;
+			}
+			setContextId(c);
+
 			append(
 				{
 					role: "user",
@@ -80,6 +93,7 @@ function RouteComponent() {
 					body: {
 						...body,
 						personaId: p,
+						contextId: c === "none" ? undefined : c,
 					},
 				},
 			);
@@ -126,6 +140,29 @@ function RouteComponent() {
 											label: s.data.name,
 											value: s.id,
 										}))}
+									/>
+								)}
+							/>
+							<form.AppField
+								name="contextId"
+								children={(field) => (
+									<field.SelectField
+										disabled={!!personaId}
+										label="Context"
+										options={[
+											{
+												label: "Random",
+												value: "random",
+											},
+											{
+												label: "None",
+												value: "none",
+											},
+											...contexts.map((p) => ({
+												label: p.data.name,
+												value: p.id,
+											})),
+										]}
 									/>
 								)}
 							/>

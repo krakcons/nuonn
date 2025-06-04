@@ -21,6 +21,7 @@ export const MessageSchema = z.object({
 export const ChatInputSchema = z.object({
 	scenarioId: z.string(),
 	personaId: z.string(),
+	contextId: z.string().optional(),
 });
 export type ChatInputType = z.infer<typeof ChatInputSchema>;
 
