@@ -53,7 +53,7 @@ export const deletePersonaFn = createServerFn()
 			);
 	});
 
-export const updatePersonaFn = createServerFn({ method: "POST" })
+export const createOrUpdatePersonaFn = createServerFn({ method: "POST" })
 	.middleware([protectedMiddleware])
 	.validator(PersonaSchema.extend({ id: z.string().optional() }))
 	.handler(async ({ data, context }) => {

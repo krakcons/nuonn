@@ -1,6 +1,6 @@
 import { ScenarioForm } from "@/components/forms/ScenarioForm";
 import { Page, PageHeader } from "@/components/Page";
-import { updateScenarioFn } from "@/lib/handlers/scenarios";
+import { createOrUpdateScenarioFn } from "@/lib/handlers/scenarios";
 import { useLocale } from "@/lib/locale";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
@@ -13,7 +13,7 @@ function RouteComponent() {
 	const navigate = useNavigate();
 	const locale = useLocale();
 	const createScenarioFn = useMutation({
-		mutationFn: updateScenarioFn,
+		mutationFn: createOrUpdateScenarioFn,
 		onSuccess: ({ id }) => {
 			navigate({
 				to: "/$locale/admin/scenarios/$id",

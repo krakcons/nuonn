@@ -106,6 +106,8 @@ const en = {
 		scenarios: "Scenarios",
 		editing: "Editing",
 		chat: "Chat",
+		settings: "Settings",
+		apiKeys: "API Keys",
 	},
 	Home: {
 		title: "AI Chat Engine",

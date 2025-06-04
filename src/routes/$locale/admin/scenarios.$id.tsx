@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import {
 	deleteScenarioFn,
 	getScenarioFn,
-	updateScenarioFn,
+	createOrUpdateScenarioFn,
 } from "@/lib/handlers/scenarios";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, notFound, useRouter } from "@tanstack/react-router";
@@ -27,7 +27,7 @@ function RouteComponent() {
 	const { id, data } = Route.useLoaderData();
 
 	const updateScenario = useMutation({
-		mutationFn: updateScenarioFn,
+		mutationFn: createOrUpdateScenarioFn,
 		onSuccess: () => {
 			router.invalidate();
 		},

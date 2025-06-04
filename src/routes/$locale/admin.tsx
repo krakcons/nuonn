@@ -42,7 +42,7 @@ import {
 	redirect,
 	useNavigate,
 } from "@tanstack/react-router";
-import { FileVideo, MessagesSquare, Plus, User } from "lucide-react";
+import { FileVideo, Key, MessagesSquare, Plus, User } from "lucide-react";
 import { z } from "zod";
 
 export const Route = createFileRoute("/$locale/admin")({
@@ -192,6 +192,28 @@ function RouteComponent() {
 											</Link>
 										</SidebarMenuItem>
 									))}
+								</SidebarMenu>
+							</SidebarGroupContent>
+						</SidebarGroup>
+						<SidebarGroup>
+							<SidebarGroupLabel>{t.settings}</SidebarGroupLabel>
+							<SidebarGroupContent>
+								<SidebarMenu>
+									<SidebarMenuItem>
+										<Link
+											to={`/$locale/admin/api-keys`}
+											from={Route.fullPath}
+										>
+											{({ isActive }) => (
+												<SidebarMenuButton
+													isActive={isActive}
+												>
+													<Key />
+													{t.apiKeys}
+												</SidebarMenuButton>
+											)}
+										</Link>
+									</SidebarMenuItem>
 								</SidebarMenu>
 							</SidebarGroupContent>
 						</SidebarGroup>

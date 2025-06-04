@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import {
 	deletePersonaFn,
 	getPersonaFn,
-	updatePersonaFn,
+	createOrUpdatePersonaFn,
 } from "@/lib/handlers/personas";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, notFound, useRouter } from "@tanstack/react-router";
@@ -27,7 +27,7 @@ function RouteComponent() {
 	const { id, data } = Route.useLoaderData();
 
 	const updatePersona = useMutation({
-		mutationFn: updatePersonaFn,
+		mutationFn: createOrUpdatePersonaFn,
 		onSuccess: () => {
 			router.invalidate();
 		},

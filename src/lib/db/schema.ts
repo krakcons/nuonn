@@ -38,11 +38,21 @@ export const scenarios = sqliteTable("scenarios", {
 	...dates,
 });
 
+export const apiKeys = sqliteTable("api_keys", {
+	id: text().primaryKey(),
+	organizationId: text().notNull(),
+	name: text().notNull(),
+	key: text().notNull(),
+	provider: text({ enum: ["openai"] }).notNull(),
+	...dates,
+});
+
 export const tableSchemas = {
 	...authSchema,
 	// CONTENT
 	personas,
 	scenarios,
+	apiKeys,
 };
 
 export const relationSchemas = {};

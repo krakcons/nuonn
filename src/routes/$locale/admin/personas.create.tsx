@@ -1,6 +1,6 @@
 import { PersonaForm } from "@/components/forms/PersonaForm";
 import { Page, PageHeader } from "@/components/Page";
-import { updatePersonaFn } from "@/lib/handlers/personas";
+import { createOrUpdatePersonaFn } from "@/lib/handlers/personas";
 import { useLocale } from "@/lib/locale";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
@@ -13,7 +13,7 @@ function RouteComponent() {
 	const navigate = useNavigate();
 	const locale = useLocale();
 	const createPersonaFn = useMutation({
-		mutationFn: updatePersonaFn,
+		mutationFn: createOrUpdatePersonaFn,
 		onSuccess: ({ id }) => {
 			navigate({
 				to: "/$locale/admin/personas/$id",

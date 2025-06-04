@@ -53,7 +53,7 @@ export const deleteScenarioFn = createServerFn()
 			);
 	});
 
-export const updateScenarioFn = createServerFn()
+export const createOrUpdateScenarioFn = createServerFn()
 	.middleware([protectedMiddleware])
 	.validator(ScenarioSchema.extend({ id: z.string().optional() }))
 	.handler(async ({ data, context }) => {
