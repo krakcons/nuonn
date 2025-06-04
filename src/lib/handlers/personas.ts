@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { personas } from "@/lib/db/schema";
 import { createServerFn } from "@tanstack/react-start";
-import { PersonaSchema } from "../ai";
+import { PersonaSchema } from "@/lib/types/personas";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { protectedMiddleware } from "./auth";

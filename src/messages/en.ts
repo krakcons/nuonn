@@ -108,6 +108,7 @@ const en = {
 		chat: "Chat",
 		settings: "Settings",
 		apiKeys: "API Keys",
+		contexts: "Contexts",
 	},
 	Home: {
 		title: "AI Chat Engine",

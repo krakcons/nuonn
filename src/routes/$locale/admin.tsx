@@ -26,6 +26,7 @@ import {
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { getOrganizationsFn, getSessionFn } from "@/lib/handlers/auth";
+import { getContextsFn } from "@/lib/handlers/contexts";
 import { getPersonasFn } from "@/lib/handlers/personas";
 import { getScenariosFn } from "@/lib/handlers/scenarios";
 import {
@@ -42,7 +43,14 @@ import {
 	redirect,
 	useNavigate,
 } from "@tanstack/react-router";
-import { FileVideo, Key, MessagesSquare, Plus, User } from "lucide-react";
+import {
+	FileVideo,
+	Gauge,
+	Key,
+	MessagesSquare,
+	Plus,
+	User,
+} from "lucide-react";
 import { z } from "zod";
 
 export const Route = createFileRoute("/$locale/admin")({
@@ -69,16 +77,19 @@ export const Route = createFileRoute("/$locale/admin")({
 			});
 		}
 
-		const [personas, scenarios, organizations] = await Promise.all([
-			getPersonasFn(),
-			getScenariosFn(),
-			getOrganizationsFn(),
-		]);
+		const [personas, scenarios, organizations, contexts] =
+			await Promise.all([
+				getPersonasFn(),
+				getScenariosFn(),
+				getOrganizationsFn(),
+				getContextsFn(),
+			]);
 
 		return {
 			personas,
 			scenarios,
 			organizations,
+			contexts,
 			user,
 			session: {
 				...session,
@@ -94,7 +105,7 @@ function RouteComponent() {
 	const search = Route.useSearch();
 	const editingLocale = search.locale ?? locale;
 	const navigate = useNavigate();
-	const { personas, scenarios, organizations, user, session } =
+	const { personas, scenarios, organizations, user, session, contexts } =
 		Route.useLoaderData();
 
 	return (
@@ -146,8 +157,9 @@ function RouteComponent() {
 									{personas.map((persona) => (
 										<SidebarMenuItem key={persona.id}>
 											<Link
-												to={`/$locale/admin/personas/${persona.id}`}
+												to="/$locale/admin/personas/$id"
 												from={Route.fullPath}
+												params={{ id: persona.id }}
 											>
 												{({ isActive }) => (
 													<SidebarMenuButton
@@ -155,6 +167,39 @@ function RouteComponent() {
 													>
 														<User />
 														{persona.data.name}
+													</SidebarMenuButton>
+												)}
+											</Link>
+										</SidebarMenuItem>
+									))}
+								</SidebarMenu>
+							</SidebarGroupContent>
+						</SidebarGroup>
+						<SidebarGroup>
+							<SidebarGroupLabel>{t.contexts}</SidebarGroupLabel>
+							<Link
+								to="/$locale/admin/contexts/create"
+								from={Route.fullPath}
+							>
+								<SidebarGroupAction>
+									<Plus />
+								</SidebarGroupAction>
+							</Link>
+							<SidebarGroupContent>
+								<SidebarMenu>
+									{contexts.map((context) => (
+										<SidebarMenuItem key={context.id}>
+											<Link
+												to="/$locale/admin/contexts/$id"
+												from={Route.fullPath}
+												params={{ id: context.id }}
+											>
+												{({ isActive }) => (
+													<SidebarMenuButton
+														isActive={isActive}
+													>
+														<Gauge />
+														{context.data.name}
 													</SidebarMenuButton>
 												)}
 											</Link>
@@ -178,8 +223,9 @@ function RouteComponent() {
 									{scenarios.map((scenario) => (
 										<SidebarMenuItem key={scenario.id}>
 											<Link
-												to={`/$locale/admin/scenarios/${scenario.id}`}
+												to="/$locale/admin/scenarios/$id"
 												from={Route.fullPath}
+												params={{ id: scenario.id }}
 											>
 												{({ isActive }) => (
 													<SidebarMenuButton

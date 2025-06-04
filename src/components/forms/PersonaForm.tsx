@@ -1,8 +1,8 @@
 import { PageSubHeader } from "@/components/Page";
 import { Button } from "@/components/ui/button";
 import { useAppForm } from "@/components/ui/form";
-import { PersonaSchema, type PersonaType } from "@/lib/ai";
-import { Minus, Plus, Trash } from "lucide-react";
+import { PersonaSchema, type PersonaType } from "@/lib/types/personas";
+import { Plus, Trash } from "lucide-react";
 import {
 	Card,
 	CardAction,

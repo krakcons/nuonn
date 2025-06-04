@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { scenarios } from "@/lib/db/schema";
 import { createServerFn } from "@tanstack/react-start";
-import { ScenarioSchema } from "../ai";
+import { ScenarioSchema } from "@/lib/types/scenarios";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { protectedMiddleware } from "./auth";

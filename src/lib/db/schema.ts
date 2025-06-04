@@ -1,7 +1,9 @@
 import { sql } from "drizzle-orm";
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
-import type { PersonaType, ScenarioType } from "../ai";
 import * as authSchema from "./auth";
+import type { ContextType } from "../types/contexts";
+import type { PersonaType } from "../types/personas";
+import type { ScenarioType } from "../types/scenarios";
 export * from "./auth";
 
 // Enums
@@ -38,6 +40,13 @@ export const scenarios = sqliteTable("scenarios", {
 	...dates,
 });
 
+export const contexts = sqliteTable("contexts", {
+	id: text().primaryKey(),
+	organizationId: text().notNull(),
+	data: text({ mode: "json" }).$type<ContextType>().notNull(),
+	...dates,
+});
+
 export const apiKeys = sqliteTable("api_keys", {
 	id: text().primaryKey(),
 	organizationId: text().notNull(),
@@ -52,6 +61,7 @@ export const tableSchemas = {
 	// CONTENT
 	personas,
 	scenarios,
+	contexts,
 	apiKeys,
 };
 

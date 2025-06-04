@@ -3,7 +3,7 @@ import { protectedMiddleware } from "./auth";
 import { db } from "../db";
 import { eq, and } from "drizzle-orm";
 import { apiKeys } from "../db/schema";
-import { ApiKeyFormSchema, ApiKeySchema } from "./apiKeys.types";
+import { ApiKeyFormSchema, ApiKeySchema } from "@/lib/types/apiKeys";
 
 export const getApiKeysFn = createServerFn()
 	.middleware([protectedMiddleware])

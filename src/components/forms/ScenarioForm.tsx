@@ -1,7 +1,7 @@
 import { PageSubHeader } from "@/components/Page";
 import { Button } from "@/components/ui/button";
 import { useAppForm } from "@/components/ui/form";
-import { type ScenarioType, ScenarioSchema } from "@/lib/ai";
+import { type ScenarioType, ScenarioSchema } from "@/lib/types/scenarios";
 import { Plus, Trash } from "lucide-react";
 import {
 	Card,
@@ -51,8 +51,6 @@ export const ScenarioForm = ({
 		},
 		onSubmit,
 	});
-
-	console.log(form.state);
 
 	return (
 		<form.AppForm>
