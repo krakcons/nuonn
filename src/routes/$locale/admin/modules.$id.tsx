@@ -2,11 +2,7 @@ import { ModuleForm } from "@/components/forms/ModuleForm";
 import { Page, PageHeader } from "@/components/Page";
 import { Button } from "@/components/ui/button";
 import { getApiKeysFn } from "@/lib/handlers/apiKeys";
-import {
-	createOrUpdateContextFn,
-	getContextFn,
-	getContextsFn,
-} from "@/lib/handlers/contexts";
+import { getContextsFn } from "@/lib/handlers/contexts";
 import {
 	createOrUpdateModuleFn,
 	deleteModuleFn,
@@ -17,6 +13,7 @@ import { getScenariosFn } from "@/lib/handlers/scenarios";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, notFound, useRouter } from "@tanstack/react-router";
 import { Trash } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/$locale/admin/modules/$id")({
 	component: RouteComponent,
@@ -45,6 +42,7 @@ function RouteComponent() {
 	const updateModule = useMutation({
 		mutationFn: createOrUpdateModuleFn,
 		onSuccess: () => {
+			toast.success("Module updated successfully");
 			router.invalidate();
 		},
 	});
@@ -52,6 +50,7 @@ function RouteComponent() {
 	const deleteModule = useMutation({
 		mutationFn: deleteModuleFn,
 		onSuccess: () => {
+			toast.success("Module deleted successfully");
 			navigate({
 				to: "/$locale/admin",
 			});

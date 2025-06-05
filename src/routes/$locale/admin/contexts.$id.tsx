@@ -9,6 +9,7 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, notFound, useRouter } from "@tanstack/react-router";
 import { Trash } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/$locale/admin/contexts/$id")({
 	component: RouteComponent,
@@ -29,6 +30,7 @@ function RouteComponent() {
 	const updateContext = useMutation({
 		mutationFn: createOrUpdateContextFn,
 		onSuccess: () => {
+			toast.success("Context updated successfully");
 			router.invalidate();
 		},
 	});
@@ -36,6 +38,7 @@ function RouteComponent() {
 	const deleteContext = useMutation({
 		mutationFn: deleteContextFn,
 		onSuccess: () => {
+			toast.success("Context deleted successfully");
 			navigate({
 				to: "/$locale/admin",
 			});

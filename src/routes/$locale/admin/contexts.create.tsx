@@ -4,6 +4,7 @@ import { createOrUpdateContextFn } from "@/lib/handlers/contexts";
 import { useLocale } from "@/lib/locale";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/$locale/admin/contexts/create")({
 	component: RouteComponent,
@@ -15,6 +16,7 @@ function RouteComponent() {
 	const createContext = useMutation({
 		mutationFn: createOrUpdateContextFn,
 		onSuccess: ({ id }) => {
+			toast.success("Context created successfully");
 			navigate({
 				to: "/$locale/admin/contexts/$id",
 				params: {

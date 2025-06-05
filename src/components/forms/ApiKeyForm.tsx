@@ -3,7 +3,7 @@ import {
 	ApiKeyFormSchema,
 	type ApiKeyFormType,
 	type ApiKeyType,
-} from "@/lib/handlers/apiKeys.types";
+} from "@/lib/types/apiKeys";
 
 const apiKeyLocations: Record<ApiKeyType["provider"], string> = {
 	openai: "https://platform.openai.com/settings/organization/api-keys",

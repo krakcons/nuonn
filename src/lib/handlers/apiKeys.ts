@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { protectedMiddleware } from "./auth";
 import { db } from "../db";
 import { eq, and } from "drizzle-orm";
-import { apiKeys } from "../db/schema";
+import { apiKeys, modules } from "../db/schema";
 import { ApiKeyFormSchema, ApiKeySchema } from "@/lib/types/apiKeys";
 
 export const getApiKeysFn = createServerFn()
@@ -46,6 +46,22 @@ export const deleteApiKeyFn = createServerFn()
 	.middleware([protectedMiddleware])
 	.validator(ApiKeySchema.pick({ id: true }))
 	.handler(async ({ context, data }) => {
+		const moduleList = await db.query.modules.findMany({
+			where: and(
+				eq(
+					modules.organizationId,
+					context.session.activeOrganizationId,
+				),
+				eq(modules.apiKeyId, data.id),
+			),
+		});
+
+		if (moduleList.length > 0) {
+			throw new Error(
+				`Cannot delete API key, it is in use by ${moduleList.length} module(s)`,
+			);
+		}
+
 		return await db
 			.delete(apiKeys)
 			.where(

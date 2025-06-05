@@ -164,7 +164,7 @@ const SelectField = ({
 	...props
 }: React.ComponentProps<React.FC<SelectProps>> &
 	DefaultOptions & {
-		placeholder: string;
+		placeholder?: string;
 		options: {
 			label: string;
 			value: string;

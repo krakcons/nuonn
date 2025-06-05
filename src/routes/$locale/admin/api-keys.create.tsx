@@ -3,6 +3,7 @@ import { Page, PageHeader } from "@/components/Page";
 import { createOrUpdateApiKeyFn } from "@/lib/handlers/apiKeys";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/$locale/admin/api-keys/create")({
 	component: RouteComponent,
@@ -14,6 +15,7 @@ function RouteComponent() {
 	const createApiKey = useMutation({
 		mutationFn: createOrUpdateApiKeyFn,
 		onSuccess: () => {
+			toast.success("API key created successfully");
 			navigate({
 				to: "/$locale/admin/api-keys",
 			});

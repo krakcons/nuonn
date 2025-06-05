@@ -14,6 +14,7 @@ import {
 	rootLocaleMiddleware,
 } from "@/lib/locale.tsx";
 import { getThemeFn, getThemeQueryOptions } from "@/lib/theme";
+import { Toaster } from "sonner";
 
 interface MyRouterContext {
 	queryClient: QueryClient;
@@ -93,6 +94,7 @@ function RootDocument() {
 				<IntlProvider i18n={i18n}>
 					<Outlet />
 				</IntlProvider>
+				<Toaster />
 				<Scripts />
 			</body>
 		</html>

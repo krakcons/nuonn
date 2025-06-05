@@ -8,6 +8,7 @@ import { getScenariosFn } from "@/lib/handlers/scenarios";
 import { useLocale } from "@/lib/locale";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/$locale/admin/modules/create")({
 	component: RouteComponent,
@@ -28,6 +29,7 @@ function RouteComponent() {
 	const createModule = useMutation({
 		mutationFn: createOrUpdateModuleFn,
 		onSuccess: ({ id }) => {
+			toast.success("Module created successfully");
 			navigate({
 				to: "/$locale/admin/modules/$id",
 				params: {

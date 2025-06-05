@@ -5,10 +5,11 @@ import {
 import { Page, PageHeader } from "@/components/Page";
 import { buttonVariants } from "@/components/ui/button";
 import { deleteApiKeyFn, getApiKeysFn } from "@/lib/handlers/apiKeys";
-import type { ApiKeyType } from "@/lib/handlers/apiKeys.types";
+import type { ApiKeyType } from "@/lib/types/apiKeys";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/$locale/admin/api-keys/")({
 	component: RouteComponent,
@@ -25,6 +26,7 @@ function RouteComponent() {
 	const deleteApiKey = useMutation({
 		mutationFn: deleteApiKeyFn,
 		onSuccess: () => {
+			toast.success("API key deleted successfully");
 			router.invalidate();
 		},
 	});
