@@ -1,17 +1,17 @@
 import { useAppForm } from "@/components/ui/form";
-import { ContextSchema, type ContextType } from "@/lib/types/contexts";
+import { ContextDataSchema, type ContextDataType } from "@/lib/types/contexts";
 
 export const ContextForm = ({
 	defaultValues,
 	onSubmit,
 }: {
-	defaultValues?: ContextType;
-	onSubmit: ({ value }: { value: ContextType }) => Promise<any>;
+	defaultValues?: ContextDataType;
+	onSubmit: ({ value }: { value: ContextDataType }) => Promise<any>;
 }) => {
 	const form = useAppForm({
 		defaultValues,
 		validators: {
-			onSubmit: ContextSchema,
+			onSubmit: ContextDataSchema,
 		},
 		onSubmit,
 	});

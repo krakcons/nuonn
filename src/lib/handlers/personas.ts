@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { personas } from "@/lib/db/schema";
 import { createServerFn } from "@tanstack/react-start";
-import { PersonaSchema } from "@/lib/types/personas";
+import { PersonaDataSchema } from "@/lib/types/personas";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { protectedMiddleware } from "./auth";
@@ -55,13 +55,13 @@ export const deletePersonaFn = createServerFn()
 
 export const createOrUpdatePersonaFn = createServerFn({ method: "POST" })
 	.middleware([protectedMiddleware])
-	.validator(PersonaSchema.extend({ id: z.string().optional() }))
-	.handler(async ({ data, context }) => {
-		const id = data.id ?? Bun.randomUUIDv7();
+	.validator(PersonaDataSchema.extend({ id: z.string().optional() }))
+	.handler(async ({ data: { id, ...data }, context }) => {
+		const personaId = id ?? Bun.randomUUIDv7();
 		await db
 			.insert(personas)
 			.values({
-				id,
+				id: personaId,
 				data,
 				organizationId: context.session.activeOrganizationId,
 			})
@@ -76,6 +76,6 @@ export const createOrUpdatePersonaFn = createServerFn({ method: "POST" })
 				),
 			});
 		return {
-			id,
+			id: personaId,
 		};
 	});

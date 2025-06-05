@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/sidebar";
 import { getOrganizationsFn, getSessionFn } from "@/lib/handlers/auth";
 import { getContextsFn } from "@/lib/handlers/contexts";
+import { getModulesFn } from "@/lib/handlers/modules";
 import { getPersonasFn } from "@/lib/handlers/personas";
 import { getScenariosFn } from "@/lib/handlers/scenarios";
 import {
@@ -44,6 +45,7 @@ import {
 	useNavigate,
 } from "@tanstack/react-router";
 import {
+	Component,
 	FileVideo,
 	Gauge,
 	Key,
@@ -77,12 +79,13 @@ export const Route = createFileRoute("/$locale/admin")({
 			});
 		}
 
-		const [personas, scenarios, organizations, contexts] =
+		const [personas, scenarios, organizations, contexts, modules] =
 			await Promise.all([
 				getPersonasFn(),
 				getScenariosFn(),
 				getOrganizationsFn(),
 				getContextsFn(),
+				getModulesFn(),
 			]);
 
 		return {
@@ -91,6 +94,7 @@ export const Route = createFileRoute("/$locale/admin")({
 			organizations,
 			contexts,
 			user,
+			modules,
 			session: {
 				...session,
 				activeOrganizationId: session.activeOrganizationId,
@@ -105,8 +109,15 @@ function RouteComponent() {
 	const search = Route.useSearch();
 	const editingLocale = search.locale ?? locale;
 	const navigate = useNavigate();
-	const { personas, scenarios, organizations, user, session, contexts } =
-		Route.useLoaderData();
+	const {
+		personas,
+		scenarios,
+		organizations,
+		user,
+		session,
+		contexts,
+		modules,
+	} = Route.useLoaderData();
 
 	return (
 		<div>
@@ -139,6 +150,39 @@ function RouteComponent() {
 											)}
 										</Link>
 									</SidebarMenuItem>
+								</SidebarMenu>
+							</SidebarGroupContent>
+						</SidebarGroup>
+						<SidebarGroup>
+							<SidebarGroupLabel>{t.modules}</SidebarGroupLabel>
+							<Link
+								to="/$locale/admin/modules/create"
+								from={Route.fullPath}
+							>
+								<SidebarGroupAction>
+									<Plus />
+								</SidebarGroupAction>
+							</Link>
+							<SidebarGroupContent>
+								<SidebarMenu>
+									{modules.map((modules) => (
+										<SidebarMenuItem key={modules.id}>
+											<Link
+												to="/$locale/admin/modules/$id"
+												from={Route.fullPath}
+												params={{ id: modules.id }}
+											>
+												{({ isActive }) => (
+													<SidebarMenuButton
+														isActive={isActive}
+													>
+														<Component />
+														{modules.data.name}
+													</SidebarMenuButton>
+												)}
+											</Link>
+										</SidebarMenuItem>
+									))}
 								</SidebarMenu>
 							</SidebarGroupContent>
 						</SidebarGroup>

@@ -8,7 +8,7 @@ const EvaluationSchema = z.object({
 	measure: z.string(),
 });
 
-export const ScenarioSchema = z.object({
+export const ScenarioDataSchema = z.object({
 	name: z.string(),
 	description: z.string(),
 	persona: z.object({
@@ -21,5 +21,14 @@ export const ScenarioSchema = z.object({
 		goals: z.string(),
 		evaluations: EvaluationSchema.array(),
 	}),
+});
+export type ScenarioDataType = z.infer<typeof ScenarioDataSchema>;
+
+export const ScenarioSchema = z.object({
+	id: z.string(),
+	organizationId: z.string(),
+	data: ScenarioDataSchema,
+	updatedAt: z.date(),
+	createdAt: z.date(),
 });
 export type ScenarioType = z.infer<typeof ScenarioSchema>;

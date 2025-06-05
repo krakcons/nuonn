@@ -1,7 +1,10 @@
 import { PageSubHeader } from "@/components/Page";
 import { Button } from "@/components/ui/button";
 import { useAppForm } from "@/components/ui/form";
-import { type ScenarioType, ScenarioSchema } from "@/lib/types/scenarios";
+import {
+	type ScenarioDataType,
+	ScenarioDataSchema,
+} from "@/lib/types/scenarios";
 import { Plus, Trash } from "lucide-react";
 import {
 	Card,
@@ -15,8 +18,8 @@ export const ScenarioForm = ({
 	defaultValues,
 	onSubmit,
 }: {
-	defaultValues?: ScenarioType;
-	onSubmit: ({ value }: { value: ScenarioType }) => Promise<any>;
+	defaultValues?: ScenarioDataType;
+	onSubmit: ({ value }: { value: ScenarioDataType }) => Promise<any>;
 }) => {
 	const form = useAppForm({
 		defaultValues: {
@@ -45,9 +48,9 @@ export const ScenarioForm = ({
 				],
 			},
 			...defaultValues,
-		} as ScenarioType,
+		} as ScenarioDataType,
 		validators: {
-			onSubmit: ScenarioSchema,
+			onSubmit: ScenarioDataSchema,
 		},
 		onSubmit,
 	});

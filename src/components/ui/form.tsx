@@ -31,6 +31,7 @@ import { Checkbox } from "./checkbox";
 import { Loader2 } from "lucide-react";
 import { useTranslations } from "@/lib/locale";
 import type { SelectProps } from "@radix-ui/react-select";
+import MultipleSelector, { type MultipleSelectorProps } from "./multi-select";
 const { fieldContext, useFieldContext, formContext, useFormContext } =
 	createFormHookContexts();
 
@@ -159,9 +160,11 @@ const CheckboxField = (props: DefaultOptions) => {
 
 const SelectField = ({
 	options,
+	placeholder,
 	...props
 }: React.ComponentProps<React.FC<SelectProps>> &
 	DefaultOptions & {
+		placeholder: string;
 		options: {
 			label: string;
 			value: string;
@@ -177,7 +180,7 @@ const SelectField = ({
 				{...props}
 			>
 				<SelectTrigger className="gap-1" id={field.name}>
-					<SelectValue />
+					<SelectValue placeholder={placeholder} />
 				</SelectTrigger>
 				<SelectContent>
 					<SelectGroup>
@@ -189,6 +192,37 @@ const SelectField = ({
 					</SelectGroup>
 				</SelectContent>
 			</Select>
+			<Description {...props} />
+			<Error errors={field.getMeta().errors} />
+		</Field>
+	);
+};
+
+const MultiSelectField = ({
+	options,
+	...props
+}: React.ComponentProps<React.FC<MultipleSelectorProps>> &
+	DefaultOptions & {
+		options: {
+			label: string;
+			value: string;
+		}[];
+	}) => {
+	const field = useFieldContext<string[]>();
+	return (
+		<Field>
+			<Title {...props} htmlFor={field.name} />
+			<MultipleSelector
+				selectFirstItem={false}
+				onChange={(value) => {
+					field.setValue(value.map((v) => v.value));
+				}}
+				emptyIndicator={
+					<p className="text-muted-foreground">No results found</p>
+				}
+				options={options}
+				{...props}
+			/>
 			<Description {...props} />
 			<Error errors={field.getMeta().errors} />
 		</Field>
@@ -377,6 +411,7 @@ const { useAppForm } = createFormHook({
 		TextField,
 		TextAreaField,
 		SelectField,
+		MultiSelectField,
 		CheckboxField,
 		FileField,
 		ImageField,

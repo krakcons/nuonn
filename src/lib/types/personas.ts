@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const StatLevelSchema = z.enum(["low", "medium", "high"]);
 
-export const PersonaSchema = z.object({
+export const PersonaDataSchema = z.object({
 	// Info
 	name: z.string(),
 	age: z.string().optional(),
@@ -43,5 +43,14 @@ export const PersonaSchema = z.object({
 			written: StatLevelSchema.optional(),
 		})
 		.array(),
+});
+export type PersonaDataType = z.infer<typeof PersonaDataSchema>;
+
+export const PersonaSchema = z.object({
+	id: z.string(),
+	organizationId: z.string(),
+	data: PersonaDataSchema,
+	updatedAt: z.date(),
+	createdAt: z.date(),
 });
 export type PersonaType = z.infer<typeof PersonaSchema>;

@@ -3,7 +3,7 @@ import { protectedMiddleware } from "./auth";
 import { db } from "../db";
 import { eq, and } from "drizzle-orm";
 import { contexts } from "../db/schema";
-import { ContextSchema } from "../types/contexts";
+import { ContextDataSchema } from "../types/contexts";
 import { z } from "zod";
 
 export const getContextsFn = createServerFn()
@@ -38,13 +38,13 @@ export const getContextFn = createServerFn()
 
 export const createOrUpdateContextFn = createServerFn()
 	.middleware([protectedMiddleware])
-	.validator(ContextSchema.extend({ id: z.string().optional() }))
-	.handler(async ({ context, data }) => {
-		const id = data.id ?? Bun.randomUUIDv7();
+	.validator(ContextDataSchema.extend({ id: z.string().optional() }))
+	.handler(async ({ context, data: { id, ...data } }) => {
+		const contextId = id ?? Bun.randomUUIDv7();
 		await db
 			.insert(contexts)
 			.values({
-				id,
+				id: contextId,
 				organizationId: context.session.activeOrganizationId,
 				data,
 			})
@@ -60,7 +60,7 @@ export const createOrUpdateContextFn = createServerFn()
 				),
 			});
 		return {
-			id,
+			id: contextId,
 		};
 	});
 

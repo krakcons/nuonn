@@ -1,7 +1,7 @@
 import { PageSubHeader } from "@/components/Page";
 import { Button } from "@/components/ui/button";
 import { useAppForm } from "@/components/ui/form";
-import { PersonaSchema, type PersonaType } from "@/lib/types/personas";
+import { PersonaDataSchema, type PersonaDataType } from "@/lib/types/personas";
 import { Plus, Trash } from "lucide-react";
 import {
 	Card,
@@ -15,8 +15,8 @@ export const PersonaForm = ({
 	defaultValues,
 	onSubmit,
 }: {
-	defaultValues?: PersonaType;
-	onSubmit: ({ value }: { value: PersonaType }) => Promise<any>;
+	defaultValues?: PersonaDataType;
+	onSubmit: ({ value }: { value: PersonaDataType }) => Promise<any>;
 }) => {
 	const form = useAppForm({
 		defaultValues: {
@@ -34,9 +34,9 @@ export const PersonaForm = ({
 				},
 			],
 			...defaultValues,
-		} as PersonaType,
+		} as PersonaDataType,
 		validators: {
-			onSubmit: PersonaSchema,
+			onSubmit: PersonaDataSchema,
 		},
 		onSubmit,
 	});
