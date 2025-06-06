@@ -6,51 +6,28 @@ import { contexts, personas, scenarios } from "@/lib/db/schema";
 import { db } from "@/lib/db";
 import { and, eq, inArray } from "drizzle-orm";
 import { z } from "zod";
-import { protectedMiddleware } from "./auth";
 
 export const getChatResponseFn = createServerFn({
 	method: "POST",
 	response: "raw",
 })
-	.middleware([protectedMiddleware])
 	.validator(
 		ChatInputSchema.extend({
 			messages: z.any(),
 		}),
 	)
 	.handler(
-		async ({
-			data: { messages, scenarioId, personaId, contextIds },
-			context,
-		}) => {
+		async ({ data: { messages, scenarioId, personaId, contextIds } }) => {
 			const [scenario, persona, chatContexts] = await Promise.all([
 				db.query.scenarios.findFirst({
-					where: and(
-						eq(scenarios.id, scenarioId),
-						eq(
-							scenarios.organizationId,
-							context.session.activeOrganizationId,
-						),
-					),
+					where: eq(scenarios.id, scenarioId),
 				}),
 				db.query.personas.findFirst({
-					where: and(
-						eq(personas.id, personaId),
-						eq(
-							personas.organizationId,
-							context.session.activeOrganizationId,
-						),
-					),
+					where: eq(personas.id, personaId),
 				}),
 				contextIds &&
 					db.query.contexts.findMany({
-						where: and(
-							inArray(contexts.id, contextIds),
-							eq(
-								contexts.organizationId,
-								context.session.activeOrganizationId,
-							),
-						),
+						where: inArray(contexts.id, contextIds),
 					}),
 			]);
 			if (!scenario || !persona)

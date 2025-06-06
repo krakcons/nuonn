@@ -99,7 +99,7 @@ function RouteComponent() {
 		zip.file("imsmanifest.xml", imsManifest(chatModule));
 		zip.file(
 			"index.html",
-			`<iframe src="${window.location.origin}/modules/${id}/play" style="width: 100%; height: 100%;"></iframe>`,
+			`<script src="${window.location.origin}/scorm.js"></script><iframe src="${window.location.origin}/modules/${id}/play" style="width: 100%; height: 100%;"></iframe>`,
 		);
 		const response = await fetch("logo.svg");
 		const blob = await response.blob();

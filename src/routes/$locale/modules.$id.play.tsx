@@ -12,6 +12,7 @@ import {
 	type ChatResponseType,
 } from "@/lib/ai";
 import { useScorm } from "@/lib/scorm";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/$locale/modules/$id/play")({
 	component: RouteComponent,
@@ -41,14 +42,21 @@ const parseAssistantMessage = (
 	return undefined;
 };
 
-function RouteComponent() {
-	const [chatModule] = Route.useLoaderData();
-	const { api, error } = useScorm();
-
-	console.log(api, error);
-
+const Chat = ({
+	initialMessages,
+	scenarioId,
+	personaIds,
+	contextIds,
+	onChange,
+}: {
+	initialMessages?: Message[];
+	scenarioId: string;
+	personaIds: string[];
+	contextIds: string[];
+	onChange?: (messages: Message[]) => void;
+}) => {
 	const { append, status, messages } = useChat({
-		initialMessages: [],
+		initialMessages: initialMessages ?? [],
 		// @ts-ignore
 		fetch: (_, options) => {
 			const body = JSON.parse(options!.body! as string);
@@ -60,14 +68,10 @@ function RouteComponent() {
 	const form = useAppForm({
 		defaultValues: {
 			content: "",
-			scenarioId: chatModule.data.scenarioId,
+			scenarioId,
 			personaId:
-				chatModule.data.personaIds[
-					Math.floor(
-						Math.random() * chatModule.data.personaIds.length,
-					)
-				],
-			contextIds: chatModule.data.contextIds,
+				personaIds[Math.floor(Math.random() * personaIds.length)],
+			contextIds,
 		} as ChatInputType & { content: string },
 		validators: {
 			onSubmit: ChatInputSchema.extend({ content: z.string().min(1) }),
@@ -87,6 +91,11 @@ function RouteComponent() {
 	});
 
 	const reversedMessages = messages.slice().reverse();
+
+	useEffect(() => {
+		if (status !== "ready" || !onChange) return;
+		onChange(messages);
+	}, [messages, status]);
 
 	return (
 		<Page>
@@ -145,14 +154,14 @@ function RouteComponent() {
 										json.evaluations.length > 0)) && (
 									<div className="border px-3 py-2 flex flex-col gap-2">
 										{json.stats &&
-											json.stats.map((s) => (
-												<p key={s.name}>
+											json.stats.map((s, i) => (
+												<p key={i}>
 													{s.name} ({s.value})
 												</p>
 											))}
 										{json.evaluations &&
-											json.evaluations.map((s) => (
-												<p key={s.name}>
+											json.evaluations.map((s, i) => (
+												<p key={i}>
 													{s.name} ({s.value})
 												</p>
 											))}
@@ -164,5 +173,38 @@ function RouteComponent() {
 				</div>
 			</div>
 		</Page>
+	);
+};
+
+function RouteComponent() {
+	const [chatModule] = Route.useLoaderData();
+	const { sendEvent, messages: scormMessages } = useScorm();
+
+	useEffect(() => {
+		sendEvent("LMSInitialize");
+		sendEvent("LMSGetValue", "cmi.core.suspend_data");
+	}, []);
+
+	const initialMessages = scormMessages.find(
+		(m) => m.event.method === "LMSGetValue" && m.response,
+	)?.response?.result;
+
+	if (!initialMessages) {
+		return <div>Loading...</div>;
+	}
+
+	return (
+		<Chat
+			initialMessages={JSON.parse(initialMessages)}
+			scenarioId={chatModule.data.scenarioId}
+			personaIds={chatModule.data.personaIds}
+			contextIds={chatModule.data.contextIds}
+			onChange={(messages) => {
+				sendEvent("LMSSetValue", {
+					element: "cmi.core.suspend_data",
+					value: JSON.stringify(messages),
+				});
+			}}
+		/>
 	);
 }
