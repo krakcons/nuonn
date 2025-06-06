@@ -18,21 +18,14 @@ export const getModulesFn = createServerFn()
 	});
 
 export const getModuleFn = createServerFn()
-	.middleware([protectedMiddleware])
 	.validator(
 		z.object({
 			id: z.string(),
 		}),
 	)
-	.handler(async ({ data: { id }, context }) => {
+	.handler(async ({ data: { id } }) => {
 		return await db.query.modules.findFirst({
-			where: and(
-				eq(modules.id, id),
-				eq(
-					modules.organizationId,
-					context.session.activeOrganizationId,
-				),
-			),
+			where: eq(modules.id, id),
 		});
 	});
 

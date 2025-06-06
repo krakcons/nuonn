@@ -11,15 +11,16 @@ import {
 	type ChatInputType,
 	type ChatResponseType,
 } from "@/lib/ai";
+import { useScorm } from "@/lib/scorm";
 
-export const Route = createFileRoute("/$locale/admin/modules/$id/play")({
+export const Route = createFileRoute("/$locale/modules/$id/play")({
 	component: RouteComponent,
 	loader: async ({ params: { id } }) => {
-		const module = await getModuleFn({
+		const chatModule = await getModuleFn({
 			data: { id },
 		});
-		if (!module) throw notFound();
-		return Promise.all([module]);
+		if (!chatModule) throw notFound();
+		return Promise.all([chatModule]);
 	},
 });
 
@@ -42,6 +43,9 @@ const parseAssistantMessage = (
 
 function RouteComponent() {
 	const [chatModule] = Route.useLoaderData();
+	const { api, error } = useScorm();
+
+	console.log(api, error);
 
 	const { append, status, messages } = useChat({
 		initialMessages: [],
