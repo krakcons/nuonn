@@ -1,6 +1,6 @@
 import { ModuleForm } from "@/components/forms/ModuleForm";
 import { Page, PageHeader } from "@/components/Page";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { getApiKeysFn } from "@/lib/handlers/apiKeys";
 import { getContextsFn } from "@/lib/handlers/contexts";
 import {
@@ -11,11 +11,16 @@ import {
 import { getPersonasFn } from "@/lib/handlers/personas";
 import { getScenariosFn } from "@/lib/handlers/scenarios";
 import { useMutation } from "@tanstack/react-query";
-import { createFileRoute, notFound, useRouter } from "@tanstack/react-router";
-import { Trash } from "lucide-react";
+import {
+	createFileRoute,
+	Link,
+	notFound,
+	useRouter,
+} from "@tanstack/react-router";
+import { Play, Trash } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/$locale/admin/modules/$id")({
+export const Route = createFileRoute("/$locale/admin/modules/$id/")({
 	component: RouteComponent,
 	loader: async ({ params: { id } }) => {
 		const module = await getModuleFn({
@@ -60,19 +65,30 @@ function RouteComponent() {
 	return (
 		<Page>
 			<PageHeader title={data.name} description="Edit this module">
-				<Button
-					variant="secondary"
-					onClick={() => {
-						deleteModule.mutate({
-							data: {
-								id,
-							},
-						});
-					}}
-				>
-					<Trash />
-					Delete
-				</Button>
+				<div className="flex gap-2">
+					<Link
+						to="/$locale/admin/modules/$id/play"
+						params={{ id }}
+						from={Route.fullPath}
+						className={buttonVariants()}
+					>
+						<Play />
+						Preview
+					</Link>
+					<Button
+						variant="secondary"
+						onClick={() => {
+							deleteModule.mutate({
+								data: {
+									id,
+								},
+							});
+						}}
+					>
+						<Trash />
+						Delete
+					</Button>
+				</div>
 			</PageHeader>
 			<ModuleForm
 				key={id}

@@ -23,10 +23,10 @@ import { Route as LocaleAdminScenariosIdImport } from './routes/$locale/admin/sc
 import { Route as LocaleAdminPersonasCreateImport } from './routes/$locale/admin/personas.create'
 import { Route as LocaleAdminPersonasIdImport } from './routes/$locale/admin/personas.$id'
 import { Route as LocaleAdminModulesCreateImport } from './routes/$locale/admin/modules.create'
-import { Route as LocaleAdminModulesIdImport } from './routes/$locale/admin/modules.$id'
 import { Route as LocaleAdminContextsCreateImport } from './routes/$locale/admin/contexts.create'
 import { Route as LocaleAdminContextsIdImport } from './routes/$locale/admin/contexts.$id'
 import { Route as LocaleAdminApiKeysCreateImport } from './routes/$locale/admin/api-keys.create'
+import { Route as LocaleAdminModulesIdIndexImport } from './routes/$locale/admin/modules.$id.index'
 import { Route as LocaleAdminModulesIdPlayImport } from './routes/$locale/admin/modules.$id.play'
 
 // Create/Update Routes
@@ -105,12 +105,6 @@ const LocaleAdminModulesCreateRoute = LocaleAdminModulesCreateImport.update({
   getParentRoute: () => LocaleAdminRoute,
 } as any)
 
-const LocaleAdminModulesIdRoute = LocaleAdminModulesIdImport.update({
-  id: '/modules/$id',
-  path: '/modules/$id',
-  getParentRoute: () => LocaleAdminRoute,
-} as any)
-
 const LocaleAdminContextsCreateRoute = LocaleAdminContextsCreateImport.update({
   id: '/contexts/create',
   path: '/contexts/create',
@@ -129,10 +123,16 @@ const LocaleAdminApiKeysCreateRoute = LocaleAdminApiKeysCreateImport.update({
   getParentRoute: () => LocaleAdminRoute,
 } as any)
 
+const LocaleAdminModulesIdIndexRoute = LocaleAdminModulesIdIndexImport.update({
+  id: '/modules/$id/',
+  path: '/modules/$id/',
+  getParentRoute: () => LocaleAdminRoute,
+} as any)
+
 const LocaleAdminModulesIdPlayRoute = LocaleAdminModulesIdPlayImport.update({
-  id: '/play',
-  path: '/play',
-  getParentRoute: () => LocaleAdminModulesIdRoute,
+  id: '/modules/$id/play',
+  path: '/modules/$id/play',
+  getParentRoute: () => LocaleAdminRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -202,13 +202,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LocaleAdminContextsCreateImport
       parentRoute: typeof LocaleAdminImport
     }
-    '/$locale/admin/modules/$id': {
-      id: '/$locale/admin/modules/$id'
-      path: '/modules/$id'
-      fullPath: '/$locale/admin/modules/$id'
-      preLoaderRoute: typeof LocaleAdminModulesIdImport
-      parentRoute: typeof LocaleAdminImport
-    }
     '/$locale/admin/modules/create': {
       id: '/$locale/admin/modules/create'
       path: '/modules/create'
@@ -253,39 +246,36 @@ declare module '@tanstack/react-router' {
     }
     '/$locale/admin/modules/$id/play': {
       id: '/$locale/admin/modules/$id/play'
-      path: '/play'
+      path: '/modules/$id/play'
       fullPath: '/$locale/admin/modules/$id/play'
       preLoaderRoute: typeof LocaleAdminModulesIdPlayImport
-      parentRoute: typeof LocaleAdminModulesIdImport
+      parentRoute: typeof LocaleAdminImport
+    }
+    '/$locale/admin/modules/$id/': {
+      id: '/$locale/admin/modules/$id/'
+      path: '/modules/$id'
+      fullPath: '/$locale/admin/modules/$id'
+      preLoaderRoute: typeof LocaleAdminModulesIdIndexImport
+      parentRoute: typeof LocaleAdminImport
     }
   }
 }
 
 // Create and export the route tree
 
-interface LocaleAdminModulesIdRouteChildren {
-  LocaleAdminModulesIdPlayRoute: typeof LocaleAdminModulesIdPlayRoute
-}
-
-const LocaleAdminModulesIdRouteChildren: LocaleAdminModulesIdRouteChildren = {
-  LocaleAdminModulesIdPlayRoute: LocaleAdminModulesIdPlayRoute,
-}
-
-const LocaleAdminModulesIdRouteWithChildren =
-  LocaleAdminModulesIdRoute._addFileChildren(LocaleAdminModulesIdRouteChildren)
-
 interface LocaleAdminRouteChildren {
   LocaleAdminIndexRoute: typeof LocaleAdminIndexRoute
   LocaleAdminApiKeysCreateRoute: typeof LocaleAdminApiKeysCreateRoute
   LocaleAdminContextsIdRoute: typeof LocaleAdminContextsIdRoute
   LocaleAdminContextsCreateRoute: typeof LocaleAdminContextsCreateRoute
-  LocaleAdminModulesIdRoute: typeof LocaleAdminModulesIdRouteWithChildren
   LocaleAdminModulesCreateRoute: typeof LocaleAdminModulesCreateRoute
   LocaleAdminPersonasIdRoute: typeof LocaleAdminPersonasIdRoute
   LocaleAdminPersonasCreateRoute: typeof LocaleAdminPersonasCreateRoute
   LocaleAdminScenariosIdRoute: typeof LocaleAdminScenariosIdRoute
   LocaleAdminScenariosCreateRoute: typeof LocaleAdminScenariosCreateRoute
   LocaleAdminApiKeysIndexRoute: typeof LocaleAdminApiKeysIndexRoute
+  LocaleAdminModulesIdPlayRoute: typeof LocaleAdminModulesIdPlayRoute
+  LocaleAdminModulesIdIndexRoute: typeof LocaleAdminModulesIdIndexRoute
 }
 
 const LocaleAdminRouteChildren: LocaleAdminRouteChildren = {
@@ -293,13 +283,14 @@ const LocaleAdminRouteChildren: LocaleAdminRouteChildren = {
   LocaleAdminApiKeysCreateRoute: LocaleAdminApiKeysCreateRoute,
   LocaleAdminContextsIdRoute: LocaleAdminContextsIdRoute,
   LocaleAdminContextsCreateRoute: LocaleAdminContextsCreateRoute,
-  LocaleAdminModulesIdRoute: LocaleAdminModulesIdRouteWithChildren,
   LocaleAdminModulesCreateRoute: LocaleAdminModulesCreateRoute,
   LocaleAdminPersonasIdRoute: LocaleAdminPersonasIdRoute,
   LocaleAdminPersonasCreateRoute: LocaleAdminPersonasCreateRoute,
   LocaleAdminScenariosIdRoute: LocaleAdminScenariosIdRoute,
   LocaleAdminScenariosCreateRoute: LocaleAdminScenariosCreateRoute,
   LocaleAdminApiKeysIndexRoute: LocaleAdminApiKeysIndexRoute,
+  LocaleAdminModulesIdPlayRoute: LocaleAdminModulesIdPlayRoute,
+  LocaleAdminModulesIdIndexRoute: LocaleAdminModulesIdIndexRoute,
 }
 
 const LocaleAdminRouteWithChildren = LocaleAdminRoute._addFileChildren(
@@ -316,7 +307,6 @@ export interface FileRoutesByFullPath {
   '/$locale/admin/api-keys/create': typeof LocaleAdminApiKeysCreateRoute
   '/$locale/admin/contexts/$id': typeof LocaleAdminContextsIdRoute
   '/$locale/admin/contexts/create': typeof LocaleAdminContextsCreateRoute
-  '/$locale/admin/modules/$id': typeof LocaleAdminModulesIdRouteWithChildren
   '/$locale/admin/modules/create': typeof LocaleAdminModulesCreateRoute
   '/$locale/admin/personas/$id': typeof LocaleAdminPersonasIdRoute
   '/$locale/admin/personas/create': typeof LocaleAdminPersonasCreateRoute
@@ -324,6 +314,7 @@ export interface FileRoutesByFullPath {
   '/$locale/admin/scenarios/create': typeof LocaleAdminScenariosCreateRoute
   '/$locale/admin/api-keys': typeof LocaleAdminApiKeysIndexRoute
   '/$locale/admin/modules/$id/play': typeof LocaleAdminModulesIdPlayRoute
+  '/$locale/admin/modules/$id': typeof LocaleAdminModulesIdIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -335,7 +326,6 @@ export interface FileRoutesByTo {
   '/$locale/admin/api-keys/create': typeof LocaleAdminApiKeysCreateRoute
   '/$locale/admin/contexts/$id': typeof LocaleAdminContextsIdRoute
   '/$locale/admin/contexts/create': typeof LocaleAdminContextsCreateRoute
-  '/$locale/admin/modules/$id': typeof LocaleAdminModulesIdRouteWithChildren
   '/$locale/admin/modules/create': typeof LocaleAdminModulesCreateRoute
   '/$locale/admin/personas/$id': typeof LocaleAdminPersonasIdRoute
   '/$locale/admin/personas/create': typeof LocaleAdminPersonasCreateRoute
@@ -343,6 +333,7 @@ export interface FileRoutesByTo {
   '/$locale/admin/scenarios/create': typeof LocaleAdminScenariosCreateRoute
   '/$locale/admin/api-keys': typeof LocaleAdminApiKeysIndexRoute
   '/$locale/admin/modules/$id/play': typeof LocaleAdminModulesIdPlayRoute
+  '/$locale/admin/modules/$id': typeof LocaleAdminModulesIdIndexRoute
 }
 
 export interface FileRoutesById {
@@ -356,7 +347,6 @@ export interface FileRoutesById {
   '/$locale/admin/api-keys/create': typeof LocaleAdminApiKeysCreateRoute
   '/$locale/admin/contexts/$id': typeof LocaleAdminContextsIdRoute
   '/$locale/admin/contexts/create': typeof LocaleAdminContextsCreateRoute
-  '/$locale/admin/modules/$id': typeof LocaleAdminModulesIdRouteWithChildren
   '/$locale/admin/modules/create': typeof LocaleAdminModulesCreateRoute
   '/$locale/admin/personas/$id': typeof LocaleAdminPersonasIdRoute
   '/$locale/admin/personas/create': typeof LocaleAdminPersonasCreateRoute
@@ -364,6 +354,7 @@ export interface FileRoutesById {
   '/$locale/admin/scenarios/create': typeof LocaleAdminScenariosCreateRoute
   '/$locale/admin/api-keys/': typeof LocaleAdminApiKeysIndexRoute
   '/$locale/admin/modules/$id/play': typeof LocaleAdminModulesIdPlayRoute
+  '/$locale/admin/modules/$id/': typeof LocaleAdminModulesIdIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -378,7 +369,6 @@ export interface FileRouteTypes {
     | '/$locale/admin/api-keys/create'
     | '/$locale/admin/contexts/$id'
     | '/$locale/admin/contexts/create'
-    | '/$locale/admin/modules/$id'
     | '/$locale/admin/modules/create'
     | '/$locale/admin/personas/$id'
     | '/$locale/admin/personas/create'
@@ -386,6 +376,7 @@ export interface FileRouteTypes {
     | '/$locale/admin/scenarios/create'
     | '/$locale/admin/api-keys'
     | '/$locale/admin/modules/$id/play'
+    | '/$locale/admin/modules/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/$locale'
@@ -396,7 +387,6 @@ export interface FileRouteTypes {
     | '/$locale/admin/api-keys/create'
     | '/$locale/admin/contexts/$id'
     | '/$locale/admin/contexts/create'
-    | '/$locale/admin/modules/$id'
     | '/$locale/admin/modules/create'
     | '/$locale/admin/personas/$id'
     | '/$locale/admin/personas/create'
@@ -404,6 +394,7 @@ export interface FileRouteTypes {
     | '/$locale/admin/scenarios/create'
     | '/$locale/admin/api-keys'
     | '/$locale/admin/modules/$id/play'
+    | '/$locale/admin/modules/$id'
   id:
     | '__root__'
     | '/$locale/admin'
@@ -415,7 +406,6 @@ export interface FileRouteTypes {
     | '/$locale/admin/api-keys/create'
     | '/$locale/admin/contexts/$id'
     | '/$locale/admin/contexts/create'
-    | '/$locale/admin/modules/$id'
     | '/$locale/admin/modules/create'
     | '/$locale/admin/personas/$id'
     | '/$locale/admin/personas/create'
@@ -423,6 +413,7 @@ export interface FileRouteTypes {
     | '/$locale/admin/scenarios/create'
     | '/$locale/admin/api-keys/'
     | '/$locale/admin/modules/$id/play'
+    | '/$locale/admin/modules/$id/'
   fileRoutesById: FileRoutesById
 }
 
@@ -466,13 +457,14 @@ export const routeTree = rootRoute
         "/$locale/admin/api-keys/create",
         "/$locale/admin/contexts/$id",
         "/$locale/admin/contexts/create",
-        "/$locale/admin/modules/$id",
         "/$locale/admin/modules/create",
         "/$locale/admin/personas/$id",
         "/$locale/admin/personas/create",
         "/$locale/admin/scenarios/$id",
         "/$locale/admin/scenarios/create",
-        "/$locale/admin/api-keys/"
+        "/$locale/admin/api-keys/",
+        "/$locale/admin/modules/$id/play",
+        "/$locale/admin/modules/$id/"
       ]
     },
     "/$locale/": {
@@ -503,13 +495,6 @@ export const routeTree = rootRoute
       "filePath": "$locale/admin/contexts.create.tsx",
       "parent": "/$locale/admin"
     },
-    "/$locale/admin/modules/$id": {
-      "filePath": "$locale/admin/modules.$id.tsx",
-      "parent": "/$locale/admin",
-      "children": [
-        "/$locale/admin/modules/$id/play"
-      ]
-    },
     "/$locale/admin/modules/create": {
       "filePath": "$locale/admin/modules.create.tsx",
       "parent": "/$locale/admin"
@@ -536,7 +521,11 @@ export const routeTree = rootRoute
     },
     "/$locale/admin/modules/$id/play": {
       "filePath": "$locale/admin/modules.$id.play.tsx",
-      "parent": "/$locale/admin/modules/$id"
+      "parent": "/$locale/admin"
+    },
+    "/$locale/admin/modules/$id/": {
+      "filePath": "$locale/admin/modules.$id.index.tsx",
+      "parent": "/$locale/admin"
     }
   }
 }

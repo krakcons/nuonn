@@ -11,7 +11,6 @@ import {
 	type ChatInputType,
 	type ChatResponseType,
 } from "@/lib/ai";
-import { useState } from "react";
 
 export const Route = createFileRoute("/$locale/admin/modules/$id/play")({
 	component: RouteComponent,
@@ -63,36 +62,19 @@ function RouteComponent() {
 						Math.random() * chatModule.data.personaIds.length,
 					)
 				],
-			contextId: chatModule.data.contextIds,
+			contextIds: chatModule.data.contextIds,
 		} as ChatInputType & { content: string },
 		validators: {
 			onSubmit: ChatInputSchema.extend({ content: z.string().min(1) }),
 		},
 		onSubmit: ({ value: { content, ...body }, formApi }) => {
-			let p = personaId ?? body.personaId;
-
-			if (p === "random") {
-				p = personas[Math.floor(Math.random() * personas.length)].id;
-			}
-			setPersonaId(p);
-
-			let c = contextId ?? body.contextId;
-			if (c === "random") {
-				c = contexts[Math.floor(Math.random() * contexts.length)].id;
-			}
-			setContextId(c);
-
 			append(
 				{
 					role: "user",
 					content,
 				},
 				{
-					body: {
-						...body,
-						personaId: p,
-						contextId: c === "none" ? undefined : c,
-					},
+					body,
 				},
 			);
 			formApi.reset();
@@ -127,63 +109,6 @@ function RouteComponent() {
 								/>
 							)}
 						/>
-						<div className="flex gap-2 items-center">
-							<form.AppField
-								name="scenarioId"
-								children={(field) => (
-									<field.SelectField
-										disabled={!!personaId}
-										label="Scenario"
-										options={scenarios.map((s) => ({
-											label: s.data.name,
-											value: s.id,
-										}))}
-									/>
-								)}
-							/>
-							<form.AppField
-								name="contextId"
-								children={(field) => (
-									<field.SelectField
-										disabled={!!personaId}
-										label="Context"
-										options={[
-											{
-												label: "Random",
-												value: "random",
-											},
-											{
-												label: "None",
-												value: "none",
-											},
-											...contexts.map((p) => ({
-												label: p.data.name,
-												value: p.id,
-											})),
-										]}
-									/>
-								)}
-							/>
-							<form.AppField
-								name="personaId"
-								children={(field) => (
-									<field.SelectField
-										disabled={!!personaId}
-										label="Persona"
-										options={[
-											{
-												label: "Random",
-												value: "random",
-											},
-											...personas.map((p) => ({
-												label: p.data.name,
-												value: p.id,
-											})),
-										]}
-									/>
-								)}
-							/>
-						</div>
 					</form>
 				</form.AppForm>
 				<div className="flex max-w-2xl mx-auto w-full flex-col-reverse gap-8">
