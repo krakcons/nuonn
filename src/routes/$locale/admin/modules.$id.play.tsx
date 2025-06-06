@@ -42,6 +42,7 @@ const parseAssistantMessage = (
 
 function RouteComponent() {
 	const [chatModule] = Route.useLoaderData();
+
 	const { append, status, messages } = useChat({
 		initialMessages: [],
 		// @ts-ignore
