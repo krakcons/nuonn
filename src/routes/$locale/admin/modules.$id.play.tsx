@@ -1,32 +1,26 @@
+import { Page } from "@/components/Page";
+import { getModuleFn } from "@/lib/handlers/modules";
+import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useAppForm } from "@/components/ui/form";
-import { createFileRoute } from "@tanstack/react-router";
 import { type Message, useChat } from "@ai-sdk/react";
 import { parsePartialJson } from "@ai-sdk/ui-utils";
 import { z } from "zod";
-import { Page } from "@/components/Page";
 import { getChatResponseFn } from "@/lib/handlers/chat";
 import {
 	ChatInputSchema,
 	type ChatInputType,
 	type ChatResponseType,
 } from "@/lib/ai";
-import { getPersonasFn } from "@/lib/handlers/personas";
-import { getScenariosFn } from "@/lib/handlers/scenarios";
 import { useState } from "react";
-import { getContextsFn } from "@/lib/handlers/contexts";
-import type { walkUpBindingElementsAndPatterns } from "typescript";
 
-export const Route = createFileRoute("/$locale/admin/")({
+export const Route = createFileRoute("/$locale/admin/modules/$id/play")({
 	component: RouteComponent,
-	validateSearch: z.object({
-		options: ChatInputSchema.optional(),
-	}),
-	loader: async () => {
-		return Promise.all([
-			getPersonasFn(),
-			getScenariosFn(),
-			getContextsFn(),
-		]);
+	loader: async ({ params: { id } }) => {
+		const module = await getModuleFn({
+			data: { id },
+		});
+		if (!module) throw notFound();
+		return Promise.all([module]);
 	},
 });
 
@@ -48,8 +42,7 @@ const parseAssistantMessage = (
 };
 
 function RouteComponent() {
-	const [personas, scenarios, contexts] = Route.useLoaderData();
-	const [personaId, setPersonaId] = useState<string | null>(null);
+	const [chatModule] = Route.useLoaderData();
 	const { append, status, messages } = useChat({
 		initialMessages: [],
 		// @ts-ignore
@@ -63,9 +56,14 @@ function RouteComponent() {
 	const form = useAppForm({
 		defaultValues: {
 			content: "",
-			scenarioId: scenarios.length ? scenarios[0].id : null,
-			personaId: "random",
-			contextIds: [],
+			scenarioId: chatModule.data.scenarioId,
+			personaId:
+				chatModule.data.personaIds[
+					Math.floor(
+						Math.random() * chatModule.data.personaIds.length,
+					)
+				],
+			contextId: chatModule.data.contextIds,
 		} as ChatInputType & { content: string },
 		validators: {
 			onSubmit: ChatInputSchema.extend({ content: z.string().min(1) }),
@@ -78,6 +76,12 @@ function RouteComponent() {
 			}
 			setPersonaId(p);
 
+			let c = contextId ?? body.contextId;
+			if (c === "random") {
+				c = contexts[Math.floor(Math.random() * contexts.length)].id;
+			}
+			setContextId(c);
+
 			append(
 				{
 					role: "user",
@@ -87,10 +91,11 @@ function RouteComponent() {
 					body: {
 						...body,
 						personaId: p,
+						contextId: c === "none" ? undefined : c,
 					},
 				},
 			);
-			formApi.setFieldValue("content", "");
+			formApi.reset();
 		},
 	});
 
@@ -104,6 +109,24 @@ function RouteComponent() {
 						onSubmit={(e) => e.preventDefault()}
 						className="flex flex-col max-w-2xl gap-4 w-full mx-auto"
 					>
+						<form.AppField
+							name="content"
+							children={(field) => (
+								<field.TextAreaField
+									placeholder="Enter your response"
+									label=""
+									className="resize-none"
+									onKeyDown={(e) => {
+										if (e.key === "Enter" && !e.shiftKey) {
+											e.preventDefault();
+											console.log("submit", status);
+											if (status === "ready")
+												form.handleSubmit();
+										}
+									}}
+								/>
+							)}
+						/>
 						<div className="flex gap-2 items-center">
 							<form.AppField
 								name="scenarioId"
@@ -119,27 +142,25 @@ function RouteComponent() {
 								)}
 							/>
 							<form.AppField
-								name="contextIds"
+								name="contextId"
 								children={(field) => (
-									<field.MultiSelectField
+									<field.SelectField
 										disabled={!!personaId}
-										selectFirstItem
-										label="Contexts"
-										placeholder="Select contexts"
-										value={contexts
-											.map((p) => ({
+										label="Context"
+										options={[
+											{
+												label: "Random",
+												value: "random",
+											},
+											{
+												label: "None",
+												value: "none",
+											},
+											...contexts.map((p) => ({
 												label: p.data.name,
 												value: p.id,
-											}))
-											.filter(({ value }) =>
-												field.state.value?.includes(
-													value,
-												),
-											)}
-										options={contexts.map((c) => ({
-											label: c.data.name,
-											value: c.id,
-										}))}
+											})),
+										]}
 									/>
 								)}
 							/>
@@ -163,24 +184,6 @@ function RouteComponent() {
 								)}
 							/>
 						</div>
-						<form.AppField
-							name="content"
-							children={(field) => (
-								<field.TextAreaField
-									placeholder="Enter your response"
-									label=""
-									className="resize-none"
-									onKeyDown={(e) => {
-										if (e.key === "Enter" && !e.shiftKey) {
-											e.preventDefault();
-											console.log("submit", status);
-											if (status === "ready")
-												form.handleSubmit();
-										}
-									}}
-								/>
-							)}
-						/>
 					</form>
 				</form.AppForm>
 				<div className="flex max-w-2xl mx-auto w-full flex-col-reverse gap-8">

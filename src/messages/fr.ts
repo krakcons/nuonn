@@ -109,7 +109,11 @@ const fr: Messages = {
 		personas: "Personnages",
 		scenarios: "Scénarios",
 		editing: "Édition",
-		chat: "Chat",
+		chat: "Test de Discussion",
+		settings: "Paramètres",
+		apiKeys: "Clés API",
+		contexts: "Contextes",
+		modules: "Modules",
 	},
 	Home: {
 		title: "Moteur de Chat IA",

@@ -105,7 +105,7 @@ const en = {
 		personas: "Personas",
 		scenarios: "Scenarios",
 		editing: "Editing",
-		chat: "Chat",
+		chat: "Chat Playground",
 		settings: "Settings",
 		apiKeys: "API Keys",
 		contexts: "Contexts",

@@ -4,7 +4,7 @@ import { openai } from "@ai-sdk/openai";
 import { createServerFn } from "@tanstack/react-start";
 import { contexts, personas, scenarios } from "@/lib/db/schema";
 import { db } from "@/lib/db";
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { z } from "zod";
 import { protectedMiddleware } from "./auth";
 
@@ -20,10 +20,10 @@ export const getChatResponseFn = createServerFn({
 	)
 	.handler(
 		async ({
-			data: { messages, scenarioId, personaId, contextId },
+			data: { messages, scenarioId, personaId, contextIds },
 			context,
 		}) => {
-			const [scenario, persona, chatContext] = await Promise.all([
+			const [scenario, persona, chatContexts] = await Promise.all([
 				db.query.scenarios.findFirst({
 					where: and(
 						eq(scenarios.id, scenarioId),
@@ -42,10 +42,10 @@ export const getChatResponseFn = createServerFn({
 						),
 					),
 				}),
-				contextId &&
-					db.query.contexts.findFirst({
+				contextIds &&
+					db.query.contexts.findMany({
 						where: and(
-							eq(contexts.id, contextId),
+							inArray(contexts.id, contextIds),
 							eq(
 								contexts.organizationId,
 								context.session.activeOrganizationId,
@@ -83,12 +83,16 @@ Role: ${scenario.data.user.role}
 Goals: ${scenario.data.user.goals}`,
 
 				// Context
-				chatContext &&
-					`Apply the following context to the user and persona:
-Name: ${chatContext.data.name}
-Description: ${chatContext.data.description}
-User Context: ${JSON.stringify(chatContext.data.user)}
-Persona Context: ${JSON.stringify(chatContext.data.persona)}
+				chatContexts &&
+					chatContexts.length > 0 &&
+					`Apply the following contexts to the user and persona:
+${chatContexts.map(
+	(c, i) => `${i}:
+Name: ${c.data.name}
+Description: ${c.data.description}
+User Context: ${JSON.stringify(c.data.user)}
+Persona Context: ${JSON.stringify(c.data.persona)}`,
+)}
 `,
 
 				`Evaluation Framework:
