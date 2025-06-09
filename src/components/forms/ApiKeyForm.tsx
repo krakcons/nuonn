@@ -1,4 +1,5 @@
 import { useAppForm } from "@/components/ui/form";
+import { useTranslations } from "@/lib/locale";
 import {
 	ApiKeyFormSchema,
 	type ApiKeyFormType,
@@ -16,6 +17,7 @@ export const ApiKeyForm = ({
 	defaultValues?: ApiKeyFormType;
 	onSubmit: ({ value }: { value: ApiKeyFormType }) => Promise<any>;
 }) => {
+	const t = useTranslations("ApiKeyForm");
 	const form = useAppForm({
 		defaultValues: {
 			key: "",
@@ -36,17 +38,17 @@ export const ApiKeyForm = ({
 			>
 				<form.AppField
 					name="name"
-					children={(field) => <field.TextField label="Name" />}
+					children={(field) => <field.TextField label={t.name} />}
 				/>
 				<form.AppField
 					name="key"
-					children={(field) => <field.TextField label="Key" />}
+					children={(field) => <field.TextField label={t.key} />}
 				/>
 				<form.AppField
 					name="provider"
 					children={(field) => (
 						<field.SelectField
-							label="Provider"
+							label={t.provider}
 							options={[{ label: "OpenAI", value: "openai" }]}
 							description={apiKeyLocations[field.state.value]}
 						/>

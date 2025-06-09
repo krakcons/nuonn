@@ -15,6 +15,7 @@ import { getScenariosFn } from "@/lib/handlers/scenarios";
 import { useState } from "react";
 import { getContextsFn } from "@/lib/handlers/contexts";
 import type { walkUpBindingElementsAndPatterns } from "typescript";
+import { useTranslations } from "@/lib/locale";
 
 export const Route = createFileRoute("/$locale/admin/")({
 	component: RouteComponent,
@@ -50,6 +51,7 @@ const parseAssistantMessage = (
 function RouteComponent() {
 	const [personas, scenarios, contexts] = Route.useLoaderData();
 	const [personaId, setPersonaId] = useState<string | null>(null);
+	const t = useTranslations("Chat");
 	const { append, status, messages } = useChat({
 		initialMessages: [],
 		// @ts-ignore
@@ -110,7 +112,8 @@ function RouteComponent() {
 								children={(field) => (
 									<field.SelectField
 										disabled={!!personaId}
-										label="Scenario"
+										label={t.scenario.title}
+										placeholder={t.scenario.description}
 										options={scenarios.map((s) => ({
 											label: s.data.name,
 											value: s.id,
@@ -124,8 +127,8 @@ function RouteComponent() {
 									<field.MultiSelectField
 										disabled={!!personaId}
 										selectFirstItem
-										label="Contexts"
-										placeholder="Select contexts"
+										label={t.context.title}
+										placeholder={t.context.description}
 										value={contexts
 											.map((p) => ({
 												label: p.data.name,
@@ -148,10 +151,11 @@ function RouteComponent() {
 								children={(field) => (
 									<field.SelectField
 										disabled={!!personaId}
-										label="Persona"
+										label={t.persona.title}
+										placeholder={t.persona.description}
 										options={[
 											{
-												label: "Random",
+												label: t.random,
 												value: "random",
 											},
 											...personas.map((p) => ({
@@ -167,7 +171,7 @@ function RouteComponent() {
 							name="content"
 							children={(field) => (
 								<field.TextAreaField
-									placeholder="Enter your response"
+									placeholder={t.placeholder}
 									label=""
 									className="resize-none"
 									onKeyDown={(e) => {

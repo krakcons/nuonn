@@ -5,10 +5,9 @@ import { getContextsFn } from "@/lib/handlers/contexts";
 import { createOrUpdateModuleFn } from "@/lib/handlers/modules";
 import { getPersonasFn } from "@/lib/handlers/personas";
 import { getScenariosFn } from "@/lib/handlers/scenarios";
-import { useLocale } from "@/lib/locale";
+import { useLocale, useTranslations } from "@/lib/locale";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { toast } from "sonner";
 
 export const Route = createFileRoute("/$locale/admin/modules/create")({
 	component: RouteComponent,
@@ -26,10 +25,10 @@ function RouteComponent() {
 	const navigate = useNavigate();
 	const [scenarios, contexts, personas, apiKeys] = Route.useLoaderData();
 	const locale = useLocale();
+	const t = useTranslations("ModuleCreate");
 	const createModule = useMutation({
 		mutationFn: createOrUpdateModuleFn,
 		onSuccess: ({ id }) => {
-			toast.success("Module created successfully");
 			navigate({
 				to: "/$locale/admin/modules/$id",
 				params: {
@@ -42,10 +41,7 @@ function RouteComponent() {
 
 	return (
 		<Page>
-			<PageHeader
-				title="Create Module"
-				description="A module is a defined experience that can be used as a course"
-			/>
+			<PageHeader title={t.title} description={t.description} />
 			<ModuleForm
 				onSubmit={({ value }) =>
 					createModule.mutateAsync({

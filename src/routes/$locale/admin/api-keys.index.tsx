@@ -5,6 +5,7 @@ import {
 import { Page, PageHeader } from "@/components/Page";
 import { buttonVariants } from "@/components/ui/button";
 import { deleteApiKeyFn, getApiKeysFn } from "@/lib/handlers/apiKeys";
+import { useTranslations } from "@/lib/locale";
 import type { ApiKeyType } from "@/lib/types/apiKeys";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
@@ -22,25 +23,27 @@ export const Route = createFileRoute("/$locale/admin/api-keys/")({
 function RouteComponent() {
 	const apiKeys = Route.useLoaderData();
 	const router = useRouter();
+	const t = useTranslations("ApiKey");
+	const tActions = useTranslations("Actions");
 
 	const deleteApiKey = useMutation({
 		mutationFn: deleteApiKeyFn,
 		onSuccess: () => {
-			toast.success("API key deleted successfully");
+			toast.success(t.deleteToast);
 			router.invalidate();
 		},
 	});
 
 	return (
 		<Page>
-			<PageHeader title="API Keys" description="Manage your API keys.">
+			<PageHeader title={t.title} description={t.description}>
 				<Link
 					to="/$locale/admin/api-keys/create"
 					from={Route.fullPath}
 					className={buttonVariants()}
 				>
 					<Plus />
-					Create
+					{tActions.create}
 				</Link>
 			</PageHeader>
 			<DataTable
@@ -50,11 +53,11 @@ function RouteComponent() {
 					{
 						id: "name",
 						accessorKey: "name",
-						header: "Name",
+						header: t.table.name,
 					},
 					{
 						id: "key",
-						header: "Key",
+						header: t.table.key,
 						cell: ({ cell }) => (
 							<code>
 								{cell.row.original.key.substring(0, 12) +
@@ -68,12 +71,12 @@ function RouteComponent() {
 					{
 						id: "provider",
 						accessorKey: "provider",
-						header: "Provider",
+						header: t.table.provider,
 						cell: ({ cell }) => cell.getValue(),
 					},
 					createDataTableActionsColumn<ApiKeyType>([
 						{
-							name: "Delete",
+							name: tActions.delete,
 							onClick: (apiKey) => {
 								deleteApiKey.mutate({
 									data: {

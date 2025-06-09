@@ -133,6 +133,190 @@ const en = {
 			"Nuonn is a chat creation tool for AI communication scenarios and evaluations.",
 		getStarted: "Get Started",
 	},
+	Chat: {
+		random: "Random",
+		scenario: {
+			title: "Scenario",
+			description: "Select scenario",
+		},
+		context: {
+			title: "Contexts",
+			description: "Select contexts",
+		},
+		persona: {
+			title: "Persona",
+			description: "Select persona",
+		},
+		placeholder: "Type your message here...",
+	},
+	Module: {
+		edit: "Edit this module",
+		export: "Export",
+		preview: "Preview",
+		toast: "Module updated successfully",
+		deleteToast: "Module deleted successfully",
+	},
+	ModuleCreate: {
+		title: "Create Module",
+		description: "Create a new module that can be used as a course",
+		toast: "Module created successfully",
+	},
+	ModuleForm: {
+		name: "Name",
+		description: "Description",
+		apiKey: {
+			label: "API Key",
+			placeholder: "Select an API Key",
+		},
+		scenario: { label: "Scenario", placeholder: "Select a Scenario" },
+		contexts: { label: "Contexts", placeholder: "Select the contexts" },
+		personas: {
+			label: "Personas",
+			placeholder: "Select the personas",
+		},
+	},
+	Persona: {
+		edit: "Edit this persona",
+		toast: "Persona updated successfully",
+		deleteToast: "Persona deleted successfully",
+	},
+	PersonaCreate: {
+		title: "Create Persona",
+		description: "Create a new persona that can be used in a scenario",
+		toast: "Persona created successfully",
+	},
+	PersonaForm: {
+		statOptions: {
+			low: "Low",
+			medium: "Medium",
+			high: "High",
+		},
+		name: "Name",
+		age: "Age",
+		gender: "Gender",
+		sexuality: "Sexuality",
+		pronouns: "Pronouns",
+		ethnicity: "Ethnicity",
+		country: "Country",
+		education: "Education",
+		location: "Location",
+		height: "Height",
+		build: "Build",
+		transportation: "Transportation",
+		disibility: "Disibility(s)",
+		occupation: "Occupation",
+		relationships: "Relationships",
+		appearance: "Appearance",
+		religion: "Religion",
+		politics: "Politics",
+		intelligence: "Intelligence",
+		memory: "Memory",
+		wealth: "Wealth",
+		health: "Health",
+		mentalHealth: "Mental Health",
+		personality: "Personality",
+		traits: "Traits",
+		hobbies: "Hobbies",
+		likes: "Likes",
+		dislikes: "Dislikes",
+		backstory: "Backstory",
+		behaviour: "Behaviour",
+		languages: {
+			title: "Languages",
+			description: "Describe the languages the persona can speak",
+			name: "Name",
+			spoken: "Spoken",
+			written: "Written",
+		},
+	},
+	Context: {
+		edit: "Edit this context",
+		toast: "Context updated successfully",
+		deleteToast: "Context deleted successfully",
+	},
+	ContextCreate: {
+		title: "Create Context",
+		description: "Create a new context that can be used in a scenario",
+		toast: "Context created successfully",
+	},
+	ContextForm: {
+		name: "Name",
+		description: "Description",
+		user: "User Context",
+		persona: "Persona Context",
+	},
+	Scenario: {
+		edit: "Edit this scenario",
+		toast: "Scenario updated successfully",
+		deleteToast: "Scenario deleted successfully",
+	},
+	ScenarioCreate: {
+		title: "Create Scenario",
+		description: "Create a new scenario that can be used in a module",
+		toast: "Scenario created successfully",
+	},
+	ScenarioForm: {
+		name: "Name",
+		description: "Description",
+		role: "Role",
+		goals: "Goals",
+		evaluation: "Evaluation",
+		user: {
+			title: "User",
+			description: "Describe the users role in the scenario",
+		},
+		userEvaluations: {
+			title: "User Evaluations",
+			description:
+				"Describe the evaluations that should be tracked for the user",
+		},
+		persona: {
+			title: "Persona",
+			description: "Describe the persona role in the scenario",
+		},
+		personaEvaluations: {
+			title: "Persona Evaluations",
+			description:
+				"Describe the evaluations that should be tracked for the persona",
+		},
+		evaluationType: {
+			title: "Type",
+			description:
+				"The type of evaluation. Message is a single message (ex. Politeness) and Session is evaluated on all of messages (ex. Conversation)",
+			message: "Message",
+			session: "Session",
+		},
+		evaluationMeasure: {
+			title: "Measure",
+			description:
+				"How the evaluation is measured (ex. True/False, 0-100, 1-10)",
+		},
+		initialValue: {
+			title: "Initial Value",
+			description: "The initial value of the evaluation (ex. 0, false)",
+		},
+	},
+	ApiKey: {
+		title: "API Key",
+		description: "Manage your API keys",
+		table: {
+			name: "Name",
+			key: "Key",
+			provider: "Provider",
+			actions: "Actions",
+		},
+		deleteToast: "API Key deleted successfully",
+	},
+	ApiKeyCreate: {
+		title: "Create API Key",
+		description: "Add a new AI API key for use within modules.",
+		toast: "API Key created successfully",
+	},
+	ApiKeyForm: {
+		name: "Name",
+		key: "Key",
+		provider: "Provider",
+	},
 };
 
 export default en;

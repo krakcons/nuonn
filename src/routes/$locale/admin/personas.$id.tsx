@@ -6,6 +6,7 @@ import {
 	getPersonaFn,
 	createOrUpdatePersonaFn,
 } from "@/lib/handlers/personas";
+import { useTranslations } from "@/lib/locale";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, notFound, useRouter } from "@tanstack/react-router";
 import { Trash } from "lucide-react";
@@ -26,11 +27,13 @@ function RouteComponent() {
 	const router = useRouter();
 	const navigate = Route.useNavigate();
 	const { id, data } = Route.useLoaderData();
+	const t = useTranslations("Persona");
+	const tActions = useTranslations("Actions");
 
 	const updatePersona = useMutation({
 		mutationFn: createOrUpdatePersonaFn,
 		onSuccess: () => {
-			toast.success("Persona updated successfully");
+			toast.success(t.toast);
 			router.invalidate();
 		},
 	});
@@ -38,7 +41,7 @@ function RouteComponent() {
 	const deletePersona = useMutation({
 		mutationFn: deletePersonaFn,
 		onSuccess: () => {
-			toast.success("Persona deleted successfully");
+			toast.success(t.deleteToast);
 			navigate({
 				to: "/$locale/admin",
 			});
@@ -47,7 +50,7 @@ function RouteComponent() {
 
 	return (
 		<Page>
-			<PageHeader title={data.name} description="Edit this persona">
+			<PageHeader title={data.name} description={t.edit}>
 				<Button
 					variant="secondary"
 					onClick={() => {
@@ -59,7 +62,7 @@ function RouteComponent() {
 					}}
 				>
 					<Trash />
-					Delete
+					{tActions.delete}
 				</Button>
 			</PageHeader>
 			<PersonaForm

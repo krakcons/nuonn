@@ -13,6 +13,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "../ui/card";
+import { useTranslations } from "@/lib/locale";
 
 export const ScenarioForm = ({
 	defaultValues,
@@ -21,6 +22,8 @@ export const ScenarioForm = ({
 	defaultValues?: ScenarioDataType;
 	onSubmit: ({ value }: { value: ScenarioDataType }) => Promise<any>;
 }) => {
+	const t = useTranslations("ScenarioForm");
+	const tActions = useTranslations("Actions");
 	const form = useAppForm({
 		defaultValues: {
 			name: "",
@@ -63,25 +66,27 @@ export const ScenarioForm = ({
 			>
 				<form.AppField
 					name="name"
-					children={(field) => <field.TextField label="Name" />}
+					children={(field) => <field.TextField label={t.name} />}
 				/>
 				<form.AppField
 					name="description"
 					children={(field) => (
-						<field.TextAreaField label="Description" />
+						<field.TextAreaField label={t.description} />
 					)}
 				/>
 				<PageSubHeader
-					title="User"
-					description="Describe the users role in the scenario"
+					title={t.user.title}
+					description={t.user.description}
 				/>
 				<form.AppField
 					name="user.role"
-					children={(field) => <field.TextAreaField label="Role" />}
+					children={(field) => <field.TextAreaField label={t.role} />}
 				/>
 				<form.AppField
 					name="user.goals"
-					children={(field) => <field.TextAreaField label="Goals" />}
+					children={(field) => (
+						<field.TextAreaField label={t.goals} />
+					)}
 				/>
 				<form.AppField
 					name="user.evaluations"
@@ -89,8 +94,8 @@ export const ScenarioForm = ({
 					children={(field) => (
 						<div className="flex flex-col gap-4">
 							<PageSubHeader
-								title="User Evaluations"
-								description="Describe the evaluations that should be tracked for the user"
+								title={t.userEvaluations.title}
+								description={t.userEvaluations.description}
 							>
 								<Button
 									onClick={(e) => {
@@ -105,14 +110,14 @@ export const ScenarioForm = ({
 									}}
 								>
 									<Plus />
-									Add
+									{tActions.create}
 								</Button>
 							</PageSubHeader>
 							{field.state?.value?.map((_, i) => (
 								<Card key={i}>
 									<CardHeader>
 										<CardTitle>
-											Evaluation {i + 1}
+											{t.evaluation} {i + 1}
 										</CardTitle>
 										<CardAction>
 											<Button
@@ -124,7 +129,7 @@ export const ScenarioForm = ({
 												size="sm"
 											>
 												<Trash />
-												Delete
+												{tActions.delete}
 											</Button>
 										</CardAction>
 									</CardHeader>
@@ -133,41 +138,45 @@ export const ScenarioForm = ({
 											name={`user.evaluations[${i}].name`}
 											children={(subField) => (
 												<div className="flex-1">
-													<subField.TextField label="Name" />
+													<subField.TextField
+														label={t.name}
+													/>
 												</div>
 											)}
 										/>
 										<form.AppField
 											name={`user.evaluations[${i}].description`}
 											children={(subField) => (
-												<subField.TextAreaField label="Description" />
+												<subField.TextAreaField
+													label={t.description}
+												/>
 											)}
 										/>
 										<form.AppField
 											name={`user.evaluations[${i}].type`}
 											children={(subField) => (
 												<subField.SelectField
-													label="Type"
-													description="The type of evaluation. Message is a single message (ex. Politeness) and Session is evaluated on all of messages (ex. Conversation)"
+													label={
+														t.evaluationType.title
+													}
+													description={
+														t.evaluationType
+															.description
+													}
 													options={[
 														{
-															label: "Message",
+															label: t
+																.evaluationType
+																.message,
 															value: "message",
 														},
 														{
-															label: "Session",
+															label: t
+																.evaluationType
+																.session,
 															value: "session",
 														},
 													]}
-												/>
-											)}
-										/>
-										<form.AppField
-											name={`user.evaluations[${i}].measure`}
-											children={(subField) => (
-												<subField.TextField
-													label="Measure"
-													description="How the evaluation is measured (ex. True/False, 0-100, 1-10)"
 												/>
 											)}
 										/>
@@ -185,14 +194,37 @@ export const ScenarioForm = ({
 															subField,
 														) => (
 															<subField.TextField
-																label="Initial Value"
-																description="The initial value of the evaluation (ex. 0, false)"
+																label={
+																	t
+																		.initialValue
+																		.title
+																}
+																description={
+																	t
+																		.initialValue
+																		.description
+																}
 															/>
 														)}
 													/>
 												)
 											}
 										</form.Subscribe>
+										<form.AppField
+											name={`user.evaluations[${i}].measure`}
+											children={(subField) => (
+												<subField.TextField
+													label={
+														t.evaluationMeasure
+															.title
+													}
+													description={
+														t.evaluationMeasure
+															.description
+													}
+												/>
+											)}
+										/>
 									</CardContent>
 								</Card>
 							))}
@@ -200,16 +232,18 @@ export const ScenarioForm = ({
 					)}
 				/>
 				<PageSubHeader
-					title="Persona"
-					description="Describe the personas role in the scenario"
+					title={t.persona.title}
+					description={t.persona.description}
 				/>
 				<form.AppField
 					name="persona.role"
-					children={(field) => <field.TextAreaField label="Role" />}
+					children={(field) => <field.TextAreaField label={t.role} />}
 				/>
 				<form.AppField
 					name="persona.goals"
-					children={(field) => <field.TextAreaField label="Goals" />}
+					children={(field) => (
+						<field.TextAreaField label={t.goals} />
+					)}
 				/>
 				<form.AppField
 					name="persona.evaluations"
@@ -217,8 +251,8 @@ export const ScenarioForm = ({
 					children={(field) => (
 						<div className="flex flex-col gap-4">
 							<PageSubHeader
-								title="Persona Evaluations"
-								description="Describe the evaluations that should be tracked for the persona"
+								title={t.personaEvaluations.title}
+								description={t.personaEvaluations.description}
 							>
 								<Button
 									onClick={(e) => {
@@ -233,13 +267,15 @@ export const ScenarioForm = ({
 									}}
 								>
 									<Plus />
-									Add
+									{tActions.create}
 								</Button>
 							</PageSubHeader>
 							{field.state?.value?.map((_, i) => (
 								<Card key={i}>
 									<CardHeader>
-										<CardTitle>Stat {i + 1}</CardTitle>
+										<CardTitle>
+											{t.evaluation} {i + 1}
+										</CardTitle>
 										<CardAction>
 											<Button
 												onClick={(e) => {
@@ -250,7 +286,7 @@ export const ScenarioForm = ({
 												size="sm"
 											>
 												<Trash />
-												Delete
+												{tActions.delete}
 											</Button>
 										</CardAction>
 									</CardHeader>
@@ -259,41 +295,45 @@ export const ScenarioForm = ({
 											name={`persona.evaluations[${i}].name`}
 											children={(subField) => (
 												<div className="flex-1">
-													<subField.TextField label="Name" />
+													<subField.TextField
+														label={t.name}
+													/>
 												</div>
 											)}
 										/>
 										<form.AppField
 											name={`persona.evaluations[${i}].description`}
 											children={(subField) => (
-												<subField.TextAreaField label="Description" />
+												<subField.TextAreaField
+													label={t.description}
+												/>
 											)}
 										/>
 										<form.AppField
 											name={`persona.evaluations[${i}].type`}
 											children={(subField) => (
 												<subField.SelectField
-													label="Type"
-													description="The type of evaluation. Message is a single message (ex. Politeness) and Session is evaluated on all of messages (ex. Conversation)"
+													label={
+														t.evaluationType.title
+													}
+													description={
+														t.evaluationType
+															.description
+													}
 													options={[
 														{
-															label: "Message",
+															label: t
+																.evaluationType
+																.message,
 															value: "message",
 														},
 														{
-															label: "Session",
+															label: t
+																.evaluationType
+																.session,
 															value: "session",
 														},
 													]}
-												/>
-											)}
-										/>
-										<form.AppField
-											name={`persona.evaluations[${i}].measure`}
-											children={(subField) => (
-												<subField.TextField
-													label="Measure"
-													description="How the evaluation is measured (ex. True/False, 0-100, 1-10)"
 												/>
 											)}
 										/>
@@ -311,14 +351,37 @@ export const ScenarioForm = ({
 															subField,
 														) => (
 															<subField.TextField
-																label="Initial Value"
-																description="The initial value of the evaluation (ex. 0, false)"
+																label={
+																	t
+																		.initialValue
+																		.title
+																}
+																description={
+																	t
+																		.initialValue
+																		.description
+																}
 															/>
 														)}
 													/>
 												)
 											}
 										</form.Subscribe>
+										<form.AppField
+											name={`persona.evaluations[${i}].measure`}
+											children={(subField) => (
+												<subField.TextField
+													label={
+														t.evaluationMeasure
+															.title
+													}
+													description={
+														t.evaluationMeasure
+															.description
+													}
+												/>
+											)}
+										/>
 									</CardContent>
 								</Card>
 							))}

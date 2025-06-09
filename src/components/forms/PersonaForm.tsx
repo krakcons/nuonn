@@ -10,6 +10,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "../ui/card";
+import { useTranslations } from "@/lib/locale";
 
 export const PersonaForm = ({
 	defaultValues,
@@ -18,6 +19,8 @@ export const PersonaForm = ({
 	defaultValues?: PersonaDataType;
 	onSubmit: ({ value }: { value: PersonaDataType }) => Promise<any>;
 }) => {
+	const tActions = useTranslations("Actions");
+	const t = useTranslations("PersonaForm");
 	const form = useAppForm({
 		defaultValues: {
 			name: "",
@@ -43,18 +46,19 @@ export const PersonaForm = ({
 
 	const statOptions = [
 		{
-			label: "Low",
+			label: t.statOptions.low,
 			value: "low",
 		},
 		{
-			label: "Medium",
+			label: t.statOptions.medium,
 			value: "medium",
 		},
 		{
-			label: "High",
+			label: t.statOptions.high,
 			value: "high",
 		},
 	];
+
 	return (
 		<form.AppForm>
 			<form
@@ -63,108 +67,108 @@ export const PersonaForm = ({
 			>
 				<form.AppField
 					name="name"
-					children={(field) => <field.TextField label="Name" />}
+					children={(field) => <field.TextField label={t.name} />}
 				/>
 				<form.AppField
 					name="age"
 					children={(field) => (
-						<field.TextField type="number" label="Age" optional />
+						<field.TextField type="number" label={t.age} optional />
 					)}
 				/>
 				<form.AppField
 					name="gender"
 					children={(field) => (
-						<field.TextField label="Gender" optional />
+						<field.TextField label={t.gender} optional />
 					)}
 				/>
 				<form.AppField
 					name="sexuality"
 					children={(field) => (
-						<field.TextField label="Sexuality" optional />
+						<field.TextField label={t.sexuality} optional />
 					)}
 				/>
 				<form.AppField
 					name="pronouns"
 					children={(field) => (
-						<field.TextField label="Pronouns" optional />
+						<field.TextField label={t.pronouns} optional />
 					)}
 				/>
 				<form.AppField
 					name="ethnicity"
 					children={(field) => (
-						<field.TextField label="Ethinicity" optional />
+						<field.TextField label={t.ethnicity} optional />
 					)}
 				/>
 				<form.AppField
 					name="country"
 					children={(field) => (
-						<field.TextField label="Country" optional />
+						<field.TextField label={t.country} optional />
 					)}
 				/>
 				<form.AppField
 					name="education"
 					children={(field) => (
-						<field.TextField label="Education" optional />
+						<field.TextField label={t.education} optional />
 					)}
 				/>
 				<form.AppField
 					name="location"
 					children={(field) => (
-						<field.TextField label="Location" optional />
+						<field.TextField label={t.location} optional />
 					)}
 				/>
 				<form.AppField
 					name="height"
 					children={(field) => (
-						<field.TextField label="Height" optional />
+						<field.TextField label={t.height} optional />
 					)}
 				/>
 				<form.AppField
 					name="build"
 					children={(field) => (
-						<field.TextField label="Build" optional />
+						<field.TextField label={t.build} optional />
 					)}
 				/>
 				<form.AppField
 					name="transportation"
 					children={(field) => (
-						<field.TextField label="Transportation" optional />
+						<field.TextField label={t.transportation} optional />
 					)}
 				/>
 				<form.AppField
 					name="disibility"
 					children={(field) => (
-						<field.TextField label="Disibility(s)" optional />
+						<field.TextField label={t.disibility} optional />
 					)}
 				/>
 				<form.AppField
 					name="occupation"
 					children={(field) => (
-						<field.TextField label="Occupation" optional />
+						<field.TextField label={t.occupation} optional />
 					)}
 				/>
 				<form.AppField
 					name="relationships"
 					children={(field) => (
-						<field.TextField label="Relationships" optional />
+						<field.TextField label={t.relationships} optional />
 					)}
 				/>
 				<form.AppField
 					name="appearance"
 					children={(field) => (
-						<field.TextField label="Appearance" optional />
+						<field.TextField label={t.appearance} optional />
 					)}
 				/>
 				<form.AppField
 					name="religion"
 					children={(field) => (
-						<field.TextField label="Religion" optional />
+						<field.TextField label={t.religion} optional />
 					)}
 				/>
 				<form.AppField
 					name="politics"
 					children={(field) => (
-						<field.TextField label="Politics" optional />
+						<field.TextField label={t.politics} optional />
 					)}
 				/>
 				<PageSubHeader title="Stats" />
@@ -173,7 +177,7 @@ export const PersonaForm = ({
 						name="intelligence"
 						children={(field) => (
 							<field.SelectField
-								label="Intelligence"
+								label={t.intelligence}
 								options={statOptions}
 							/>
 						)}
@@ -182,7 +186,7 @@ export const PersonaForm = ({
 						name="memory"
 						children={(field) => (
 							<field.SelectField
-								label="Memory"
+								label={t.memory}
 								options={statOptions}
 							/>
 						)}
@@ -191,7 +195,7 @@ export const PersonaForm = ({
 						name="wealth"
 						children={(field) => (
 							<field.SelectField
-								label="Wealth"
+								label={t.wealth}
 								options={statOptions}
 							/>
 						)}
@@ -200,7 +204,7 @@ export const PersonaForm = ({
 						name="health"
 						children={(field) => (
 							<field.SelectField
-								label="Health"
+								label={t.health}
 								options={statOptions}
 							/>
 						)}
@@ -209,47 +213,47 @@ export const PersonaForm = ({
 						name="mentalHealth"
 						children={(field) => (
 							<field.SelectField
-								label="Mental Health"
+								label={t.mentalHealth}
 								options={statOptions}
 							/>
 						)}
 					/>
 				</div>
-				<PageSubHeader title="Personality" />
+				<PageSubHeader title={t.personality} />
 				<form.AppField
 					name="traits"
 					children={(field) => (
-						<field.TextAreaField label="Traits" optional />
+						<field.TextAreaField label={t.traits} optional />
 					)}
 				/>
 				<form.AppField
 					name="hobbies"
 					children={(field) => (
-						<field.TextAreaField label="Hobbies" optional />
+						<field.TextAreaField label={t.hobbies} optional />
 					)}
 				/>
 				<form.AppField
 					name="likes"
 					children={(field) => (
-						<field.TextAreaField label="Likes" optional />
+						<field.TextAreaField label={t.likes} optional />
 					)}
 				/>
 				<form.AppField
 					name="dislikes"
 					children={(field) => (
-						<field.TextAreaField label="Dislikes" optional />
+						<field.TextAreaField label={t.dislikes} optional />
 					)}
 				/>
 				<form.AppField
 					name="backstory"
 					children={(field) => (
-						<field.TextAreaField label="Backstory" optional />
+						<field.TextAreaField label={t.backstory} optional />
 					)}
 				/>
 				<form.AppField
 					name="behaviour"
 					children={(field) => (
-						<field.TextAreaField label="Behaviour" optional />
+						<field.TextAreaField label={t.behaviour} optional />
 					)}
 				/>
 
@@ -259,8 +263,8 @@ export const PersonaForm = ({
 					children={(field) => (
 						<div className="flex flex-col gap-4">
 							<PageSubHeader
-								title="Languages"
-								description="Describe the languages the persona can speak"
+								title={t.languages.title}
+								description={t.languages.description}
 							>
 								<Button
 									onClick={(e) => {
@@ -273,13 +277,15 @@ export const PersonaForm = ({
 									}}
 								>
 									<Plus />
-									Add
+									{tActions.create}
 								</Button>
 							</PageSubHeader>
 							{field.state?.value?.map((_, i) => (
 								<Card key={i}>
 									<CardHeader>
-										<CardTitle>Language {i + 1}</CardTitle>
+										<CardTitle>
+											{t.languages.name} {i + 1}
+										</CardTitle>
 										<CardAction>
 											<Button
 												onClick={(e) => {
@@ -290,7 +296,7 @@ export const PersonaForm = ({
 												size="sm"
 											>
 												<Trash />
-												Delete
+												{tActions.delete}
 											</Button>
 										</CardAction>
 									</CardHeader>
@@ -299,7 +305,9 @@ export const PersonaForm = ({
 											name={`languages[${i}].name`}
 											children={(subField) => (
 												<div className="flex-1">
-													<subField.TextField label="Name" />
+													<subField.TextField
+														label={t.languages.name}
+													/>
 												</div>
 											)}
 										/>
@@ -307,7 +315,7 @@ export const PersonaForm = ({
 											name={`languages[${i}].spoken`}
 											children={(subField) => (
 												<subField.SelectField
-													label="Spoken"
+													label={t.languages.spoken}
 													options={statOptions}
 												/>
 											)}
@@ -316,7 +324,7 @@ export const PersonaForm = ({
 											name={`languages[${i}].written`}
 											children={(subField) => (
 												<subField.SelectField
-													label="Written"
+													label={t.languages.written}
 													options={statOptions}
 												/>
 											)}

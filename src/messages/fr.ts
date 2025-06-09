@@ -137,6 +137,201 @@ const fr: Messages = {
 			"Nuonn est un outil de création de chats pour les scénarios de communication IA et les évaluations.",
 		getStarted: "Commencer",
 	},
+	Chat: {
+		random: "Aléatoire",
+		scenario: {
+			title: "Scénario",
+			description: "Sélectionner un scénario",
+		},
+		context: {
+			title: "Contextes",
+			description: "Sélectionner les contextes",
+		},
+		persona: {
+			title: "Persona",
+			description: "Sélectionner une persona",
+		},
+		placeholder: "Tapez votre message ici...",
+	},
+	Module: {
+		edit: "Modifier ce module",
+		export: "Exporter",
+		preview: "Aperçu",
+		toast: "Module mis à jour avec succès",
+		deleteToast: "Module supprimé avec succès",
+	},
+	ModuleCreate: {
+		title: "Créer un Module",
+		description:
+			"Créer un nouveau module qui peut être utilisé comme cours",
+		toast: "Module créé avec succès",
+	},
+	ModuleForm: {
+		name: "Nom",
+		description: "Description",
+		apiKey: {
+			label: "Clé API",
+			placeholder: "Sélectionner une clé API",
+		},
+		scenario: {
+			label: "Scénario",
+			placeholder: "Sélectionner un scénario",
+		},
+		contexts: {
+			label: "Contextes",
+			placeholder: "Sélectionner les contextes",
+		},
+		personas: {
+			label: "Personas",
+			placeholder: "Sélectionner les personas",
+		},
+	},
+	Persona: {
+		edit: "Modifier cette persona",
+		toast: "Persona mise à jour avec succès",
+		deleteToast: "Persona supprimée avec succès",
+	},
+	PersonaCreate: {
+		title: "Créer une Persona",
+		description:
+			"Créer une nouvelle persona qui peut être utilisée dans un scénario",
+		toast: "Persona créée avec succès",
+	},
+	PersonaForm: {
+		statOptions: {
+			low: "Faible",
+			medium: "Moyen",
+			high: "Élevé",
+		},
+		name: "Nom",
+		age: "Âge",
+		gender: "Genre",
+		sexuality: "Sexualité",
+		pronouns: "Pronoms",
+		ethnicity: "Origine ethnique",
+		country: "Pays",
+		education: "Éducation",
+		location: "Localisation",
+		height: "Taille",
+		build: "Corpulence",
+		transportation: "Transport",
+		disibility: "Handicap(s)",
+		occupation: "Profession",
+		relationships: "Relations",
+		appearance: "Apparence",
+		religion: "Religion",
+		politics: "Politique",
+		intelligence: "Intelligence",
+		memory: "Mémoire",
+		wealth: "Richesse",
+		health: "Santé",
+		mentalHealth: "Santé mentale",
+		personality: "Personnalité",
+		traits: "Traits",
+		hobbies: "Loisirs",
+		likes: "Aime",
+		dislikes: "N'aime pas",
+		backstory: "Histoire personnelle",
+		behaviour: "Comportement",
+		languages: {
+			title: "Langues",
+			description: "Décrire les langues que la persona peut parler",
+			name: "Nom",
+			spoken: "Parlé",
+			written: "Écrit",
+		},
+	},
+	Context: {
+		edit: "Modifier ce contexte",
+		toast: "Contexte mis à jour avec succès",
+		deleteToast: "Contexte supprimé avec succès",
+	},
+	ContextCreate: {
+		title: "Créer un Contexte",
+		description:
+			"Créer un nouveau contexte qui peut être utilisé dans un scénario",
+		toast: "Contexte créé avec succès",
+	},
+	ContextForm: {
+		name: "Nom",
+		description: "Description",
+		user: "Contexte utilisateur",
+		persona: "Contexte persona",
+	},
+	Scenario: {
+		edit: "Modifier ce scénario",
+		toast: "Scénario mis à jour avec succès",
+		deleteToast: "Scénario supprimé avec succès",
+	},
+	ScenarioCreate: {
+		title: "Créer un Scénario",
+		description:
+			"Créer un nouveau scénario qui peut être utilisé dans un module",
+		toast: "Scénario créé avec succès",
+	},
+	ScenarioForm: {
+		name: "Nom",
+		description: "Description",
+		role: "Rôle",
+		goals: "Objectifs",
+		evaluation: "Évaluation",
+		user: {
+			title: "Utilisateur",
+			description: "Décrire le rôle de l'utilisateur dans le scénario",
+		},
+		userEvaluations: {
+			title: "Évaluations de l'utilisateur",
+			description:
+				"Décrire les évaluations qui doivent être suivies pour l'utilisateur",
+		},
+		persona: {
+			title: "Persona",
+			description: "Décrire le rôle de la persona dans le scénario",
+		},
+		personaEvaluations: {
+			title: "Évaluations de la persona",
+			description:
+				"Décrire les évaluations qui doivent être suivies pour la persona",
+		},
+		evaluationType: {
+			title: "Taper",
+			description:
+				"Le type d'évaluation. Message est un seul message (ex. Politesse) et Session est évaluée sur tous les messages (ex. Conversation)",
+			message: "Message",
+			session: "Session",
+		},
+		evaluationMeasure: {
+			title: "Mesure",
+			description:
+				"Comment l'évaluation est mesurée (ex. Vrai/Faux, 0-100, 1-10)",
+		},
+		initialValue: {
+			title: "Valeur initiale",
+			description: "La valeur initiale de l'évaluation (ex. 0, faux)",
+		},
+	},
+	ApiKey: {
+		title: "Clé API",
+		description: "Gérer vos clés API",
+		table: {
+			name: "Nom",
+			key: "Clé",
+			provider: "Fournisseur",
+			actions: "Actions",
+		},
+		deleteToast: "Clé API supprimée avec succès",
+	},
+	ApiKeyCreate: {
+		title: "Créer une Clé API",
+		description:
+			"Ajouter une nouvelle clé API d'IA pour utilisation dans les modules.",
+		toast: "Clé API créée avec succès",
+	},
+	ApiKeyForm: {
+		name: "Nom",
+		key: "Clé",
+		provider: "Fournisseur",
+	},
 };
 
 export default fr;

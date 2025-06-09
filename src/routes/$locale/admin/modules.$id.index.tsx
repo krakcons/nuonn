@@ -21,6 +21,7 @@ import {
 import { Download, Play, Trash } from "lucide-react";
 import { toast } from "sonner";
 import JSZip from "jszip";
+import { useTranslations } from "@/lib/locale";
 
 export const Route = createFileRoute("/$locale/admin/modules/$id/")({
 	component: RouteComponent,
@@ -75,11 +76,13 @@ function RouteComponent() {
 	const [chatModule, scenarios, contexts, personas, apiKeys] =
 		Route.useLoaderData();
 	const { id, data } = chatModule;
+	const t = useTranslations("Module");
+	const tActions = useTranslations("Actions");
 
 	const updateModule = useMutation({
 		mutationFn: createOrUpdateModuleFn,
 		onSuccess: () => {
-			toast.success("Module updated successfully");
+			toast.success(t.toast);
 			router.invalidate();
 		},
 	});
@@ -87,7 +90,7 @@ function RouteComponent() {
 	const deleteModule = useMutation({
 		mutationFn: deleteModuleFn,
 		onSuccess: () => {
-			toast.success("Module deleted successfully");
+			toast.success(t.deleteToast);
 			navigate({
 				to: "/$locale/admin",
 			});
@@ -115,11 +118,11 @@ function RouteComponent() {
 
 	return (
 		<Page>
-			<PageHeader title={data.name} description="Edit this module">
+			<PageHeader title={data.name} description={t.edit}>
 				<div className="flex gap-2">
 					<Button variant="outline" onClick={download}>
 						<Download />
-						Export
+						{t.export}
 					</Button>
 					<Link
 						to="/$locale/modules/$id/chat"
@@ -129,7 +132,7 @@ function RouteComponent() {
 						target="_blank"
 					>
 						<Play />
-						Preview
+						{t.preview}
 					</Link>
 					<Button
 						variant="secondary"
@@ -142,7 +145,7 @@ function RouteComponent() {
 						}}
 					>
 						<Trash />
-						Delete
+						{tActions.delete}
 					</Button>
 				</div>
 			</PageHeader>

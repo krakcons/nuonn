@@ -5,6 +5,7 @@ import type { PersonaType } from "@/lib/types/personas";
 import type { ScenarioType } from "@/lib/types/scenarios";
 import { z } from "zod";
 import type { ApiKeyType } from "@/lib/types/apiKeys";
+import { useTranslations } from "@/lib/locale";
 
 export const ModuleForm = ({
 	defaultValues,
@@ -25,6 +26,7 @@ export const ModuleForm = ({
 	personaOptions: PersonaType[];
 	contextOptions: ContextType[];
 }) => {
+	const t = useTranslations("ModuleForm");
 	const form = useAppForm({
 		defaultValues: {
 			contextIds: [],
@@ -48,20 +50,20 @@ export const ModuleForm = ({
 			>
 				<form.AppField
 					name="name"
-					children={(field) => <field.TextField label="Name" />}
+					children={(field) => <field.TextField label={t.name} />}
 				/>
 				<form.AppField
 					name="description"
 					children={(field) => (
-						<field.TextAreaField optional label="Description" />
+						<field.TextAreaField optional label={t.description} />
 					)}
 				/>
 				<form.AppField
 					name="apiKeyId"
 					children={(field) => (
 						<field.SelectField
-							placeholder="Select an API Key"
-							label="API Key"
+							placeholder={t.apiKey.placeholder}
+							label={t.apiKey.label}
 							options={apiKeyOptions.map((k) => ({
 								label: k.name,
 								value: k.id,
@@ -73,8 +75,8 @@ export const ModuleForm = ({
 					name="scenarioId"
 					children={(field) => (
 						<field.SelectField
-							placeholder="Select a Scenario"
-							label="Scenario"
+							placeholder={t.scenario.placeholder}
+							label={t.scenario.label}
 							options={scenarioOptions.map((s) => ({
 								label: s.data.name,
 								value: s.id,
@@ -87,8 +89,8 @@ export const ModuleForm = ({
 					children={(field) => (
 						<field.MultiSelectField
 							optional
-							placeholder="Select the contexts"
-							label="Contexts"
+							placeholder={t.contexts.placeholder}
+							label={t.contexts.label}
 							value={contextOptions
 								.map((p) => ({
 									label: p.data.name,
@@ -108,8 +110,8 @@ export const ModuleForm = ({
 					name="personaIds"
 					children={(field) => (
 						<field.MultiSelectField
-							placeholder="Select the personas"
-							label="Personas"
+							placeholder={t.personas.placeholder}
+							label={t.personas.label}
 							value={personaOptions
 								.map((p) => ({
 									label: p.data.name,
