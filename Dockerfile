@@ -38,6 +38,5 @@ COPY --from=prerelease /usr/src/app/drizzle.config.ts .
 COPY --from=prerelease /usr/src/app/migrations ./migrations
 
 # run the app
-USER bun
 EXPOSE 3000/tcp
 ENTRYPOINT [ "bun", "run", "start" ]
