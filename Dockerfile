@@ -33,6 +33,9 @@ COPY --from=prerelease /usr/src/app/bun.lock .
 COPY --from=prerelease /usr/src/app/package.json .
 COPY --from=prerelease /usr/src/app/.vinxi .vinxi
 COPY --from=prerelease /usr/src/app/.output .output
+# drizzle-kit
+COPY --from=prerelease /usr/src/app/drizzle.config.ts .
+COPY --from=prerelease /usr/src/app/migrations ./migrations
 
 # run the app
 USER bun
