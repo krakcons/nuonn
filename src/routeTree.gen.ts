@@ -18,7 +18,7 @@ import { Route as LocaleAuthVerifyEmailImport } from './routes/$locale/auth.veri
 import { Route as LocaleAuthLoginImport } from './routes/$locale/auth.login'
 import { Route as LocaleAuthCreateTeamImport } from './routes/$locale/auth.create-team'
 import { Route as LocaleAdminApiKeysIndexImport } from './routes/$locale/admin/api-keys.index'
-import { Route as LocaleModulesIdPlayImport } from './routes/$locale/modules.$id.play'
+import { Route as LocaleModulesIdChatImport } from './routes/$locale/modules.$id.chat'
 import { Route as LocaleAdminScenariosCreateImport } from './routes/$locale/admin/scenarios.create'
 import { Route as LocaleAdminScenariosIdImport } from './routes/$locale/admin/scenarios.$id'
 import { Route as LocaleAdminPersonasCreateImport } from './routes/$locale/admin/personas.create'
@@ -73,9 +73,9 @@ const LocaleAdminApiKeysIndexRoute = LocaleAdminApiKeysIndexImport.update({
   getParentRoute: () => LocaleAdminRoute,
 } as any)
 
-const LocaleModulesIdPlayRoute = LocaleModulesIdPlayImport.update({
-  id: '/$locale/modules/$id/play',
-  path: '/$locale/modules/$id/play',
+const LocaleModulesIdChatRoute = LocaleModulesIdChatImport.update({
+  id: '/$locale/modules/$id/chat',
+  path: '/$locale/modules/$id/chat',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -237,11 +237,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LocaleAdminScenariosCreateImport
       parentRoute: typeof LocaleAdminImport
     }
-    '/$locale/modules/$id/play': {
-      id: '/$locale/modules/$id/play'
-      path: '/$locale/modules/$id/play'
-      fullPath: '/$locale/modules/$id/play'
-      preLoaderRoute: typeof LocaleModulesIdPlayImport
+    '/$locale/modules/$id/chat': {
+      id: '/$locale/modules/$id/chat'
+      path: '/$locale/modules/$id/chat'
+      fullPath: '/$locale/modules/$id/chat'
+      preLoaderRoute: typeof LocaleModulesIdChatImport
       parentRoute: typeof rootRoute
     }
     '/$locale/admin/api-keys/': {
@@ -310,7 +310,7 @@ export interface FileRoutesByFullPath {
   '/$locale/admin/personas/create': typeof LocaleAdminPersonasCreateRoute
   '/$locale/admin/scenarios/$id': typeof LocaleAdminScenariosIdRoute
   '/$locale/admin/scenarios/create': typeof LocaleAdminScenariosCreateRoute
-  '/$locale/modules/$id/play': typeof LocaleModulesIdPlayRoute
+  '/$locale/modules/$id/chat': typeof LocaleModulesIdChatRoute
   '/$locale/admin/api-keys': typeof LocaleAdminApiKeysIndexRoute
   '/$locale/admin/modules/$id': typeof LocaleAdminModulesIdIndexRoute
 }
@@ -329,7 +329,7 @@ export interface FileRoutesByTo {
   '/$locale/admin/personas/create': typeof LocaleAdminPersonasCreateRoute
   '/$locale/admin/scenarios/$id': typeof LocaleAdminScenariosIdRoute
   '/$locale/admin/scenarios/create': typeof LocaleAdminScenariosCreateRoute
-  '/$locale/modules/$id/play': typeof LocaleModulesIdPlayRoute
+  '/$locale/modules/$id/chat': typeof LocaleModulesIdChatRoute
   '/$locale/admin/api-keys': typeof LocaleAdminApiKeysIndexRoute
   '/$locale/admin/modules/$id': typeof LocaleAdminModulesIdIndexRoute
 }
@@ -350,7 +350,7 @@ export interface FileRoutesById {
   '/$locale/admin/personas/create': typeof LocaleAdminPersonasCreateRoute
   '/$locale/admin/scenarios/$id': typeof LocaleAdminScenariosIdRoute
   '/$locale/admin/scenarios/create': typeof LocaleAdminScenariosCreateRoute
-  '/$locale/modules/$id/play': typeof LocaleModulesIdPlayRoute
+  '/$locale/modules/$id/chat': typeof LocaleModulesIdChatRoute
   '/$locale/admin/api-keys/': typeof LocaleAdminApiKeysIndexRoute
   '/$locale/admin/modules/$id/': typeof LocaleAdminModulesIdIndexRoute
 }
@@ -372,7 +372,7 @@ export interface FileRouteTypes {
     | '/$locale/admin/personas/create'
     | '/$locale/admin/scenarios/$id'
     | '/$locale/admin/scenarios/create'
-    | '/$locale/modules/$id/play'
+    | '/$locale/modules/$id/chat'
     | '/$locale/admin/api-keys'
     | '/$locale/admin/modules/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -390,7 +390,7 @@ export interface FileRouteTypes {
     | '/$locale/admin/personas/create'
     | '/$locale/admin/scenarios/$id'
     | '/$locale/admin/scenarios/create'
-    | '/$locale/modules/$id/play'
+    | '/$locale/modules/$id/chat'
     | '/$locale/admin/api-keys'
     | '/$locale/admin/modules/$id'
   id:
@@ -409,7 +409,7 @@ export interface FileRouteTypes {
     | '/$locale/admin/personas/create'
     | '/$locale/admin/scenarios/$id'
     | '/$locale/admin/scenarios/create'
-    | '/$locale/modules/$id/play'
+    | '/$locale/modules/$id/chat'
     | '/$locale/admin/api-keys/'
     | '/$locale/admin/modules/$id/'
   fileRoutesById: FileRoutesById
@@ -421,7 +421,7 @@ export interface RootRouteChildren {
   LocaleAuthCreateTeamRoute: typeof LocaleAuthCreateTeamRoute
   LocaleAuthLoginRoute: typeof LocaleAuthLoginRoute
   LocaleAuthVerifyEmailRoute: typeof LocaleAuthVerifyEmailRoute
-  LocaleModulesIdPlayRoute: typeof LocaleModulesIdPlayRoute
+  LocaleModulesIdChatRoute: typeof LocaleModulesIdChatRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -430,7 +430,7 @@ const rootRouteChildren: RootRouteChildren = {
   LocaleAuthCreateTeamRoute: LocaleAuthCreateTeamRoute,
   LocaleAuthLoginRoute: LocaleAuthLoginRoute,
   LocaleAuthVerifyEmailRoute: LocaleAuthVerifyEmailRoute,
-  LocaleModulesIdPlayRoute: LocaleModulesIdPlayRoute,
+  LocaleModulesIdChatRoute: LocaleModulesIdChatRoute,
 }
 
 export const routeTree = rootRoute
@@ -448,7 +448,7 @@ export const routeTree = rootRoute
         "/$locale/auth/create-team",
         "/$locale/auth/login",
         "/$locale/auth/verify-email",
-        "/$locale/modules/$id/play"
+        "/$locale/modules/$id/chat"
       ]
     },
     "/$locale/admin": {
@@ -515,8 +515,8 @@ export const routeTree = rootRoute
       "filePath": "$locale/admin/scenarios.create.tsx",
       "parent": "/$locale/admin"
     },
-    "/$locale/modules/$id/play": {
-      "filePath": "$locale/modules.$id.play.tsx"
+    "/$locale/modules/$id/chat": {
+      "filePath": "$locale/modules.$id.chat.tsx"
     },
     "/$locale/admin/api-keys/": {
       "filePath": "$locale/admin/api-keys.index.tsx",

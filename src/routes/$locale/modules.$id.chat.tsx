@@ -14,7 +14,7 @@ import {
 import { useScorm } from "@/lib/scorm";
 import { useEffect } from "react";
 
-export const Route = createFileRoute("/$locale/modules/$id/play")({
+export const Route = createFileRoute("/$locale/modules/$id/chat")({
 	component: RouteComponent,
 	loader: async ({ params: { id } }) => {
 		const chatModule = await getModuleFn({

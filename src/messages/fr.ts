@@ -106,14 +106,30 @@ const fr: Messages = {
 	// Custom
 	AdminSidebar: {
 		dashboard: "Tableau de bord",
-		personas: "Personnages",
-		scenarios: "Scénarios",
+		personas: {
+			title: "Personnages",
+			tooltip:
+				"Les personas sont les personnages que l'IA joue dans les scénarios.",
+		},
+		scenarios: {
+			title: "Scénarios",
+			tooltip:
+				"Les scénarios sont l'environnement dans lequel la personne et l'utilisateur interagissent. (ex. une ligne d'assistance, un caissier)",
+		},
+		contexts: {
+			title: "Contextes",
+			tooltip:
+				"Le contexte derrière un scénario. (ex. un client en colère, un appelant frénétique)",
+		},
+		modules: {
+			title: "Modules",
+			tooltip:
+				"Les modules sont un cours exportable basé sur un scénario, des personnages et des contextes.",
+		},
 		editing: "Édition",
 		chat: "Test de Discussion",
 		settings: "Paramètres",
 		apiKeys: "Clés API",
-		contexts: "Contextes",
-		modules: "Modules",
 	},
 	Home: {
 		title: "Moteur de Chat IA",

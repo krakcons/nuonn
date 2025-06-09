@@ -25,6 +25,11 @@ import {
 	SidebarProvider,
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { getOrganizationsFn, getSessionFn } from "@/lib/handlers/auth";
 import { getContextsFn } from "@/lib/handlers/contexts";
 import { getModulesFn } from "@/lib/handlers/modules";
@@ -48,6 +53,8 @@ import {
 	Component,
 	FileVideo,
 	Gauge,
+	HelpCircle,
+	HelpingHand,
 	Key,
 	MessagesSquare,
 	Plus,
@@ -154,7 +161,17 @@ function RouteComponent() {
 							</SidebarGroupContent>
 						</SidebarGroup>
 						<SidebarGroup>
-							<SidebarGroupLabel>{t.modules}</SidebarGroupLabel>
+							<SidebarGroupLabel className="flex justify-between gap-2 pr-7">
+								{t.modules.title}
+								<Tooltip>
+									<TooltipTrigger>
+										<HelpCircle className="size-4" />
+									</TooltipTrigger>
+									<TooltipContent>
+										{t.modules.tooltip}
+									</TooltipContent>
+								</Tooltip>
+							</SidebarGroupLabel>
 							<Link
 								to="/$locale/admin/modules/create"
 								from={Route.fullPath}
@@ -187,7 +204,17 @@ function RouteComponent() {
 							</SidebarGroupContent>
 						</SidebarGroup>
 						<SidebarGroup>
-							<SidebarGroupLabel>{t.personas}</SidebarGroupLabel>
+							<SidebarGroupLabel className="flex justify-between gap-2 pr-7">
+								{t.personas.title}
+								<Tooltip>
+									<TooltipTrigger>
+										<HelpCircle className="size-4" />
+									</TooltipTrigger>
+									<TooltipContent>
+										{t.personas.tooltip}
+									</TooltipContent>
+								</Tooltip>
+							</SidebarGroupLabel>
 							<Link
 								to="/$locale/admin/personas/create"
 								from={Route.fullPath}
@@ -220,7 +247,17 @@ function RouteComponent() {
 							</SidebarGroupContent>
 						</SidebarGroup>
 						<SidebarGroup>
-							<SidebarGroupLabel>{t.contexts}</SidebarGroupLabel>
+							<SidebarGroupLabel className="flex justify-between gap-2 pr-7">
+								{t.contexts.title}
+								<Tooltip>
+									<TooltipTrigger>
+										<HelpCircle className="size-4" />
+									</TooltipTrigger>
+									<TooltipContent>
+										{t.contexts.tooltip}
+									</TooltipContent>
+								</Tooltip>
+							</SidebarGroupLabel>
 							<Link
 								to="/$locale/admin/contexts/create"
 								from={Route.fullPath}
@@ -253,7 +290,17 @@ function RouteComponent() {
 							</SidebarGroupContent>
 						</SidebarGroup>
 						<SidebarGroup>
-							<SidebarGroupLabel>{t.scenarios}</SidebarGroupLabel>
+							<SidebarGroupLabel className="flex justify-between gap-2 pr-7">
+								{t.scenarios.title}
+								<Tooltip>
+									<TooltipTrigger>
+										<HelpCircle className="size-4" />
+									</TooltipTrigger>
+									<TooltipContent>
+										{t.scenarios.tooltip}
+									</TooltipContent>
+								</Tooltip>
+							</SidebarGroupLabel>
 							<Link
 								to="/$locale/admin/scenarios/create"
 								from={Route.fullPath}

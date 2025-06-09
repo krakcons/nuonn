@@ -102,14 +102,30 @@ const en = {
 	// Custom
 	AdminSidebar: {
 		dashboard: "Dashboard",
-		personas: "Personas",
-		scenarios: "Scenarios",
+		personas: {
+			title: "Personas",
+			tooltip:
+				"Personas are the characters the AI plays in the scenarios.",
+		},
+		scenarios: {
+			title: "Scenarios",
+			tooltip:
+				"Scenarios are the environment the persona and user are interacting in. (ex. a helpline, cashier)",
+		},
+		contexts: {
+			title: "Contexts",
+			tooltip:
+				"The context behind a scenario. (ex. an angry customer, an frantic caller)",
+		},
+		modules: {
+			title: "Modules",
+			tooltip:
+				"Modules are an exportable course based on a scenario, personas, and contexts.",
+		},
 		editing: "Editing",
 		chat: "Chat Playground",
 		settings: "Settings",
 		apiKeys: "API Keys",
-		contexts: "Contexts",
-		modules: "Modules",
 	},
 	Home: {
 		title: "AI Chat Engine",
