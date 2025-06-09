@@ -109,7 +109,7 @@ function RouteComponent() {
 
 		const link = document.createElement("a");
 		link.href = URL.createObjectURL(zipBlob);
-		link.download = "my-files.zip";
+		link.download = `${data.name.replaceAll(" ", "_")}.zip`;
 		link.click();
 	};
 

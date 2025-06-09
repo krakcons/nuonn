@@ -185,9 +185,10 @@ function RouteComponent() {
 		sendEvent("LMSGetValue", "cmi.core.suspend_data");
 	}, []);
 
-	const initialMessages = scormMessages.find(
-		(m) => m.event.method === "LMSGetValue" && m.response,
-	)?.response?.result;
+	const initialMessages =
+		scormMessages.find(
+			(m) => m.event.method === "LMSGetValue" && m.response,
+		)?.response?.result ?? "[]";
 
 	if (!initialMessages) {
 		return <div>Loading...</div>;
