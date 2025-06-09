@@ -5,7 +5,7 @@ on:
     branches: ["main"]
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: "andrasbacsai/github-actions-with-coolify"
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   amd64:
@@ -20,7 +20,7 @@ jobs:
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
-          password: ${{ secrets.TOKEN  }}
+          password: ${{ secrets.GITHUB_TOKEN  }}
       - name: Build image and push to registry
         uses: docker/build-push-action@v4
         with:
