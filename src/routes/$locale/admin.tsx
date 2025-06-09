@@ -54,7 +54,6 @@ import {
 	FileVideo,
 	Gauge,
 	HelpCircle,
-	HelpingHand,
 	Key,
 	MessagesSquare,
 	Plus,

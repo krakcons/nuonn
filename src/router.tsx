@@ -12,7 +12,8 @@ export const createRouter = () => {
 	const router = routerWithQueryClient(
 		createTanstackRouter({
 			routeTree,
-			defaultPreload: "intent",
+			// TODO: Add a default preload strategy, needs client caching
+			// defaultPreload: "intent",
 			context: {
 				...TanstackQuery.getContext(),
 			},
