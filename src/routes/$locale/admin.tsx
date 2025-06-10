@@ -193,7 +193,9 @@ function RouteComponent() {
 														isActive={isActive}
 													>
 														<Component />
-														{modules.data.name}
+														<p className="truncate">
+															{modules.data.name}
+														</p>
 													</SidebarMenuButton>
 												)}
 											</Link>
@@ -236,7 +238,9 @@ function RouteComponent() {
 														isActive={isActive}
 													>
 														<User />
-														{persona.data.name}
+														<p className="truncate">
+															{persona.data.name}
+														</p>
 													</SidebarMenuButton>
 												)}
 											</Link>
@@ -279,7 +283,9 @@ function RouteComponent() {
 														isActive={isActive}
 													>
 														<Gauge />
-														{context.data.name}
+														<p className="truncate">
+															{context.data.name}
+														</p>
 													</SidebarMenuButton>
 												)}
 											</Link>
@@ -322,7 +328,9 @@ function RouteComponent() {
 														isActive={isActive}
 													>
 														<FileVideo />
-														{scenario.data.name}
+														<p className="truncate">
+															{scenario.data.name}
+														</p>
 													</SidebarMenuButton>
 												)}
 											</Link>
