@@ -7,13 +7,13 @@ import {
 
 import appCss from "../styles.css?url";
 
-import { useSuspenseQuery, type QueryClient } from "@tanstack/react-query";
+import { type QueryClient } from "@tanstack/react-query";
 import {
 	getI18nFn,
 	IntlProvider,
 	rootLocaleMiddleware,
 } from "@/lib/locale.tsx";
-import { getThemeFn, getThemeQueryOptions } from "@/lib/theme";
+import { getThemeFn } from "@/lib/theme";
 import { Toaster } from "sonner";
 
 interface MyRouterContext {

@@ -8,292 +8,126 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-// Import Routes
+import { createServerRootRoute } from '@tanstack/react-start/server'
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as LocaleIndexImport } from './routes/$locale/index'
-import { Route as LocaleAdminImport } from './routes/$locale/admin'
-import { Route as LocaleAdminIndexImport } from './routes/$locale/admin/index'
-import { Route as LocaleAuthVerifyEmailImport } from './routes/$locale/auth.verify-email'
-import { Route as LocaleAuthLoginImport } from './routes/$locale/auth.login'
-import { Route as LocaleAuthCreateTeamImport } from './routes/$locale/auth.create-team'
-import { Route as LocaleAdminApiKeysIndexImport } from './routes/$locale/admin/api-keys.index'
-import { Route as LocaleModulesIdChatImport } from './routes/$locale/modules.$id.chat'
-import { Route as LocaleAdminScenariosCreateImport } from './routes/$locale/admin/scenarios.create'
-import { Route as LocaleAdminScenariosIdImport } from './routes/$locale/admin/scenarios.$id'
-import { Route as LocaleAdminPersonasCreateImport } from './routes/$locale/admin/personas.create'
-import { Route as LocaleAdminPersonasIdImport } from './routes/$locale/admin/personas.$id'
-import { Route as LocaleAdminModulesCreateImport } from './routes/$locale/admin/modules.create'
-import { Route as LocaleAdminContextsCreateImport } from './routes/$locale/admin/contexts.create'
-import { Route as LocaleAdminContextsIdImport } from './routes/$locale/admin/contexts.$id'
-import { Route as LocaleAdminApiKeysCreateImport } from './routes/$locale/admin/api-keys.create'
-import { Route as LocaleAdminModulesIdIndexImport } from './routes/$locale/admin/modules.$id.index'
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as LocaleIndexRouteImport } from './routes/$locale/index'
+import { Route as LocaleAdminRouteImport } from './routes/$locale/admin'
+import { Route as LocaleAdminIndexRouteImport } from './routes/$locale/admin/index'
+import { Route as LocaleAuthVerifyEmailRouteImport } from './routes/$locale/auth.verify-email'
+import { Route as LocaleAuthLoginRouteImport } from './routes/$locale/auth.login'
+import { Route as LocaleAuthCreateTeamRouteImport } from './routes/$locale/auth.create-team'
+import { Route as LocaleAdminApiKeysIndexRouteImport } from './routes/$locale/admin/api-keys.index'
+import { Route as LocaleModulesIdChatRouteImport } from './routes/$locale/modules.$id.chat'
+import { Route as LocaleAdminScenariosCreateRouteImport } from './routes/$locale/admin/scenarios.create'
+import { Route as LocaleAdminScenariosIdRouteImport } from './routes/$locale/admin/scenarios.$id'
+import { Route as LocaleAdminPersonasCreateRouteImport } from './routes/$locale/admin/personas.create'
+import { Route as LocaleAdminPersonasIdRouteImport } from './routes/$locale/admin/personas.$id'
+import { Route as LocaleAdminModulesCreateRouteImport } from './routes/$locale/admin/modules.create'
+import { Route as LocaleAdminContextsCreateRouteImport } from './routes/$locale/admin/contexts.create'
+import { Route as LocaleAdminContextsIdRouteImport } from './routes/$locale/admin/contexts.$id'
+import { Route as LocaleAdminApiKeysCreateRouteImport } from './routes/$locale/admin/api-keys.create'
+import { Route as LocaleAdminModulesIdIndexRouteImport } from './routes/$locale/admin/modules.$id.index'
+import { ServerRoute as ApiAuthSplatServerRouteImport } from './routes/api.auth.$'
 
-// Create/Update Routes
+const rootServerRouteImport = createServerRootRoute()
 
-const LocaleIndexRoute = LocaleIndexImport.update({
+const LocaleIndexRoute = LocaleIndexRouteImport.update({
   id: '/$locale/',
   path: '/$locale/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const LocaleAdminRoute = LocaleAdminImport.update({
+const LocaleAdminRoute = LocaleAdminRouteImport.update({
   id: '/$locale/admin',
   path: '/$locale/admin',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const LocaleAdminIndexRoute = LocaleAdminIndexImport.update({
+const LocaleAdminIndexRoute = LocaleAdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => LocaleAdminRoute,
 } as any)
-
-const LocaleAuthVerifyEmailRoute = LocaleAuthVerifyEmailImport.update({
+const LocaleAuthVerifyEmailRoute = LocaleAuthVerifyEmailRouteImport.update({
   id: '/$locale/auth/verify-email',
   path: '/$locale/auth/verify-email',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const LocaleAuthLoginRoute = LocaleAuthLoginImport.update({
+const LocaleAuthLoginRoute = LocaleAuthLoginRouteImport.update({
   id: '/$locale/auth/login',
   path: '/$locale/auth/login',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const LocaleAuthCreateTeamRoute = LocaleAuthCreateTeamImport.update({
+const LocaleAuthCreateTeamRoute = LocaleAuthCreateTeamRouteImport.update({
   id: '/$locale/auth/create-team',
   path: '/$locale/auth/create-team',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const LocaleAdminApiKeysIndexRoute = LocaleAdminApiKeysIndexImport.update({
+const LocaleAdminApiKeysIndexRoute = LocaleAdminApiKeysIndexRouteImport.update({
   id: '/api-keys/',
   path: '/api-keys/',
   getParentRoute: () => LocaleAdminRoute,
 } as any)
-
-const LocaleModulesIdChatRoute = LocaleModulesIdChatImport.update({
+const LocaleModulesIdChatRoute = LocaleModulesIdChatRouteImport.update({
   id: '/$locale/modules/$id/chat',
   path: '/$locale/modules/$id/chat',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const LocaleAdminScenariosCreateRoute = LocaleAdminScenariosCreateImport.update(
-  {
+const LocaleAdminScenariosCreateRoute =
+  LocaleAdminScenariosCreateRouteImport.update({
     id: '/scenarios/create',
     path: '/scenarios/create',
     getParentRoute: () => LocaleAdminRoute,
-  } as any,
-)
-
-const LocaleAdminScenariosIdRoute = LocaleAdminScenariosIdImport.update({
+  } as any)
+const LocaleAdminScenariosIdRoute = LocaleAdminScenariosIdRouteImport.update({
   id: '/scenarios/$id',
   path: '/scenarios/$id',
   getParentRoute: () => LocaleAdminRoute,
 } as any)
-
-const LocaleAdminPersonasCreateRoute = LocaleAdminPersonasCreateImport.update({
-  id: '/personas/create',
-  path: '/personas/create',
-  getParentRoute: () => LocaleAdminRoute,
-} as any)
-
-const LocaleAdminPersonasIdRoute = LocaleAdminPersonasIdImport.update({
+const LocaleAdminPersonasCreateRoute =
+  LocaleAdminPersonasCreateRouteImport.update({
+    id: '/personas/create',
+    path: '/personas/create',
+    getParentRoute: () => LocaleAdminRoute,
+  } as any)
+const LocaleAdminPersonasIdRoute = LocaleAdminPersonasIdRouteImport.update({
   id: '/personas/$id',
   path: '/personas/$id',
   getParentRoute: () => LocaleAdminRoute,
 } as any)
-
-const LocaleAdminModulesCreateRoute = LocaleAdminModulesCreateImport.update({
-  id: '/modules/create',
-  path: '/modules/create',
-  getParentRoute: () => LocaleAdminRoute,
-} as any)
-
-const LocaleAdminContextsCreateRoute = LocaleAdminContextsCreateImport.update({
-  id: '/contexts/create',
-  path: '/contexts/create',
-  getParentRoute: () => LocaleAdminRoute,
-} as any)
-
-const LocaleAdminContextsIdRoute = LocaleAdminContextsIdImport.update({
+const LocaleAdminModulesCreateRoute =
+  LocaleAdminModulesCreateRouteImport.update({
+    id: '/modules/create',
+    path: '/modules/create',
+    getParentRoute: () => LocaleAdminRoute,
+  } as any)
+const LocaleAdminContextsCreateRoute =
+  LocaleAdminContextsCreateRouteImport.update({
+    id: '/contexts/create',
+    path: '/contexts/create',
+    getParentRoute: () => LocaleAdminRoute,
+  } as any)
+const LocaleAdminContextsIdRoute = LocaleAdminContextsIdRouteImport.update({
   id: '/contexts/$id',
   path: '/contexts/$id',
   getParentRoute: () => LocaleAdminRoute,
 } as any)
-
-const LocaleAdminApiKeysCreateRoute = LocaleAdminApiKeysCreateImport.update({
-  id: '/api-keys/create',
-  path: '/api-keys/create',
-  getParentRoute: () => LocaleAdminRoute,
+const LocaleAdminApiKeysCreateRoute =
+  LocaleAdminApiKeysCreateRouteImport.update({
+    id: '/api-keys/create',
+    path: '/api-keys/create',
+    getParentRoute: () => LocaleAdminRoute,
+  } as any)
+const LocaleAdminModulesIdIndexRoute =
+  LocaleAdminModulesIdIndexRouteImport.update({
+    id: '/modules/$id/',
+    path: '/modules/$id/',
+    getParentRoute: () => LocaleAdminRoute,
+  } as any)
+const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootServerRouteImport,
 } as any)
-
-const LocaleAdminModulesIdIndexRoute = LocaleAdminModulesIdIndexImport.update({
-  id: '/modules/$id/',
-  path: '/modules/$id/',
-  getParentRoute: () => LocaleAdminRoute,
-} as any)
-
-// Populate the FileRoutesByPath interface
-
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/$locale/admin': {
-      id: '/$locale/admin'
-      path: '/$locale/admin'
-      fullPath: '/$locale/admin'
-      preLoaderRoute: typeof LocaleAdminImport
-      parentRoute: typeof rootRoute
-    }
-    '/$locale/': {
-      id: '/$locale/'
-      path: '/$locale'
-      fullPath: '/$locale'
-      preLoaderRoute: typeof LocaleIndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/$locale/auth/create-team': {
-      id: '/$locale/auth/create-team'
-      path: '/$locale/auth/create-team'
-      fullPath: '/$locale/auth/create-team'
-      preLoaderRoute: typeof LocaleAuthCreateTeamImport
-      parentRoute: typeof rootRoute
-    }
-    '/$locale/auth/login': {
-      id: '/$locale/auth/login'
-      path: '/$locale/auth/login'
-      fullPath: '/$locale/auth/login'
-      preLoaderRoute: typeof LocaleAuthLoginImport
-      parentRoute: typeof rootRoute
-    }
-    '/$locale/auth/verify-email': {
-      id: '/$locale/auth/verify-email'
-      path: '/$locale/auth/verify-email'
-      fullPath: '/$locale/auth/verify-email'
-      preLoaderRoute: typeof LocaleAuthVerifyEmailImport
-      parentRoute: typeof rootRoute
-    }
-    '/$locale/admin/': {
-      id: '/$locale/admin/'
-      path: '/'
-      fullPath: '/$locale/admin/'
-      preLoaderRoute: typeof LocaleAdminIndexImport
-      parentRoute: typeof LocaleAdminImport
-    }
-    '/$locale/admin/api-keys/create': {
-      id: '/$locale/admin/api-keys/create'
-      path: '/api-keys/create'
-      fullPath: '/$locale/admin/api-keys/create'
-      preLoaderRoute: typeof LocaleAdminApiKeysCreateImport
-      parentRoute: typeof LocaleAdminImport
-    }
-    '/$locale/admin/contexts/$id': {
-      id: '/$locale/admin/contexts/$id'
-      path: '/contexts/$id'
-      fullPath: '/$locale/admin/contexts/$id'
-      preLoaderRoute: typeof LocaleAdminContextsIdImport
-      parentRoute: typeof LocaleAdminImport
-    }
-    '/$locale/admin/contexts/create': {
-      id: '/$locale/admin/contexts/create'
-      path: '/contexts/create'
-      fullPath: '/$locale/admin/contexts/create'
-      preLoaderRoute: typeof LocaleAdminContextsCreateImport
-      parentRoute: typeof LocaleAdminImport
-    }
-    '/$locale/admin/modules/create': {
-      id: '/$locale/admin/modules/create'
-      path: '/modules/create'
-      fullPath: '/$locale/admin/modules/create'
-      preLoaderRoute: typeof LocaleAdminModulesCreateImport
-      parentRoute: typeof LocaleAdminImport
-    }
-    '/$locale/admin/personas/$id': {
-      id: '/$locale/admin/personas/$id'
-      path: '/personas/$id'
-      fullPath: '/$locale/admin/personas/$id'
-      preLoaderRoute: typeof LocaleAdminPersonasIdImport
-      parentRoute: typeof LocaleAdminImport
-    }
-    '/$locale/admin/personas/create': {
-      id: '/$locale/admin/personas/create'
-      path: '/personas/create'
-      fullPath: '/$locale/admin/personas/create'
-      preLoaderRoute: typeof LocaleAdminPersonasCreateImport
-      parentRoute: typeof LocaleAdminImport
-    }
-    '/$locale/admin/scenarios/$id': {
-      id: '/$locale/admin/scenarios/$id'
-      path: '/scenarios/$id'
-      fullPath: '/$locale/admin/scenarios/$id'
-      preLoaderRoute: typeof LocaleAdminScenariosIdImport
-      parentRoute: typeof LocaleAdminImport
-    }
-    '/$locale/admin/scenarios/create': {
-      id: '/$locale/admin/scenarios/create'
-      path: '/scenarios/create'
-      fullPath: '/$locale/admin/scenarios/create'
-      preLoaderRoute: typeof LocaleAdminScenariosCreateImport
-      parentRoute: typeof LocaleAdminImport
-    }
-    '/$locale/modules/$id/chat': {
-      id: '/$locale/modules/$id/chat'
-      path: '/$locale/modules/$id/chat'
-      fullPath: '/$locale/modules/$id/chat'
-      preLoaderRoute: typeof LocaleModulesIdChatImport
-      parentRoute: typeof rootRoute
-    }
-    '/$locale/admin/api-keys/': {
-      id: '/$locale/admin/api-keys/'
-      path: '/api-keys'
-      fullPath: '/$locale/admin/api-keys'
-      preLoaderRoute: typeof LocaleAdminApiKeysIndexImport
-      parentRoute: typeof LocaleAdminImport
-    }
-    '/$locale/admin/modules/$id/': {
-      id: '/$locale/admin/modules/$id/'
-      path: '/modules/$id'
-      fullPath: '/$locale/admin/modules/$id'
-      preLoaderRoute: typeof LocaleAdminModulesIdIndexImport
-      parentRoute: typeof LocaleAdminImport
-    }
-  }
-}
-
-// Create and export the route tree
-
-interface LocaleAdminRouteChildren {
-  LocaleAdminIndexRoute: typeof LocaleAdminIndexRoute
-  LocaleAdminApiKeysCreateRoute: typeof LocaleAdminApiKeysCreateRoute
-  LocaleAdminContextsIdRoute: typeof LocaleAdminContextsIdRoute
-  LocaleAdminContextsCreateRoute: typeof LocaleAdminContextsCreateRoute
-  LocaleAdminModulesCreateRoute: typeof LocaleAdminModulesCreateRoute
-  LocaleAdminPersonasIdRoute: typeof LocaleAdminPersonasIdRoute
-  LocaleAdminPersonasCreateRoute: typeof LocaleAdminPersonasCreateRoute
-  LocaleAdminScenariosIdRoute: typeof LocaleAdminScenariosIdRoute
-  LocaleAdminScenariosCreateRoute: typeof LocaleAdminScenariosCreateRoute
-  LocaleAdminApiKeysIndexRoute: typeof LocaleAdminApiKeysIndexRoute
-  LocaleAdminModulesIdIndexRoute: typeof LocaleAdminModulesIdIndexRoute
-}
-
-const LocaleAdminRouteChildren: LocaleAdminRouteChildren = {
-  LocaleAdminIndexRoute: LocaleAdminIndexRoute,
-  LocaleAdminApiKeysCreateRoute: LocaleAdminApiKeysCreateRoute,
-  LocaleAdminContextsIdRoute: LocaleAdminContextsIdRoute,
-  LocaleAdminContextsCreateRoute: LocaleAdminContextsCreateRoute,
-  LocaleAdminModulesCreateRoute: LocaleAdminModulesCreateRoute,
-  LocaleAdminPersonasIdRoute: LocaleAdminPersonasIdRoute,
-  LocaleAdminPersonasCreateRoute: LocaleAdminPersonasCreateRoute,
-  LocaleAdminScenariosIdRoute: LocaleAdminScenariosIdRoute,
-  LocaleAdminScenariosCreateRoute: LocaleAdminScenariosCreateRoute,
-  LocaleAdminApiKeysIndexRoute: LocaleAdminApiKeysIndexRoute,
-  LocaleAdminModulesIdIndexRoute: LocaleAdminModulesIdIndexRoute,
-}
-
-const LocaleAdminRouteWithChildren = LocaleAdminRoute._addFileChildren(
-  LocaleAdminRouteChildren,
-)
 
 export interface FileRoutesByFullPath {
   '/$locale/admin': typeof LocaleAdminRouteWithChildren
@@ -314,7 +148,6 @@ export interface FileRoutesByFullPath {
   '/$locale/admin/api-keys': typeof LocaleAdminApiKeysIndexRoute
   '/$locale/admin/modules/$id': typeof LocaleAdminModulesIdIndexRoute
 }
-
 export interface FileRoutesByTo {
   '/$locale': typeof LocaleIndexRoute
   '/$locale/auth/create-team': typeof LocaleAuthCreateTeamRoute
@@ -333,9 +166,8 @@ export interface FileRoutesByTo {
   '/$locale/admin/api-keys': typeof LocaleAdminApiKeysIndexRoute
   '/$locale/admin/modules/$id': typeof LocaleAdminModulesIdIndexRoute
 }
-
 export interface FileRoutesById {
-  __root__: typeof rootRoute
+  __root__: typeof rootRouteImport
   '/$locale/admin': typeof LocaleAdminRouteWithChildren
   '/$locale/': typeof LocaleIndexRoute
   '/$locale/auth/create-team': typeof LocaleAuthCreateTeamRoute
@@ -354,7 +186,6 @@ export interface FileRoutesById {
   '/$locale/admin/api-keys/': typeof LocaleAdminApiKeysIndexRoute
   '/$locale/admin/modules/$id/': typeof LocaleAdminModulesIdIndexRoute
 }
-
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
@@ -414,7 +245,6 @@ export interface FileRouteTypes {
     | '/$locale/admin/modules/$id/'
   fileRoutesById: FileRoutesById
 }
-
 export interface RootRouteChildren {
   LocaleAdminRoute: typeof LocaleAdminRouteWithChildren
   LocaleIndexRoute: typeof LocaleIndexRoute
@@ -423,6 +253,320 @@ export interface RootRouteChildren {
   LocaleAuthVerifyEmailRoute: typeof LocaleAuthVerifyEmailRoute
   LocaleModulesIdChatRoute: typeof LocaleModulesIdChatRoute
 }
+export interface FileServerRoutesByFullPath {
+  '/api/auth/$': typeof ApiAuthSplatServerRoute
+}
+export interface FileServerRoutesByTo {
+  '/api/auth/$': typeof ApiAuthSplatServerRoute
+}
+export interface FileServerRoutesById {
+  __root__: typeof rootServerRouteImport
+  '/api/auth/$': typeof ApiAuthSplatServerRoute
+}
+export interface FileServerRouteTypes {
+  fileServerRoutesByFullPath: FileServerRoutesByFullPath
+  fullPaths: '/api/auth/$'
+  fileServerRoutesByTo: FileServerRoutesByTo
+  to: '/api/auth/$'
+  id: '__root__' | '/api/auth/$'
+  fileServerRoutesById: FileServerRoutesById
+}
+export interface RootServerRouteChildren {
+  ApiAuthSplatServerRoute: typeof ApiAuthSplatServerRoute
+}
+
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/$locale/admin': {
+      id: '/$locale/admin'
+      path: '/$locale/admin'
+      fullPath: '/$locale/admin'
+      preLoaderRoute: typeof LocaleAdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$locale/': {
+      id: '/$locale/'
+      path: '/$locale'
+      fullPath: '/$locale'
+      preLoaderRoute: typeof LocaleIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$locale/auth/create-team': {
+      id: '/$locale/auth/create-team'
+      path: '/$locale/auth/create-team'
+      fullPath: '/$locale/auth/create-team'
+      preLoaderRoute: typeof LocaleAuthCreateTeamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$locale/auth/login': {
+      id: '/$locale/auth/login'
+      path: '/$locale/auth/login'
+      fullPath: '/$locale/auth/login'
+      preLoaderRoute: typeof LocaleAuthLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$locale/auth/verify-email': {
+      id: '/$locale/auth/verify-email'
+      path: '/$locale/auth/verify-email'
+      fullPath: '/$locale/auth/verify-email'
+      preLoaderRoute: typeof LocaleAuthVerifyEmailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: ''
+      fullPath: '/api/auth/$'
+      preLoaderRoute: unknown
+      parentRoute: typeof rootRouteImport
+    }
+    '/$locale/admin/': {
+      id: '/$locale/admin/'
+      path: '/'
+      fullPath: '/$locale/admin/'
+      preLoaderRoute: typeof LocaleAdminIndexRouteImport
+      parentRoute: typeof LocaleAdminRoute
+    }
+    '/$locale/admin/api-keys/create': {
+      id: '/$locale/admin/api-keys/create'
+      path: '/api-keys/create'
+      fullPath: '/$locale/admin/api-keys/create'
+      preLoaderRoute: typeof LocaleAdminApiKeysCreateRouteImport
+      parentRoute: typeof LocaleAdminRoute
+    }
+    '/$locale/admin/contexts/$id': {
+      id: '/$locale/admin/contexts/$id'
+      path: '/contexts/$id'
+      fullPath: '/$locale/admin/contexts/$id'
+      preLoaderRoute: typeof LocaleAdminContextsIdRouteImport
+      parentRoute: typeof LocaleAdminRoute
+    }
+    '/$locale/admin/contexts/create': {
+      id: '/$locale/admin/contexts/create'
+      path: '/contexts/create'
+      fullPath: '/$locale/admin/contexts/create'
+      preLoaderRoute: typeof LocaleAdminContextsCreateRouteImport
+      parentRoute: typeof LocaleAdminRoute
+    }
+    '/$locale/admin/modules/create': {
+      id: '/$locale/admin/modules/create'
+      path: '/modules/create'
+      fullPath: '/$locale/admin/modules/create'
+      preLoaderRoute: typeof LocaleAdminModulesCreateRouteImport
+      parentRoute: typeof LocaleAdminRoute
+    }
+    '/$locale/admin/personas/$id': {
+      id: '/$locale/admin/personas/$id'
+      path: '/personas/$id'
+      fullPath: '/$locale/admin/personas/$id'
+      preLoaderRoute: typeof LocaleAdminPersonasIdRouteImport
+      parentRoute: typeof LocaleAdminRoute
+    }
+    '/$locale/admin/personas/create': {
+      id: '/$locale/admin/personas/create'
+      path: '/personas/create'
+      fullPath: '/$locale/admin/personas/create'
+      preLoaderRoute: typeof LocaleAdminPersonasCreateRouteImport
+      parentRoute: typeof LocaleAdminRoute
+    }
+    '/$locale/admin/scenarios/$id': {
+      id: '/$locale/admin/scenarios/$id'
+      path: '/scenarios/$id'
+      fullPath: '/$locale/admin/scenarios/$id'
+      preLoaderRoute: typeof LocaleAdminScenariosIdRouteImport
+      parentRoute: typeof LocaleAdminRoute
+    }
+    '/$locale/admin/scenarios/create': {
+      id: '/$locale/admin/scenarios/create'
+      path: '/scenarios/create'
+      fullPath: '/$locale/admin/scenarios/create'
+      preLoaderRoute: typeof LocaleAdminScenariosCreateRouteImport
+      parentRoute: typeof LocaleAdminRoute
+    }
+    '/$locale/modules/$id/chat': {
+      id: '/$locale/modules/$id/chat'
+      path: '/$locale/modules/$id/chat'
+      fullPath: '/$locale/modules/$id/chat'
+      preLoaderRoute: typeof LocaleModulesIdChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$locale/admin/api-keys/': {
+      id: '/$locale/admin/api-keys/'
+      path: '/api-keys'
+      fullPath: '/$locale/admin/api-keys'
+      preLoaderRoute: typeof LocaleAdminApiKeysIndexRouteImport
+      parentRoute: typeof LocaleAdminRoute
+    }
+    '/$locale/admin/modules/$id/': {
+      id: '/$locale/admin/modules/$id/'
+      path: '/modules/$id'
+      fullPath: '/$locale/admin/modules/$id'
+      preLoaderRoute: typeof LocaleAdminModulesIdIndexRouteImport
+      parentRoute: typeof LocaleAdminRoute
+    }
+  }
+}
+declare module '@tanstack/react-start/server' {
+  interface ServerFileRoutesByPath {
+    '/$locale/admin': {
+      id: '/$locale/admin'
+      path: '/$locale/admin'
+      fullPath: '/$locale/admin'
+      preLoaderRoute: unknown
+      parentRoute: typeof rootServerRouteImport
+    }
+    '/$locale/': {
+      id: '/$locale/'
+      path: '/$locale'
+      fullPath: '/$locale'
+      preLoaderRoute: unknown
+      parentRoute: typeof rootServerRouteImport
+    }
+    '/$locale/auth/create-team': {
+      id: '/$locale/auth/create-team'
+      path: '/$locale/auth/create-team'
+      fullPath: '/$locale/auth/create-team'
+      preLoaderRoute: unknown
+      parentRoute: typeof rootServerRouteImport
+    }
+    '/$locale/auth/login': {
+      id: '/$locale/auth/login'
+      path: '/$locale/auth/login'
+      fullPath: '/$locale/auth/login'
+      preLoaderRoute: unknown
+      parentRoute: typeof rootServerRouteImport
+    }
+    '/$locale/auth/verify-email': {
+      id: '/$locale/auth/verify-email'
+      path: '/$locale/auth/verify-email'
+      fullPath: '/$locale/auth/verify-email'
+      preLoaderRoute: unknown
+      parentRoute: typeof rootServerRouteImport
+    }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatServerRouteImport
+      parentRoute: typeof rootServerRouteImport
+    }
+    '/$locale/admin/': {
+      id: '/$locale/admin/'
+      path: '/'
+      fullPath: '/$locale/admin/'
+      preLoaderRoute: unknown
+      parentRoute: typeof rootServerRouteImport
+    }
+    '/$locale/admin/api-keys/create': {
+      id: '/$locale/admin/api-keys/create'
+      path: '/api-keys/create'
+      fullPath: '/$locale/admin/api-keys/create'
+      preLoaderRoute: unknown
+      parentRoute: typeof rootServerRouteImport
+    }
+    '/$locale/admin/contexts/$id': {
+      id: '/$locale/admin/contexts/$id'
+      path: '/contexts/$id'
+      fullPath: '/$locale/admin/contexts/$id'
+      preLoaderRoute: unknown
+      parentRoute: typeof rootServerRouteImport
+    }
+    '/$locale/admin/contexts/create': {
+      id: '/$locale/admin/contexts/create'
+      path: '/contexts/create'
+      fullPath: '/$locale/admin/contexts/create'
+      preLoaderRoute: unknown
+      parentRoute: typeof rootServerRouteImport
+    }
+    '/$locale/admin/modules/create': {
+      id: '/$locale/admin/modules/create'
+      path: '/modules/create'
+      fullPath: '/$locale/admin/modules/create'
+      preLoaderRoute: unknown
+      parentRoute: typeof rootServerRouteImport
+    }
+    '/$locale/admin/personas/$id': {
+      id: '/$locale/admin/personas/$id'
+      path: '/personas/$id'
+      fullPath: '/$locale/admin/personas/$id'
+      preLoaderRoute: unknown
+      parentRoute: typeof rootServerRouteImport
+    }
+    '/$locale/admin/personas/create': {
+      id: '/$locale/admin/personas/create'
+      path: '/personas/create'
+      fullPath: '/$locale/admin/personas/create'
+      preLoaderRoute: unknown
+      parentRoute: typeof rootServerRouteImport
+    }
+    '/$locale/admin/scenarios/$id': {
+      id: '/$locale/admin/scenarios/$id'
+      path: '/scenarios/$id'
+      fullPath: '/$locale/admin/scenarios/$id'
+      preLoaderRoute: unknown
+      parentRoute: typeof rootServerRouteImport
+    }
+    '/$locale/admin/scenarios/create': {
+      id: '/$locale/admin/scenarios/create'
+      path: '/scenarios/create'
+      fullPath: '/$locale/admin/scenarios/create'
+      preLoaderRoute: unknown
+      parentRoute: typeof rootServerRouteImport
+    }
+    '/$locale/modules/$id/chat': {
+      id: '/$locale/modules/$id/chat'
+      path: '/$locale/modules/$id/chat'
+      fullPath: '/$locale/modules/$id/chat'
+      preLoaderRoute: unknown
+      parentRoute: typeof rootServerRouteImport
+    }
+    '/$locale/admin/api-keys/': {
+      id: '/$locale/admin/api-keys/'
+      path: '/api-keys'
+      fullPath: '/$locale/admin/api-keys'
+      preLoaderRoute: unknown
+      parentRoute: typeof rootServerRouteImport
+    }
+    '/$locale/admin/modules/$id/': {
+      id: '/$locale/admin/modules/$id/'
+      path: '/modules/$id'
+      fullPath: '/$locale/admin/modules/$id'
+      preLoaderRoute: unknown
+      parentRoute: typeof rootServerRouteImport
+    }
+  }
+}
+
+interface LocaleAdminRouteChildren {
+  LocaleAdminIndexRoute: typeof LocaleAdminIndexRoute
+  LocaleAdminApiKeysCreateRoute: typeof LocaleAdminApiKeysCreateRoute
+  LocaleAdminContextsIdRoute: typeof LocaleAdminContextsIdRoute
+  LocaleAdminContextsCreateRoute: typeof LocaleAdminContextsCreateRoute
+  LocaleAdminModulesCreateRoute: typeof LocaleAdminModulesCreateRoute
+  LocaleAdminPersonasIdRoute: typeof LocaleAdminPersonasIdRoute
+  LocaleAdminPersonasCreateRoute: typeof LocaleAdminPersonasCreateRoute
+  LocaleAdminScenariosIdRoute: typeof LocaleAdminScenariosIdRoute
+  LocaleAdminScenariosCreateRoute: typeof LocaleAdminScenariosCreateRoute
+  LocaleAdminApiKeysIndexRoute: typeof LocaleAdminApiKeysIndexRoute
+  LocaleAdminModulesIdIndexRoute: typeof LocaleAdminModulesIdIndexRoute
+}
+
+const LocaleAdminRouteChildren: LocaleAdminRouteChildren = {
+  LocaleAdminIndexRoute: LocaleAdminIndexRoute,
+  LocaleAdminApiKeysCreateRoute: LocaleAdminApiKeysCreateRoute,
+  LocaleAdminContextsIdRoute: LocaleAdminContextsIdRoute,
+  LocaleAdminContextsCreateRoute: LocaleAdminContextsCreateRoute,
+  LocaleAdminModulesCreateRoute: LocaleAdminModulesCreateRoute,
+  LocaleAdminPersonasIdRoute: LocaleAdminPersonasIdRoute,
+  LocaleAdminPersonasCreateRoute: LocaleAdminPersonasCreateRoute,
+  LocaleAdminScenariosIdRoute: LocaleAdminScenariosIdRoute,
+  LocaleAdminScenariosCreateRoute: LocaleAdminScenariosCreateRoute,
+  LocaleAdminApiKeysIndexRoute: LocaleAdminApiKeysIndexRoute,
+  LocaleAdminModulesIdIndexRoute: LocaleAdminModulesIdIndexRoute,
+}
+
+const LocaleAdminRouteWithChildren = LocaleAdminRoute._addFileChildren(
+  LocaleAdminRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   LocaleAdminRoute: LocaleAdminRouteWithChildren,
@@ -432,100 +576,12 @@ const rootRouteChildren: RootRouteChildren = {
   LocaleAuthVerifyEmailRoute: LocaleAuthVerifyEmailRoute,
   LocaleModulesIdChatRoute: LocaleModulesIdChatRoute,
 }
-
-export const routeTree = rootRoute
+export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/$locale/admin",
-        "/$locale/",
-        "/$locale/auth/create-team",
-        "/$locale/auth/login",
-        "/$locale/auth/verify-email",
-        "/$locale/modules/$id/chat"
-      ]
-    },
-    "/$locale/admin": {
-      "filePath": "$locale/admin.tsx",
-      "children": [
-        "/$locale/admin/",
-        "/$locale/admin/api-keys/create",
-        "/$locale/admin/contexts/$id",
-        "/$locale/admin/contexts/create",
-        "/$locale/admin/modules/create",
-        "/$locale/admin/personas/$id",
-        "/$locale/admin/personas/create",
-        "/$locale/admin/scenarios/$id",
-        "/$locale/admin/scenarios/create",
-        "/$locale/admin/api-keys/",
-        "/$locale/admin/modules/$id/"
-      ]
-    },
-    "/$locale/": {
-      "filePath": "$locale/index.tsx"
-    },
-    "/$locale/auth/create-team": {
-      "filePath": "$locale/auth.create-team.tsx"
-    },
-    "/$locale/auth/login": {
-      "filePath": "$locale/auth.login.tsx"
-    },
-    "/$locale/auth/verify-email": {
-      "filePath": "$locale/auth.verify-email.tsx"
-    },
-    "/$locale/admin/": {
-      "filePath": "$locale/admin/index.tsx",
-      "parent": "/$locale/admin"
-    },
-    "/$locale/admin/api-keys/create": {
-      "filePath": "$locale/admin/api-keys.create.tsx",
-      "parent": "/$locale/admin"
-    },
-    "/$locale/admin/contexts/$id": {
-      "filePath": "$locale/admin/contexts.$id.tsx",
-      "parent": "/$locale/admin"
-    },
-    "/$locale/admin/contexts/create": {
-      "filePath": "$locale/admin/contexts.create.tsx",
-      "parent": "/$locale/admin"
-    },
-    "/$locale/admin/modules/create": {
-      "filePath": "$locale/admin/modules.create.tsx",
-      "parent": "/$locale/admin"
-    },
-    "/$locale/admin/personas/$id": {
-      "filePath": "$locale/admin/personas.$id.tsx",
-      "parent": "/$locale/admin"
-    },
-    "/$locale/admin/personas/create": {
-      "filePath": "$locale/admin/personas.create.tsx",
-      "parent": "/$locale/admin"
-    },
-    "/$locale/admin/scenarios/$id": {
-      "filePath": "$locale/admin/scenarios.$id.tsx",
-      "parent": "/$locale/admin"
-    },
-    "/$locale/admin/scenarios/create": {
-      "filePath": "$locale/admin/scenarios.create.tsx",
-      "parent": "/$locale/admin"
-    },
-    "/$locale/modules/$id/chat": {
-      "filePath": "$locale/modules.$id.chat.tsx"
-    },
-    "/$locale/admin/api-keys/": {
-      "filePath": "$locale/admin/api-keys.index.tsx",
-      "parent": "/$locale/admin"
-    },
-    "/$locale/admin/modules/$id/": {
-      "filePath": "$locale/admin/modules.$id.index.tsx",
-      "parent": "/$locale/admin"
-    }
-  }
+const rootServerRouteChildren: RootServerRouteChildren = {
+  ApiAuthSplatServerRoute: ApiAuthSplatServerRoute,
 }
-ROUTE_MANIFEST_END */
+export const serverRouteTree = rootServerRouteImport
+  ._addFileChildren(rootServerRouteChildren)
+  ._addFileTypes<FileServerRouteTypes>()
