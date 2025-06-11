@@ -11,6 +11,7 @@ const EvaluationSchema = z.object({
 export const ScenarioDataSchema = z.object({
 	name: z.string(),
 	description: z.string(),
+	instructions: z.string().optional(),
 	persona: z.object({
 		role: z.string(),
 		goals: z.string(),

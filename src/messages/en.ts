@@ -261,6 +261,11 @@ const en = {
 		role: "Role",
 		goals: "Goals",
 		evaluation: "Evaluation",
+		instructions: {
+			label: "Instructions",
+			description:
+				"Instructions of the scenario to be shown to the user.",
+		},
 		user: {
 			title: "User",
 			description: "Describe the users role in the scenario",

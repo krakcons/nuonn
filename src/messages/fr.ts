@@ -275,6 +275,10 @@ const fr: Messages = {
 		role: "Rôle",
 		goals: "Objectifs",
 		evaluation: "Évaluation",
+		instructions: {
+			label: "Instructions",
+			description: "Instructions du scénario à montrer à l'utilisateur.",
+		},
 		user: {
 			title: "Utilisateur",
 			description: "Décrire le rôle de l'utilisateur dans le scénario",

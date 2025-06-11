@@ -31,7 +31,7 @@ import { Checkbox } from "./checkbox";
 import { Loader2 } from "lucide-react";
 import { useTranslations } from "@/lib/locale";
 import type { SelectProps } from "@radix-ui/react-select";
-import MultipleSelector, { type MultipleSelectorProps } from "./multi-select";
+import { MultiSelect, type MultiSelectProps } from "./multi-select";
 const { fieldContext, useFieldContext, formContext, useFormContext } =
 	createFormHookContexts();
 
@@ -201,7 +201,7 @@ const SelectField = ({
 const MultiSelectField = ({
 	options,
 	...props
-}: React.ComponentProps<React.FC<MultipleSelectorProps>> &
+}: React.ComponentProps<React.FC<MultiSelectProps>> &
 	DefaultOptions & {
 		options: {
 			label: string;
@@ -212,16 +212,12 @@ const MultiSelectField = ({
 	return (
 		<Field>
 			<Title {...props} htmlFor={field.name} />
-			<MultipleSelector
-				selectFirstItem={false}
-				onChange={(value) => {
-					field.setValue(value.map((v) => v.value));
-				}}
-				emptyIndicator={
-					<p className="text-muted-foreground">No results found</p>
-				}
-				options={options}
+			<MultiSelect
 				{...props}
+				options={options}
+				onValueChange={(value) => {
+					field.setValue(value);
+				}}
 			/>
 			<Description {...props} />
 			<Error errors={field.getMeta().errors} />
