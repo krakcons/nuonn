@@ -116,6 +116,7 @@ export const ScenarioForm = ({
 											type: "message",
 											measure: "",
 											initialValue: "",
+											successValue: "",
 										});
 									}}
 								>
@@ -190,6 +191,21 @@ export const ScenarioForm = ({
 												/>
 											)}
 										/>
+										<form.AppField
+											name={`user.evaluations[${i}].measure`}
+											children={(subField) => (
+												<subField.TextField
+													label={
+														t.evaluationMeasure
+															.title
+													}
+													description={
+														t.evaluationMeasure
+															.description
+													}
+												/>
+											)}
+										/>
 										<form.Subscribe
 											selector={(formState) => [
 												formState.values.user
@@ -221,15 +237,12 @@ export const ScenarioForm = ({
 											}
 										</form.Subscribe>
 										<form.AppField
-											name={`user.evaluations[${i}].measure`}
+											name={`user.evaluations[${i}].successValue`}
 											children={(subField) => (
 												<subField.TextField
-													label={
-														t.evaluationMeasure
-															.title
-													}
+													label={t.successValue.title}
 													description={
-														t.evaluationMeasure
+														t.successValue
 															.description
 													}
 												/>
@@ -273,6 +286,7 @@ export const ScenarioForm = ({
 											measure: "",
 											initialValue: "",
 											type: "session",
+											successValue: "",
 										});
 									}}
 								>
@@ -347,6 +361,21 @@ export const ScenarioForm = ({
 												/>
 											)}
 										/>
+										<form.AppField
+											name={`persona.evaluations[${i}].measure`}
+											children={(subField) => (
+												<subField.TextField
+													label={
+														t.evaluationMeasure
+															.title
+													}
+													description={
+														t.evaluationMeasure
+															.description
+													}
+												/>
+											)}
+										/>
 										<form.Subscribe
 											selector={(formState) => [
 												formState.values.persona
@@ -378,15 +407,12 @@ export const ScenarioForm = ({
 											}
 										</form.Subscribe>
 										<form.AppField
-											name={`persona.evaluations[${i}].measure`}
+											name={`persona.evaluations[${i}].successValue`}
 											children={(subField) => (
 												<subField.TextField
-													label={
-														t.evaluationMeasure
-															.title
-													}
+													label={t.successValue.title}
 													description={
-														t.evaluationMeasure
+														t.successValue
 															.description
 													}
 												/>

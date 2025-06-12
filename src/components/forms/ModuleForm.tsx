@@ -41,6 +41,7 @@ export const ModuleForm = ({
 		},
 		onSubmit,
 	});
+	console.log(form.state.values);
 
 	return (
 		<form.AppForm>
@@ -91,14 +92,6 @@ export const ModuleForm = ({
 							optional
 							placeholder={t.contexts.placeholder}
 							label={t.contexts.label}
-							value={contextOptions
-								.map((p) => ({
-									label: p.data.name,
-									value: p.id,
-								}))
-								.filter(({ value }) =>
-									field.state.value.includes(value),
-								)}
 							options={contextOptions.map((c) => ({
 								label: c.data.name,
 								value: c.id,
@@ -112,14 +105,6 @@ export const ModuleForm = ({
 						<field.MultiSelectField
 							placeholder={t.personas.placeholder}
 							label={t.personas.label}
-							value={personaOptions
-								.map((p) => ({
-									label: p.data.name,
-									value: p.id,
-								}))
-								.filter(({ value }) =>
-									field.state.value.includes(value),
-								)}
 							options={personaOptions.map((p) => ({
 								label: p.data.name,
 								value: p.id,

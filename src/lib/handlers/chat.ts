@@ -33,6 +33,8 @@ export const getChatResponseFn = createServerFn({
 			if (!scenario || !persona)
 				throw new Error("Invalid scenario or persona");
 
+			console.log(scenario.data.persona);
+
 			const system = [
 				// INTRO
 				`You are a roleplaying system. Respond in character as the persona described below, within the context of the given scenario. Stay in character at all times.`,
@@ -80,7 +82,33 @@ Evaluation Types (based on type json field above):
 - "message": Evaluate each individual message (e.g., politeness, accuracy, tone)
 - "session": Evaluate cumulative progress across the entire conversation (e.g., goal completion, relationship building)
 
-Return evaluations on every message and update session-level metrics with each interaction.`,
+Return the state of ALL evaluations on every response and update session-level metrics with each interaction.
+
+Format the evaluations as a JSON object with the following fields:
+- name: The name of the evaluation
+- value: The value of the evaluation based on the measure
+- type: The type of evaluation (message or session)
+- role: who the evaluation is for (user or persona)
+- success: Whether the evaluation was successful based on the success value (true or false)
+
+Example:
+[
+{
+	"name": "Politeness",
+	"value": 0.8,
+	"type": "message",
+	"success": true
+	"role": "user"
+},
+{
+	"name": "Stress",
+	"value": 45,
+	"type": "session",
+	"success": false
+	"role": "persona"
+}
+]
+`,
 			];
 			try {
 				const result = streamText({

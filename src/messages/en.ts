@@ -300,6 +300,10 @@ const en = {
 			title: "Initial Value",
 			description: "The initial value of the evaluation (ex. 0, false)",
 		},
+		successValue: {
+			title: "Success Value",
+			description: "The value that represents success (ex. True, 1, >70)",
+		},
 	},
 	ApiKey: {
 		title: "API Key",

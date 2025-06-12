@@ -5,6 +5,7 @@ const EvaluationSchema = z.object({
 	description: z.string(),
 	type: z.enum(["message", "session"]),
 	initialValue: z.string(),
+	successValue: z.string(),
 	measure: z.string(),
 });
 

@@ -6,7 +6,7 @@ import { getChatResponseFn } from "@/lib/handlers/chat";
 import { type ChatResponseType } from "@/lib/ai";
 import { useEffect } from "react";
 import { useTranslations } from "@/lib/locale";
-import { ChevronsUpDown, Info } from "lucide-react";
+import { Check, ChevronsUpDown, Info } from "lucide-react";
 import {
 	Collapsible,
 	CollapsibleContent,
@@ -44,7 +44,7 @@ export const Chat = ({
 	personaId: string;
 	contextIds?: string[];
 	instructions?: string;
-	onChange?: (messages: Message[]) => void;
+	onChange?: (messages: ChatResponseType[]) => void;
 }) => {
 	const t = useTranslations("Chat");
 
@@ -95,7 +95,7 @@ export const Chat = ({
 		)
 			return;
 
-		onChange(messages);
+		onChange(messages.map((m) => parseAssistantMessage(m)!));
 	}, [messages, status]);
 
 	return (
@@ -183,7 +183,13 @@ export const Chat = ({
 										))}
 									{json.evaluations &&
 										json.evaluations.map((s, i) => (
-											<p key={i}>
+											<p
+												key={i}
+												className="flex items-center gap-2"
+											>
+												{s.success && (
+													<Check className="size-4" />
+												)}
 												{s.name} ({s.value})
 											</p>
 										))}

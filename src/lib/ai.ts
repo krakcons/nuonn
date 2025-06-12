@@ -9,7 +9,9 @@ export const DataSchema = z.object({
 export const DataOutputSchema = z.object({
 	name: z.string(),
 	value: z.string(),
-	type: z.enum(["message", "session", "stat"]),
+	type: z.enum(["message", "session"]),
+	role: z.enum(["user", "persona"]),
+	success: z.boolean(),
 });
 
 export const MessageSchema = z.object({
@@ -27,7 +29,6 @@ export type ChatInputType = z.infer<typeof ChatInputSchema>;
 
 export const ChatResponseSchema = z.object({
 	content: z.string(),
-	stats: DataOutputSchema.array(),
 	evaluations: DataOutputSchema.array(),
 });
 export type ChatResponseType = z.infer<typeof ChatResponseSchema>;

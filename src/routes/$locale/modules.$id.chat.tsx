@@ -58,6 +58,17 @@ function RouteComponent() {
 						element: "cmi.core.suspend_data",
 						value: JSON.stringify(messages),
 					});
+					// If the latest response has a non-success evaluation, don't send the next message
+					if (
+						!messages[messages.length - 1].evaluations.find(
+							(e) => !e.success,
+						)
+					) {
+						sendEvent("LMSSetValue", {
+							element: "cmi.core.lesson_status",
+							value: "completed",
+						});
+					}
 				}}
 			/>
 		</div>

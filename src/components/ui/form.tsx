@@ -209,11 +209,13 @@ const MultiSelectField = ({
 		}[];
 	}) => {
 	const field = useFieldContext<string[]>();
+
 	return (
 		<Field>
 			<Title {...props} htmlFor={field.name} />
 			<MultiSelect
 				{...props}
+				defaultValue={field.state.value}
 				options={options}
 				onValueChange={(value) => {
 					field.setValue(value);

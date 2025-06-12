@@ -313,6 +313,11 @@ const fr: Messages = {
 			title: "Valeur initiale",
 			description: "La valeur initiale de l'évaluation (ex. 0, faux)",
 		},
+		successValue: {
+			title: "Valeur de réussite",
+			description:
+				"La valeur qui représente le succès (ex. Vrai, 1, >70)",
+		},
 	},
 	ApiKey: {
 		title: "Clé API",
