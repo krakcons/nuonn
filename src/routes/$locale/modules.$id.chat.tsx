@@ -3,8 +3,6 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useScorm } from "@/lib/scorm";
 import { useEffect } from "react";
 import { Chat } from "@/components/Chat";
-import { getScenarioFn } from "@/lib/handlers/scenarios";
-import { scenarios } from "@/lib/db/schema";
 
 export const Route = createFileRoute("/$locale/modules/$id/chat")({
 	component: RouteComponent,
@@ -12,21 +10,20 @@ export const Route = createFileRoute("/$locale/modules/$id/chat")({
 		const chatModule = await getModuleFn({
 			data: { id },
 		});
-		if (!chatModule) throw notFound();
-		const scenario = await getScenarioFn({
-			data: { id: chatModule.data.scenarioId },
-		});
-		if (!scenario) throw notFound();
+		if (!chatModule) {
+			throw notFound();
+		}
 		return {
 			chatModule,
-			scenario,
 		};
 	},
 });
 
 function RouteComponent() {
-	const { chatModule, scenario } = Route.useLoaderData();
+	const { chatModule } = Route.useLoaderData();
 	const { sendEvent, messages: scormMessages } = useScorm();
+
+	console.log(chatModule);
 
 	useEffect(() => {
 		sendEvent("LMSInitialize");
@@ -55,7 +52,7 @@ function RouteComponent() {
 					]
 				}
 				contextIds={chatModule.data.contextIds}
-				instructions={scenario.data.instructions}
+				instructions={chatModule.instructions}
 				onChange={(messages) => {
 					sendEvent("LMSSetValue", {
 						element: "cmi.core.suspend_data",

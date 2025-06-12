@@ -3,7 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { protectedMiddleware } from "./auth";
-import { modules } from "../db/schema";
+import { modules, scenarios } from "../db/schema";
 import { ModuleDataSchema } from "../types/modules";
 
 export const getModulesFn = createServerFn()
@@ -24,9 +24,16 @@ export const getModuleFn = createServerFn()
 		}),
 	)
 	.handler(async ({ data: { id } }) => {
-		return await db.query.modules.findFirst({
+		const courseModule = await db.query.modules.findFirst({
 			where: eq(modules.id, id),
 		});
+		if (!courseModule) {
+			return null;
+		}
+		const scenario = await db.query.scenarios.findFirst({
+			where: eq(scenarios.id, courseModule.data.scenarioId),
+		});
+		return { ...courseModule, instructions: scenario?.data.instructions };
 	});
 
 export const deleteModuleFn = createServerFn()
