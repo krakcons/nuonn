@@ -23,24 +23,24 @@ function RouteComponent() {
 	const { chatModule } = Route.useLoaderData();
 	const { sendEvent, messages: scormMessages } = useScorm();
 
-	console.log(chatModule);
-
 	useEffect(() => {
 		sendEvent("LMSInitialize");
 		sendEvent("LMSGetValue", "cmi.core.suspend_data");
 	}, []);
 
+	console.log(scormMessages);
+
 	const initialMessages =
 		scormMessages.find(
 			(m) => m.event.method === "LMSGetValue" && m.response,
-		)?.response?.result ?? "[]";
+		)?.response?.result || "[]";
 
 	if (!initialMessages) {
 		return <div>Loading...</div>;
 	}
 
 	return (
-		<div className="p-8 h-screen">
+		<div className="p-8 h-screen max-w-2xl w-full mx-auto">
 			<Chat
 				initialMessages={JSON.parse(initialMessages)}
 				scenarioId={chatModule.data.scenarioId}

@@ -99,9 +99,9 @@ export const Chat = ({
 	}, [messages, status]);
 
 	return (
-		<div className="flex h-full justify-start gap-2 overflow-y-auto pb-1 scroll-p-8 flex-col-reverse">
+		<div className="flex h-full justify-start gap-2 overflow-y-auto p-4 scroll-p-8 flex-col-reverse w-full">
 			{instructions && (
-				<div className="border flex flex-col gap-2 max-w-2xl mx-auto w-full">
+				<div className="border flex flex-col gap-2">
 					<Collapsible defaultOpen>
 						<CollapsibleTrigger asChild>
 							<Button
@@ -125,7 +125,7 @@ export const Chat = ({
 			<form.AppForm>
 				<form
 					onSubmit={(e) => e.preventDefault()}
-					className="flex flex-col max-w-2xl gap-4 w-full mx-auto"
+					className="flex flex-col gap-4"
 				>
 					<form.AppField
 						name="content"
@@ -147,8 +147,7 @@ export const Chat = ({
 					/>
 				</form>
 			</form.AppForm>
-
-			<div className="flex max-w-2xl mx-auto w-full flex-col-reverse gap-8 py-8">
+			<div className="flex flex-col-reverse gap-8 py-8">
 				{reversedMessages.map((m) => {
 					if (m.role === "user") {
 						return (
