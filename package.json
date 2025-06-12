@@ -5,7 +5,7 @@
 	"scripts": {
 		"dev": "bun --bun vite dev",
 		"build": "bun --bun vite build",
-		"start": "drizzle-kit migrate && bun --bun vite start --port 3000",
+		"start": "drizzle-kit migrate && bun ./.output/server/index.mjs",
 		"generate-routes": "tsr generate",
 		"generate-auth": "bunx --bun @better-auth/cli@latest generate --output src/lib/db/auth.ts",
 		"watch-routes": "tsr watch",
