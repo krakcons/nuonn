@@ -82,7 +82,7 @@ Evaluation Types (based on type json field above):
 - "message": Evaluate each individual message (e.g., politeness, accuracy, tone)
 - "session": Evaluate cumulative progress across the entire conversation (e.g., goal completion, relationship building)
 
-Return the state of ALL evaluations on every response and update session-level metrics with each interaction.
+Return the state of ALL evaluations on every response (ex. if there are 3 evaluations, return all three even if they dont change) and update session-level metrics with each interaction.
 
 Format the evaluations as a JSON object with the following fields:
 - name: The name of the evaluation
