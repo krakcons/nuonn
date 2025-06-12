@@ -139,6 +139,7 @@ const fr: Messages = {
 	},
 	Chat: {
 		random: "Aléatoire",
+		instructions: "Instructions",
 		scenario: {
 			title: "Scénario",
 			description: "Sélectionner un scénario",

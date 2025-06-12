@@ -81,6 +81,8 @@ export const Chat = ({
 		onChange(messages);
 	}, [messages, status]);
 
+	console.log(instructions);
+
 	return (
 		<div className="flex h-full justify-start gap-2 overflow-y-auto p-4 scroll-p-8 flex-col-reverse w-full">
 			{instructions && (
@@ -94,12 +96,12 @@ export const Chat = ({
 							>
 								<p className="flex items-center gap-2">
 									<Info className="size-4" />
-									Instructions
+									{t.instructions}
 								</p>
 								<ChevronsUpDown className="size-4" />
 							</Button>
 						</CollapsibleTrigger>
-						<CollapsibleContent className="pt-2 text-sm text-muted-foreground p-2">
+						<CollapsibleContent className="pt-2 text-sm text-muted-foreground p-2 whitespace-pre-line">
 							{instructions}
 						</CollapsibleContent>
 					</Collapsible>

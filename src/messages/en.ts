@@ -135,6 +135,7 @@ const en = {
 	},
 	Chat: {
 		random: "Random",
+		instructions: "Instructions",
 		scenario: {
 			title: "Scenario",
 			description: "Select scenario",
