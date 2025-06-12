@@ -1,0 +1,1 @@
+import{H as s,F as t,j as n,B as c}from"./main-DsOtDJLA.js";const l=()=>{const o=s(),a=t();return n.jsx(c,{onClick:()=>{o({replace:!0,to:".",params:e=>({...e,locale:a==="en"?"fr":"en"}),search:e=>e})},size:"icon",children:a==="en"?"FR":"EN"})};export{l as L};
