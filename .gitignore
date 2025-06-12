@@ -25,3 +25,7 @@ dist
 # sst
 .sst
 sqlite.db
+
+# tanstack
+.tanstack
+.nitro
