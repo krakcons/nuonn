@@ -1,13 +1,8 @@
 import { getModuleFn } from "@/lib/handlers/modules";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useScorm } from "@/lib/scorm";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Chat } from "@/components/Chat";
-import {
-	ChatResponseSchema,
-	MessageSchema,
-	parseAssistantMessage,
-} from "@/lib/ai";
 
 export const Route = createFileRoute("/$locale/modules/$id/chat")({
 	component: RouteComponent,
@@ -27,16 +22,29 @@ export const Route = createFileRoute("/$locale/modules/$id/chat")({
 function RouteComponent() {
 	const { chatModule } = Route.useLoaderData();
 	const { sendEvent, messages: scormMessages } = useScorm();
+	const [complete, setComplete] = useState(false);
 
 	useEffect(() => {
 		sendEvent("LMSInitialize");
 		sendEvent("LMSGetValue", "cmi.core.suspend_data");
+		sendEvent("LMSGetValue", "cmi.core.lesson_status");
 	}, []);
 
 	const initialMessages =
 		scormMessages.find(
-			(m) => m.event.method === "LMSGetValue" && m.response,
+			(m) =>
+				m.event.method === "LMSGetValue" &&
+				m.response &&
+				m.event.parameter === "cmi.core.suspend_data",
 		)?.response?.result || "[]";
+
+	const defaultComplete =
+		scormMessages.find(
+			(m) =>
+				m.event.method === "LMSGetValue" &&
+				m.response &&
+				m.event.parameter === "cmi.core.lesson_status",
+		)?.response?.result === "completed";
 
 	if (!initialMessages) {
 		return <div>Loading...</div>;
@@ -54,6 +62,7 @@ function RouteComponent() {
 						)
 					]
 				}
+				complete={complete || defaultComplete}
 				contextIds={chatModule.data.contextIds}
 				instructions={chatModule.instructions}
 				onChange={(messages) => {
@@ -61,21 +70,13 @@ function RouteComponent() {
 						element: "cmi.core.suspend_data",
 						value: JSON.stringify(messages),
 					});
-
-					const parsedMessages = messages.map(
-						(m) => parseAssistantMessage(m)!,
-					);
-					// If the latest response has a non-success evaluation, don't send the next message
-					if (
-						!parsedMessages[
-							parsedMessages.length - 1
-						].evaluations.find((e) => !e.success)
-					) {
-						sendEvent("LMSSetValue", {
-							element: "cmi.core.lesson_status",
-							value: "completed",
-						});
-					}
+				}}
+				onComplete={() => {
+					setComplete(true);
+					sendEvent("LMSSetValue", {
+						element: "cmi.core.lesson_status",
+						value: "completed",
+					});
 				}}
 			/>
 		</div>

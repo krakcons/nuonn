@@ -28,6 +28,7 @@ function RouteComponent() {
 	const [personas, scenarios, contexts] = Route.useLoaderData();
 	const [disabled, setDisabled] = useState(false);
 	const t = useTranslations("Chat");
+	const [complete, setComplete] = useState(false);
 
 	const form = useAppForm({
 		defaultValues: {
@@ -49,6 +50,8 @@ function RouteComponent() {
 						onChange={() => {
 							setDisabled(true);
 						}}
+						complete={complete}
+						onComplete={() => setComplete(true)}
 						instructions={instructions}
 					/>
 					<form.AppForm>

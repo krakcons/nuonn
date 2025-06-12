@@ -140,6 +140,7 @@ const fr: Messages = {
 	Chat: {
 		random: "Aléatoire",
 		instructions: "Instructions",
+		completed: "Vous avez terminé avec succès ce scénario.",
 		scenario: {
 			title: "Scénario",
 			description: "Sélectionner un scénario",

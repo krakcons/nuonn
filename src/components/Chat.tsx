@@ -20,6 +20,8 @@ export const Chat = ({
 	contextIds,
 	instructions,
 	onChange,
+	complete,
+	onComplete,
 }: {
 	initialMessages?: Message[];
 	scenarioId: string;
@@ -27,6 +29,8 @@ export const Chat = ({
 	contextIds?: string[];
 	instructions?: string;
 	onChange?: (messages: Message[]) => void;
+	complete: boolean;
+	onComplete?: () => void;
 }) => {
 	const t = useTranslations("Chat");
 
@@ -79,9 +83,17 @@ export const Chat = ({
 			return;
 
 		onChange(messages);
-	}, [messages, status]);
 
-	console.log(instructions);
+		const parsedMessages = messages.map((m) => parseAssistantMessage(m)!);
+		// If the latest response has a non-success evaluation, don't send the next message
+		if (
+			!parsedMessages[parsedMessages.length - 1].evaluations.find(
+				(e) => !e.success,
+			)
+		) {
+			onComplete?.();
+		}
+	}, [messages, status]);
 
 	return (
 		<div className="flex h-full justify-start gap-2 overflow-y-auto p-4 scroll-p-8 flex-col-reverse w-full">
@@ -119,6 +131,7 @@ export const Chat = ({
 								placeholder={t.placeholder}
 								label=""
 								className="resize-none z-20"
+								disabled={complete}
 								onKeyDown={(e) => {
 									if (e.key === "Enter" && !e.shiftKey) {
 										e.preventDefault();
@@ -132,6 +145,13 @@ export const Chat = ({
 					/>
 				</form>
 			</form.AppForm>
+			{complete && (
+				<div className="flex flex-col gap-8 py-8">
+					<div className="text-center">
+						<p className="text-2xl font-bold">{t.completed}</p>
+					</div>
+				</div>
+			)}
 			<div className="flex flex-col-reverse gap-8 py-8">
 				{reversedMessages.map((m) => {
 					if (m.role === "user") {
