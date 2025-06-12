@@ -3,6 +3,11 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useScorm } from "@/lib/scorm";
 import { useEffect } from "react";
 import { Chat } from "@/components/Chat";
+import {
+	ChatResponseSchema,
+	MessageSchema,
+	parseAssistantMessage,
+} from "@/lib/ai";
 
 export const Route = createFileRoute("/$locale/modules/$id/chat")({
 	component: RouteComponent,
@@ -27,8 +32,6 @@ function RouteComponent() {
 		sendEvent("LMSInitialize");
 		sendEvent("LMSGetValue", "cmi.core.suspend_data");
 	}, []);
-
-	console.log(scormMessages);
 
 	const initialMessages =
 		scormMessages.find(
@@ -58,11 +61,15 @@ function RouteComponent() {
 						element: "cmi.core.suspend_data",
 						value: JSON.stringify(messages),
 					});
+
+					const parsedMessages = messages.map(
+						(m) => parseAssistantMessage(m)!,
+					);
 					// If the latest response has a non-success evaluation, don't send the next message
 					if (
-						!messages[messages.length - 1].evaluations.find(
-							(e) => !e.success,
-						)
+						!parsedMessages[
+							parsedMessages.length - 1
+						].evaluations.find((e) => !e.success)
 					) {
 						sendEvent("LMSSetValue", {
 							element: "cmi.core.lesson_status",

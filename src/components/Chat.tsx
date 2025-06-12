@@ -1,9 +1,7 @@
 import { useAppForm } from "@/components/ui/form";
 import { type Message, useChat } from "@ai-sdk/react";
-import { parsePartialJson } from "@ai-sdk/ui-utils";
 import { z } from "zod";
 import { getChatResponseFn } from "@/lib/handlers/chat";
-import { type ChatResponseType } from "@/lib/ai";
 import { useEffect } from "react";
 import { useTranslations } from "@/lib/locale";
 import { Check, ChevronsUpDown, Info } from "lucide-react";
@@ -13,23 +11,7 @@ import {
 	CollapsibleTrigger,
 } from "./ui/collapsible";
 import { Button } from "./ui/button";
-
-const parseAssistantMessage = (
-	message: Message,
-): ChatResponseType | undefined => {
-	const parsedMessage = parsePartialJson(message.content);
-
-	const { value, state } = parsedMessage as {
-		value: ChatResponseType | null;
-		state: string;
-	};
-
-	if (value && ["repaired-parse", "successful-parse"].includes(state)) {
-		return value;
-	}
-
-	return undefined;
-};
+import { parseAssistantMessage } from "@/lib/ai";
 
 export const Chat = ({
 	initialMessages = [],
@@ -44,7 +26,7 @@ export const Chat = ({
 	personaId: string;
 	contextIds?: string[];
 	instructions?: string;
-	onChange?: (messages: ChatResponseType[]) => void;
+	onChange?: (messages: Message[]) => void;
 }) => {
 	const t = useTranslations("Chat");
 
@@ -52,6 +34,7 @@ export const Chat = ({
 		initialMessages,
 		// @ts-ignore
 		fetch: (_, options) => {
+			console.log("OPTIONS", options);
 			const body = JSON.parse(options!.body! as string);
 			return getChatResponseFn({
 				data: body,
@@ -95,7 +78,7 @@ export const Chat = ({
 		)
 			return;
 
-		onChange(messages.map((m) => parseAssistantMessage(m)!));
+		onChange(messages);
 	}, [messages, status]);
 
 	return (
@@ -171,30 +154,23 @@ export const Chat = ({
 							<p className="whitespace-pre-line">
 								{json?.content}
 							</p>
-							{((json.stats && json.stats.length > 0) ||
-								(json.evaluations &&
-									json.evaluations.length > 0)) && (
-								<div className="border px-3 py-2 flex flex-col gap-2">
-									{json.stats &&
-										json.stats.map((s, i) => (
-											<p key={i}>
-												{s.name} ({s.value})
-											</p>
-										))}
-									{json.evaluations &&
-										json.evaluations.map((s, i) => (
-											<p
-												key={i}
-												className="flex items-center gap-2"
-											>
-												{s.success && (
-													<Check className="size-4" />
-												)}
-												{s.name} ({s.value})
-											</p>
-										))}
-								</div>
-							)}
+							{json.evaluations &&
+								json.evaluations.length > 0 && (
+									<div className="border px-3 py-2 flex flex-col gap-2">
+										{json.evaluations &&
+											json.evaluations.map((s, i) => (
+												<p
+													key={i}
+													className="flex items-center gap-2"
+												>
+													{s.success && (
+														<Check className="size-4" />
+													)}
+													{s.name} ({s.value})
+												</p>
+											))}
+									</div>
+								)}
 						</div>
 					);
 				})}
