@@ -277,13 +277,6 @@ export interface RootServerRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/$locale/admin': {
-      id: '/$locale/admin'
-      path: '/$locale/admin'
-      fullPath: '/$locale/admin'
-      preLoaderRoute: typeof LocaleAdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/$locale/': {
       id: '/$locale/'
       path: '/$locale'
@@ -291,32 +284,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LocaleIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/$locale/auth/create-team': {
-      id: '/$locale/auth/create-team'
-      path: '/$locale/auth/create-team'
-      fullPath: '/$locale/auth/create-team'
-      preLoaderRoute: typeof LocaleAuthCreateTeamRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/$locale/auth/login': {
-      id: '/$locale/auth/login'
-      path: '/$locale/auth/login'
-      fullPath: '/$locale/auth/login'
-      preLoaderRoute: typeof LocaleAuthLoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/$locale/auth/verify-email': {
-      id: '/$locale/auth/verify-email'
-      path: '/$locale/auth/verify-email'
-      fullPath: '/$locale/auth/verify-email'
-      preLoaderRoute: typeof LocaleAuthVerifyEmailRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/auth/$': {
-      id: '/api/auth/$'
-      path: ''
-      fullPath: '/api/auth/$'
-      preLoaderRoute: unknown
+    '/$locale/admin': {
+      id: '/$locale/admin'
+      path: '/$locale/admin'
+      fullPath: '/$locale/admin'
+      preLoaderRoute: typeof LocaleAdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$locale/admin/': {
@@ -326,60 +298,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LocaleAdminIndexRouteImport
       parentRoute: typeof LocaleAdminRoute
     }
-    '/$locale/admin/api-keys/create': {
-      id: '/$locale/admin/api-keys/create'
-      path: '/api-keys/create'
-      fullPath: '/$locale/admin/api-keys/create'
-      preLoaderRoute: typeof LocaleAdminApiKeysCreateRouteImport
-      parentRoute: typeof LocaleAdminRoute
+    '/$locale/auth/verify-email': {
+      id: '/$locale/auth/verify-email'
+      path: '/$locale/auth/verify-email'
+      fullPath: '/$locale/auth/verify-email'
+      preLoaderRoute: typeof LocaleAuthVerifyEmailRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/$locale/admin/contexts/$id': {
-      id: '/$locale/admin/contexts/$id'
-      path: '/contexts/$id'
-      fullPath: '/$locale/admin/contexts/$id'
-      preLoaderRoute: typeof LocaleAdminContextsIdRouteImport
-      parentRoute: typeof LocaleAdminRoute
+    '/$locale/auth/login': {
+      id: '/$locale/auth/login'
+      path: '/$locale/auth/login'
+      fullPath: '/$locale/auth/login'
+      preLoaderRoute: typeof LocaleAuthLoginRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/$locale/admin/contexts/create': {
-      id: '/$locale/admin/contexts/create'
-      path: '/contexts/create'
-      fullPath: '/$locale/admin/contexts/create'
-      preLoaderRoute: typeof LocaleAdminContextsCreateRouteImport
-      parentRoute: typeof LocaleAdminRoute
+    '/$locale/auth/create-team': {
+      id: '/$locale/auth/create-team'
+      path: '/$locale/auth/create-team'
+      fullPath: '/$locale/auth/create-team'
+      preLoaderRoute: typeof LocaleAuthCreateTeamRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/$locale/admin/modules/create': {
-      id: '/$locale/admin/modules/create'
-      path: '/modules/create'
-      fullPath: '/$locale/admin/modules/create'
-      preLoaderRoute: typeof LocaleAdminModulesCreateRouteImport
-      parentRoute: typeof LocaleAdminRoute
-    }
-    '/$locale/admin/personas/$id': {
-      id: '/$locale/admin/personas/$id'
-      path: '/personas/$id'
-      fullPath: '/$locale/admin/personas/$id'
-      preLoaderRoute: typeof LocaleAdminPersonasIdRouteImport
-      parentRoute: typeof LocaleAdminRoute
-    }
-    '/$locale/admin/personas/create': {
-      id: '/$locale/admin/personas/create'
-      path: '/personas/create'
-      fullPath: '/$locale/admin/personas/create'
-      preLoaderRoute: typeof LocaleAdminPersonasCreateRouteImport
-      parentRoute: typeof LocaleAdminRoute
-    }
-    '/$locale/admin/scenarios/$id': {
-      id: '/$locale/admin/scenarios/$id'
-      path: '/scenarios/$id'
-      fullPath: '/$locale/admin/scenarios/$id'
-      preLoaderRoute: typeof LocaleAdminScenariosIdRouteImport
-      parentRoute: typeof LocaleAdminRoute
-    }
-    '/$locale/admin/scenarios/create': {
-      id: '/$locale/admin/scenarios/create'
-      path: '/scenarios/create'
-      fullPath: '/$locale/admin/scenarios/create'
-      preLoaderRoute: typeof LocaleAdminScenariosCreateRouteImport
+    '/$locale/admin/api-keys/': {
+      id: '/$locale/admin/api-keys/'
+      path: '/api-keys'
+      fullPath: '/$locale/admin/api-keys'
+      preLoaderRoute: typeof LocaleAdminApiKeysIndexRouteImport
       parentRoute: typeof LocaleAdminRoute
     }
     '/$locale/modules/$id/chat': {
@@ -389,11 +333,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LocaleModulesIdChatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/$locale/admin/api-keys/': {
-      id: '/$locale/admin/api-keys/'
-      path: '/api-keys'
-      fullPath: '/$locale/admin/api-keys'
-      preLoaderRoute: typeof LocaleAdminApiKeysIndexRouteImport
+    '/$locale/admin/scenarios/create': {
+      id: '/$locale/admin/scenarios/create'
+      path: '/scenarios/create'
+      fullPath: '/$locale/admin/scenarios/create'
+      preLoaderRoute: typeof LocaleAdminScenariosCreateRouteImport
+      parentRoute: typeof LocaleAdminRoute
+    }
+    '/$locale/admin/scenarios/$id': {
+      id: '/$locale/admin/scenarios/$id'
+      path: '/scenarios/$id'
+      fullPath: '/$locale/admin/scenarios/$id'
+      preLoaderRoute: typeof LocaleAdminScenariosIdRouteImport
+      parentRoute: typeof LocaleAdminRoute
+    }
+    '/$locale/admin/personas/create': {
+      id: '/$locale/admin/personas/create'
+      path: '/personas/create'
+      fullPath: '/$locale/admin/personas/create'
+      preLoaderRoute: typeof LocaleAdminPersonasCreateRouteImport
+      parentRoute: typeof LocaleAdminRoute
+    }
+    '/$locale/admin/personas/$id': {
+      id: '/$locale/admin/personas/$id'
+      path: '/personas/$id'
+      fullPath: '/$locale/admin/personas/$id'
+      preLoaderRoute: typeof LocaleAdminPersonasIdRouteImport
+      parentRoute: typeof LocaleAdminRoute
+    }
+    '/$locale/admin/modules/create': {
+      id: '/$locale/admin/modules/create'
+      path: '/modules/create'
+      fullPath: '/$locale/admin/modules/create'
+      preLoaderRoute: typeof LocaleAdminModulesCreateRouteImport
+      parentRoute: typeof LocaleAdminRoute
+    }
+    '/$locale/admin/contexts/create': {
+      id: '/$locale/admin/contexts/create'
+      path: '/contexts/create'
+      fullPath: '/$locale/admin/contexts/create'
+      preLoaderRoute: typeof LocaleAdminContextsCreateRouteImport
+      parentRoute: typeof LocaleAdminRoute
+    }
+    '/$locale/admin/contexts/$id': {
+      id: '/$locale/admin/contexts/$id'
+      path: '/contexts/$id'
+      fullPath: '/$locale/admin/contexts/$id'
+      preLoaderRoute: typeof LocaleAdminContextsIdRouteImport
+      parentRoute: typeof LocaleAdminRoute
+    }
+    '/$locale/admin/api-keys/create': {
+      id: '/$locale/admin/api-keys/create'
+      path: '/api-keys/create'
+      fullPath: '/$locale/admin/api-keys/create'
+      preLoaderRoute: typeof LocaleAdminApiKeysCreateRouteImport
       parentRoute: typeof LocaleAdminRoute
     }
     '/$locale/admin/modules/$id/': {
@@ -407,130 +400,11 @@ declare module '@tanstack/react-router' {
 }
 declare module '@tanstack/react-start/server' {
   interface ServerFileRoutesByPath {
-    '/$locale/admin': {
-      id: '/$locale/admin'
-      path: '/$locale/admin'
-      fullPath: '/$locale/admin'
-      preLoaderRoute: unknown
-      parentRoute: typeof rootServerRouteImport
-    }
-    '/$locale/': {
-      id: '/$locale/'
-      path: '/$locale'
-      fullPath: '/$locale'
-      preLoaderRoute: unknown
-      parentRoute: typeof rootServerRouteImport
-    }
-    '/$locale/auth/create-team': {
-      id: '/$locale/auth/create-team'
-      path: '/$locale/auth/create-team'
-      fullPath: '/$locale/auth/create-team'
-      preLoaderRoute: unknown
-      parentRoute: typeof rootServerRouteImport
-    }
-    '/$locale/auth/login': {
-      id: '/$locale/auth/login'
-      path: '/$locale/auth/login'
-      fullPath: '/$locale/auth/login'
-      preLoaderRoute: unknown
-      parentRoute: typeof rootServerRouteImport
-    }
-    '/$locale/auth/verify-email': {
-      id: '/$locale/auth/verify-email'
-      path: '/$locale/auth/verify-email'
-      fullPath: '/$locale/auth/verify-email'
-      preLoaderRoute: unknown
-      parentRoute: typeof rootServerRouteImport
-    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
       fullPath: '/api/auth/$'
       preLoaderRoute: typeof ApiAuthSplatServerRouteImport
-      parentRoute: typeof rootServerRouteImport
-    }
-    '/$locale/admin/': {
-      id: '/$locale/admin/'
-      path: '/'
-      fullPath: '/$locale/admin/'
-      preLoaderRoute: unknown
-      parentRoute: typeof rootServerRouteImport
-    }
-    '/$locale/admin/api-keys/create': {
-      id: '/$locale/admin/api-keys/create'
-      path: '/api-keys/create'
-      fullPath: '/$locale/admin/api-keys/create'
-      preLoaderRoute: unknown
-      parentRoute: typeof rootServerRouteImport
-    }
-    '/$locale/admin/contexts/$id': {
-      id: '/$locale/admin/contexts/$id'
-      path: '/contexts/$id'
-      fullPath: '/$locale/admin/contexts/$id'
-      preLoaderRoute: unknown
-      parentRoute: typeof rootServerRouteImport
-    }
-    '/$locale/admin/contexts/create': {
-      id: '/$locale/admin/contexts/create'
-      path: '/contexts/create'
-      fullPath: '/$locale/admin/contexts/create'
-      preLoaderRoute: unknown
-      parentRoute: typeof rootServerRouteImport
-    }
-    '/$locale/admin/modules/create': {
-      id: '/$locale/admin/modules/create'
-      path: '/modules/create'
-      fullPath: '/$locale/admin/modules/create'
-      preLoaderRoute: unknown
-      parentRoute: typeof rootServerRouteImport
-    }
-    '/$locale/admin/personas/$id': {
-      id: '/$locale/admin/personas/$id'
-      path: '/personas/$id'
-      fullPath: '/$locale/admin/personas/$id'
-      preLoaderRoute: unknown
-      parentRoute: typeof rootServerRouteImport
-    }
-    '/$locale/admin/personas/create': {
-      id: '/$locale/admin/personas/create'
-      path: '/personas/create'
-      fullPath: '/$locale/admin/personas/create'
-      preLoaderRoute: unknown
-      parentRoute: typeof rootServerRouteImport
-    }
-    '/$locale/admin/scenarios/$id': {
-      id: '/$locale/admin/scenarios/$id'
-      path: '/scenarios/$id'
-      fullPath: '/$locale/admin/scenarios/$id'
-      preLoaderRoute: unknown
-      parentRoute: typeof rootServerRouteImport
-    }
-    '/$locale/admin/scenarios/create': {
-      id: '/$locale/admin/scenarios/create'
-      path: '/scenarios/create'
-      fullPath: '/$locale/admin/scenarios/create'
-      preLoaderRoute: unknown
-      parentRoute: typeof rootServerRouteImport
-    }
-    '/$locale/modules/$id/chat': {
-      id: '/$locale/modules/$id/chat'
-      path: '/$locale/modules/$id/chat'
-      fullPath: '/$locale/modules/$id/chat'
-      preLoaderRoute: unknown
-      parentRoute: typeof rootServerRouteImport
-    }
-    '/$locale/admin/api-keys/': {
-      id: '/$locale/admin/api-keys/'
-      path: '/api-keys'
-      fullPath: '/$locale/admin/api-keys'
-      preLoaderRoute: unknown
-      parentRoute: typeof rootServerRouteImport
-    }
-    '/$locale/admin/modules/$id/': {
-      id: '/$locale/admin/modules/$id/'
-      path: '/modules/$id'
-      fullPath: '/$locale/admin/modules/$id'
-      preLoaderRoute: unknown
       parentRoute: typeof rootServerRouteImport
     }
   }
