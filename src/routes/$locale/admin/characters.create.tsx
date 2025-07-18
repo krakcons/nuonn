@@ -6,7 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/$locale/admin/personas/create")({
+export const Route = createFileRoute("/$locale/admin/characters/create")({
 	component: RouteComponent,
 });
 
@@ -19,7 +19,7 @@ function RouteComponent() {
 		onSuccess: ({ id }) => {
 			toast.success(t.toast);
 			navigate({
-				to: "/$locale/admin/personas/$id",
+				to: "/$locale/admin/characters/$id",
 				params: {
 					id,
 					locale,

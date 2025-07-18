@@ -36,7 +36,7 @@ import { useState } from "react";
 import { useAppForm } from "@/components/ui/form";
 import { useNavigate } from "@tanstack/react-router";
 import { useTheme, type Theme } from "@/lib/theme";
-import type { Session, User } from "better-auth";
+import type { User } from "better-auth";
 
 type UserFormType = {
 	name: string;

@@ -12,12 +12,12 @@ import { createFileRoute, notFound, useRouter } from "@tanstack/react-router";
 import { Trash } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/$locale/admin/personas/$id")({
+export const Route = createFileRoute("/$locale/admin/characters/$id")({
 	component: RouteComponent,
 	loader: async ({ params: { id } }) => {
 		const persona = await getPersonaFn({
 			data: { id },
-		});
+		})
 		if (!persona) throw notFound();
 		return persona;
 	},
@@ -36,7 +36,7 @@ function RouteComponent() {
 			toast.success(t.toast);
 			router.invalidate();
 		},
-	});
+	})
 
 	const deletePersona = useMutation({
 		mutationFn: deletePersonaFn,
@@ -44,9 +44,9 @@ function RouteComponent() {
 			toast.success(t.deleteToast);
 			navigate({
 				to: "/$locale/admin",
-			});
+			})
 		},
-	});
+	})
 
 	return (
 		<Page>
@@ -58,7 +58,7 @@ function RouteComponent() {
 							data: {
 								id,
 							},
-						});
+						})
 					}}
 				>
 					<Trash />
@@ -78,5 +78,5 @@ function RouteComponent() {
 				}
 			/>
 		</Page>
-	);
+	)
 }

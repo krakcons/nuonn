@@ -109,7 +109,7 @@ const fr: Messages = {
 		personas: {
 			title: "Personnages",
 			tooltip:
-				"Les personas sont les personnages que l'IA joue dans les scénarios.",
+				"Les personnages sont le rôle que joue l'IA dans les scénarios.",
 		},
 		scenarios: {
 			title: "Scénarios",
@@ -150,8 +150,8 @@ const fr: Messages = {
 			description: "Sélectionner les contextes",
 		},
 		persona: {
-			title: "Persona",
-			description: "Sélectionner une persona",
+			title: "Caractère",
+			description: "Sélectionnez le personnage",
 		},
 		placeholder: "Tapez votre message ici...",
 	},
@@ -184,20 +184,20 @@ const fr: Messages = {
 			placeholder: "Sélectionner les contextes",
 		},
 		personas: {
-			label: "Personas",
-			placeholder: "Sélectionner les personas",
+			label: "Personnages",
+			placeholder: "Sélectionnez les personnages",
 		},
 	},
 	Persona: {
-		edit: "Modifier cette persona",
-		toast: "Persona mise à jour avec succès",
-		deleteToast: "Persona supprimée avec succès",
+		edit: "Modifier ce personnage",
+		toast: "Personnage mis à jour avec succès",
+		deleteToast: "Personnage supprimé avec succès",
 	},
 	PersonaCreate: {
-		title: "Créer une Persona",
+		title: "Créer un personnage",
 		description:
-			"Créer une nouvelle persona qui peut être utilisée dans un scénario",
-		toast: "Persona créée avec succès",
+			"Créez un nouveau personnage qui peut être utilisé dans un scénario",
+		toast: "Personnage créé avec succès",
 	},
 	PersonaForm: {
 		statOptions: {
@@ -237,7 +237,7 @@ const fr: Messages = {
 		behaviour: "Comportement",
 		languages: {
 			title: "Langues",
-			description: "Décrire les langues que la persona peut parler",
+			description: "Décrivez les langues que le personnage peut parler.",
 			name: "Nom",
 			spoken: "Parlé",
 			written: "Écrit",
@@ -258,7 +258,7 @@ const fr: Messages = {
 		name: "Nom",
 		description: "Description",
 		user: "Contexte utilisateur",
-		persona: "Contexte persona",
+		persona: "Contexte du personnage",
 	},
 	Scenario: {
 		edit: "Modifier ce scénario",
@@ -291,13 +291,13 @@ const fr: Messages = {
 				"Décrire les évaluations qui doivent être suivies pour l'utilisateur",
 		},
 		persona: {
-			title: "Persona",
-			description: "Décrire le rôle de la persona dans le scénario",
+			title: "Caractère",
+			description: "Décrivez le rôle du personnage dans le scénario",
 		},
 		personaEvaluations: {
-			title: "Évaluations de la persona",
+			title: "Évaluations de la personnalité",
 			description:
-				"Décrire les évaluations qui doivent être suivies pour la persona",
+				"Describe the evaluations that should be tracked for the character",
 		},
 		evaluationType: {
 			title: "Taper",

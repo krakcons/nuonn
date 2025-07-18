@@ -1,10 +1,10 @@
 import { ChatInputSchema, ChatResponseSchema } from "@/lib/ai";
-import { streamText, Output } from "ai";
+import { streamText, Output, convertToModelMessages } from "ai";
 import { openai } from "@ai-sdk/openai";
 import { createServerFn } from "@tanstack/react-start";
 import { contexts, personas, scenarios } from "@/lib/db/schema";
 import { db } from "@/lib/db";
-import { and, eq, inArray } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { z } from "zod";
 
 export const getChatResponseFn = createServerFn({
@@ -117,10 +117,10 @@ Example:
 					experimental_output: Output.object({
 						schema: ChatResponseSchema,
 					}),
-					messages,
+					messages: convertToModelMessages(messages),
 				});
 
-				return result.toDataStreamResponse();
+				return result.toUIMessageStreamResponse();
 			} catch (error) {
 				console.error("Error in genAIResponse:", error);
 				if (

@@ -1,5 +1,5 @@
 import { useAppForm } from "@/components/ui/form";
-import { type Message, useChat } from "@ai-sdk/react";
+import { type UIMessage, useChat } from "@ai-sdk/react";
 import { z } from "zod";
 import { getChatResponseFn } from "@/lib/handlers/chat";
 import { useEffect } from "react";
@@ -12,6 +12,7 @@ import {
 } from "./ui/collapsible";
 import { Button } from "./ui/button";
 import { parseAssistantMessage } from "@/lib/ai";
+import { DefaultChatTransport } from "ai";
 
 export const Chat = ({
 	initialMessages = [],
@@ -23,27 +24,27 @@ export const Chat = ({
 	complete,
 	onComplete,
 }: {
-	initialMessages?: Message[];
+	initialMessages?: UIMessage[];
 	scenarioId: string;
 	personaId: string;
 	contextIds?: string[];
 	instructions?: string;
-	onChange?: (messages: Message[]) => void;
+	onChange?: (messages: UIMessage[]) => void;
 	complete: boolean;
 	onComplete?: () => void;
 }) => {
 	const t = useTranslations("Chat");
 
-	const { append, status, messages } = useChat({
-		initialMessages,
-		// @ts-ignore
-		fetch: (_, options) => {
-			console.log("OPTIONS", options);
-			const body = JSON.parse(options!.body! as string);
-			return getChatResponseFn({
-				data: body,
-			});
-		},
+	const { sendMessage, status, messages } = useChat({
+		transport: new DefaultChatTransport({
+			// @ts-ignore
+			fetch: (_, options) => {
+				const body = JSON.parse(options!.body! as string);
+				return getChatResponseFn({
+					data: body,
+				});
+			},
+		}),
 	});
 
 	const form = useAppForm({
@@ -54,10 +55,9 @@ export const Chat = ({
 			onSubmit: z.object({ content: z.string().min(1) }),
 		},
 		onSubmit: ({ value: { content }, formApi }) => {
-			append(
+			sendMessage(
 				{
-					role: "user",
-					content,
+					text: content,
 				},
 				{
 					body: {
@@ -160,7 +160,7 @@ export const Chat = ({
 								key={m.id}
 								className="self-end bg-blue-500 text-white px-3 py-2 sm:max-w-[70%] max-w-[90%] whitespace-pre-line"
 							>
-								{m.content}
+								{m.parts.find((p) => p.type === "text")?.text}
 							</div>
 						);
 					}

@@ -1,5 +1,5 @@
 import { parsePartialJson } from "@ai-sdk/ui-utils";
-import type { Message } from "ai";
+import type { UIMessage } from "ai";
 import { z } from "zod";
 
 export const DataSchema = z.object({
@@ -36,9 +36,10 @@ export const ChatResponseSchema = z.object({
 export type ChatResponseType = z.infer<typeof ChatResponseSchema>;
 
 export const parseAssistantMessage = (
-	message: Message,
+	message: UIMessage,
 ): ChatResponseType | undefined => {
-	const parsedMessage = parsePartialJson(message.content);
+	const text = message.parts.find((p) => p.type === "text")?.text;
+	const parsedMessage = parsePartialJson(text);
 
 	const { value, state } = parsedMessage as {
 		value: ChatResponseType | null;

@@ -2,7 +2,9 @@ import { createMiddleware, createServerFn } from "@tanstack/react-start";
 import { getHeaders } from "@tanstack/react-start/server";
 import { auth } from "../auth";
 
-export const authMiddleware = createMiddleware().server(async ({ next }) => {
+export const authMiddleware = createMiddleware({
+	type: "function",
+}).server(async ({ next }) => {
 	const data = await auth.api.getSession({
 		headers: getHeaders() as unknown as Headers,
 	});
@@ -14,7 +16,9 @@ export const authMiddleware = createMiddleware().server(async ({ next }) => {
 	});
 });
 
-export const protectedMiddleware = createMiddleware()
+export const protectedMiddleware = createMiddleware({
+	type: "function",
+})
 	.middleware([authMiddleware])
 	.server(async ({ next, context }) => {
 		if (!context.session || !context.user) {

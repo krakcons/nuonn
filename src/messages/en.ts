@@ -103,14 +103,13 @@ const en = {
 	AdminSidebar: {
 		dashboard: "Dashboard",
 		personas: {
-			title: "Personas",
-			tooltip:
-				"Personas are the characters the AI plays in the scenarios.",
+			title: "Characters",
+			tooltip: "Characters are the role the AI plays in the scenarios.",
 		},
 		scenarios: {
 			title: "Scenarios",
 			tooltip:
-				"Scenarios are the environment the persona and user are interacting in. (ex. a helpline, cashier)",
+				"Scenarios are the environment the character and user are interacting in. (ex. a helpline, cashier)",
 		},
 		contexts: {
 			title: "Contexts",
@@ -120,7 +119,7 @@ const en = {
 		modules: {
 			title: "Modules",
 			tooltip:
-				"Modules are an exportable course based on a scenario, personas, and contexts.",
+				"Modules are an exportable course based on a scenario, characters, and contexts.",
 		},
 		editing: "Editing",
 		chat: "Chat Playground",
@@ -146,8 +145,8 @@ const en = {
 			description: "Select contexts",
 		},
 		persona: {
-			title: "Persona",
-			description: "Select persona",
+			title: "Character",
+			description: "Select character",
 		},
 		placeholder: "Type your message here...",
 	},
@@ -173,19 +172,19 @@ const en = {
 		scenario: { label: "Scenario", placeholder: "Select a Scenario" },
 		contexts: { label: "Contexts", placeholder: "Select the contexts" },
 		personas: {
-			label: "Personas",
-			placeholder: "Select the personas",
+			label: "Characters",
+			placeholder: "Select the characters",
 		},
 	},
 	Persona: {
-		edit: "Edit this persona",
-		toast: "Persona updated successfully",
-		deleteToast: "Persona deleted successfully",
+		edit: "Edit this character",
+		toast: "Character updated successfully",
+		deleteToast: "Character deleted successfully",
 	},
 	PersonaCreate: {
-		title: "Create Persona",
-		description: "Create a new persona that can be used in a scenario",
-		toast: "Persona created successfully",
+		title: "Create Character",
+		description: "Create a new character that can be used in a scenario",
+		toast: "Character created successfully",
 	},
 	PersonaForm: {
 		statOptions: {
@@ -225,7 +224,7 @@ const en = {
 		behaviour: "Behaviour",
 		languages: {
 			title: "Languages",
-			description: "Describe the languages the persona can speak",
+			description: "Describe the languages the character can speak",
 			name: "Name",
 			spoken: "Spoken",
 			written: "Written",
@@ -245,7 +244,7 @@ const en = {
 		name: "Name",
 		description: "Description",
 		user: "User Context",
-		persona: "Persona Context",
+		persona: "Character Context",
 	},
 	Scenario: {
 		edit: "Edit this scenario",
@@ -278,13 +277,13 @@ const en = {
 				"Describe the evaluations that should be tracked for the user",
 		},
 		persona: {
-			title: "Persona",
-			description: "Describe the persona role in the scenario",
+			title: "Character",
+			description: "Describe the character's role in the scenario",
 		},
 		personaEvaluations: {
-			title: "Persona Evaluations",
+			title: "Character Evaluations",
 			description:
-				"Describe the evaluations that should be tracked for the persona",
+				"Describe the evaluations that should be tracked for the character",
 		},
 		evaluationType: {
 			title: "Type",

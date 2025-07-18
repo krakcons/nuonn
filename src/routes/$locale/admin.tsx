@@ -217,7 +217,7 @@ function RouteComponent() {
 								</Tooltip>
 							</SidebarGroupLabel>
 							<Link
-								to="/$locale/admin/personas/create"
+								to="/$locale/admin/characters/create"
 								from={Route.fullPath}
 							>
 								<SidebarGroupAction>
@@ -229,7 +229,7 @@ function RouteComponent() {
 									{personas.map((persona) => (
 										<SidebarMenuItem key={persona.id}>
 											<Link
-												to="/$locale/admin/personas/$id"
+												to="/$locale/admin/characters/$id"
 												from={Route.fullPath}
 												params={{ id: persona.id }}
 											>
