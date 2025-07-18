@@ -1,7 +1,7 @@
 import { getModuleFn } from "@/lib/handlers/modules";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useScorm } from "@/lib/scorm";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Chat } from "@/components/Chat";
 
 export const Route = createFileRoute("/$locale/modules/$id/chat")({
@@ -30,30 +30,39 @@ function RouteComponent() {
 		sendEvent("LMSGetValue", "cmi.core.lesson_status");
 	}, []);
 
-	const initialMessages =
-		scormMessages.find(
+	const { initialMessages, isComplete, isLoading } = useMemo(() => {
+		const data = scormMessages.find(
 			(m) =>
 				m.event.method === "LMSGetValue" &&
 				m.response &&
 				m.event.parameter === "cmi.core.suspend_data",
-		)?.response?.result || "[]";
+		);
+		const initialMessages = data?.response?.result;
+		const isComplete =
+			scormMessages.find(
+				(m) =>
+					m.event.method === "LMSGetValue" &&
+					m.response &&
+					m.event.parameter === "cmi.core.lesson_status",
+			)?.response?.result === "completed";
+		return {
+			data,
+			isLoading: !data,
+			initialMessages,
+			isComplete,
+		};
+	}, [scormMessages]);
 
-	const defaultComplete =
-		scormMessages.find(
-			(m) =>
-				m.event.method === "LMSGetValue" &&
-				m.response &&
-				m.event.parameter === "cmi.core.lesson_status",
-		)?.response?.result === "completed";
-
-	if (!initialMessages) {
+	if (isLoading) {
 		return <div>Loading...</div>;
 	}
 
 	return (
 		<div className="p-8 h-screen max-w-2xl w-full mx-auto">
 			<Chat
-				initialMessages={JSON.parse(initialMessages)}
+				initialMessages={
+					initialMessages ? JSON.parse(initialMessages) : []
+				}
 				scenarioId={chatModule.data.scenarioId}
 				personaId={
 					chatModule.data.personaIds[
@@ -62,7 +71,7 @@ function RouteComponent() {
 						)
 					]
 				}
-				complete={complete || defaultComplete}
+				complete={complete || isComplete}
 				contextIds={chatModule.data.contextIds}
 				instructions={chatModule.instructions}
 				onChange={(messages) => {

@@ -52,7 +52,6 @@ import {
 import {
 	Component,
 	FileVideo,
-	Gauge,
 	HelpCircle,
 	Key,
 	MessagesSquare,
@@ -251,51 +250,6 @@ function RouteComponent() {
 						</SidebarGroup>
 						<SidebarGroup>
 							<SidebarGroupLabel className="flex justify-between gap-2 pr-7">
-								{t.contexts.title}
-								<Tooltip>
-									<TooltipTrigger>
-										<HelpCircle className="size-4" />
-									</TooltipTrigger>
-									<TooltipContent>
-										{t.contexts.tooltip}
-									</TooltipContent>
-								</Tooltip>
-							</SidebarGroupLabel>
-							<Link
-								to="/$locale/admin/contexts/create"
-								from={Route.fullPath}
-							>
-								<SidebarGroupAction>
-									<Plus />
-								</SidebarGroupAction>
-							</Link>
-							<SidebarGroupContent>
-								<SidebarMenu>
-									{contexts.map((context) => (
-										<SidebarMenuItem key={context.id}>
-											<Link
-												to="/$locale/admin/contexts/$id"
-												from={Route.fullPath}
-												params={{ id: context.id }}
-											>
-												{({ isActive }) => (
-													<SidebarMenuButton
-														isActive={isActive}
-													>
-														<Gauge />
-														<p className="truncate">
-															{context.data.name}
-														</p>
-													</SidebarMenuButton>
-												)}
-											</Link>
-										</SidebarMenuItem>
-									))}
-								</SidebarMenu>
-							</SidebarGroupContent>
-						</SidebarGroup>
-						<SidebarGroup>
-							<SidebarGroupLabel className="flex justify-between gap-2 pr-7">
 								{t.scenarios.title}
 								<Tooltip>
 									<TooltipTrigger>
@@ -330,6 +284,56 @@ function RouteComponent() {
 														<FileVideo />
 														<p className="truncate">
 															{scenario.data.name}
+														</p>
+													</SidebarMenuButton>
+												)}
+											</Link>
+										</SidebarMenuItem>
+									))}
+								</SidebarMenu>
+							</SidebarGroupContent>
+						</SidebarGroup>
+						<SidebarGroup>
+							<SidebarGroupLabel className="flex justify-between gap-2 pr-7">
+								{t.contexts.title}
+								<Tooltip>
+									<TooltipTrigger>
+										<HelpCircle className="size-4" />
+									</TooltipTrigger>
+									<TooltipContent>
+										{t.contexts.tooltip}
+									</TooltipContent>
+								</Tooltip>
+							</SidebarGroupLabel>
+							<Link
+								to="/$locale/admin/contexts/create"
+								from={Route.fullPath}
+							>
+								<SidebarGroupAction>
+									<Plus />
+								</SidebarGroupAction>
+							</Link>
+							<SidebarGroupContent>
+								<SidebarMenu>
+									{contexts.map((context) => (
+										<SidebarMenuItem key={context.id}>
+											<Link
+												to="/$locale/admin/contexts/$id"
+												from={Route.fullPath}
+												params={{ id: context.id }}
+											>
+												{({ isActive }) => (
+													<SidebarMenuButton
+														isActive={isActive}
+													>
+														{context.data.type ===
+														"character" ? (
+															<User />
+														) : (
+															<FileVideo />
+														)}
+														<p className="truncate">
+															{context.data.name}
 														</p>
 													</SidebarMenuButton>
 												)}

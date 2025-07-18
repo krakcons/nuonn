@@ -33,26 +33,26 @@ export const getChatResponseFn = createServerFn({
 			if (!scenario || !persona)
 				throw new Error("Invalid scenario or persona");
 
-			console.log(scenario.data.persona);
+			console.log(scenario, persona, chatContexts);
 
 			const system = [
 				// INTRO
-				`You are a roleplaying system. Respond in character as the persona described below, within the context of the given scenario. Stay in character at all times.`,
+				`You are a roleplaying system. Respond as the character described below, within the context of the given scenario. Stay in character at all times.`,
 
 				// SCENARIO
 				`Scenario: ${scenario.data.name}
 Description: ${scenario.data.description}`,
 
-				// ASSISTANT
-				`You are the Assistant in this scenario.
-Persona: ${JSON.stringify(persona.data)}
+				// CHARACTER
+				`You are the Character in this scenario.
+Character: ${JSON.stringify(persona.data)}
 Role: ${scenario.data.persona.role}
 Goals: ${scenario.data.persona.goals}
-Languages: Only respond in the language(s) specified in the persona: ${persona.data.languages || "English"}. Do not switch languages unless explicitly requested by the user and it matches your allowed languages.`,
+Languages: Only respond in the language(s) specified in the character: ${persona.data.languages || "English"}. Only switch languages if you speak it.`,
 
 				`Constraints:
-- Only use information explicitly provided in the persona and scenario
-- Do not reference external knowledge beyond what's established in your character
+- Only use information explicitly provided in the character and scenario
+- Only reference knowledge thats established in your character
 - Maintain character consistency throughout the conversation
 - If asked about something outside your character's knowledge, respond as that character would`,
 
@@ -64,18 +64,18 @@ Goals: ${scenario.data.user.goals}`,
 				// Context
 				chatContexts &&
 					chatContexts.length > 0 &&
-					`Apply the following contexts to the user and persona:
+					`Adjust the characters responses based on the following contexts:
 ${chatContexts.map(
 	(c, i) => `${i}:
+Type: ${c.data.type}
 Name: ${c.data.name}
 Description: ${c.data.description}
-User Context: ${JSON.stringify(c.data.user)}
-Persona Context: ${JSON.stringify(c.data.persona)}`,
+`,
 )}
 `,
 
 				`Evaluation Framework:
-Assistant Evaluations: ${JSON.stringify(scenario.data.persona.evaluations, null, 2)}
+Character Evaluations: ${JSON.stringify(scenario.data.persona.evaluations, null, 2)}
 User Evaluations: ${JSON.stringify(scenario.data.user.evaluations, null, 2)}
 
 Evaluation Types (based on type json field above):
@@ -88,7 +88,6 @@ Format the evaluations as a JSON object with the following fields:
 - name: The name of the evaluation
 - value: The value of the evaluation based on the measure
 - type: The type of evaluation (message or session)
-- role: who the evaluation is for (user or persona)
 - success: Whether the evaluation was successful based on the success value (true or false)
 
 Example:
@@ -98,14 +97,12 @@ Example:
 	"value": 0.8,
 	"type": "message",
 	"success": true
-	"role": "user"
 },
 {
 	"name": "Stress",
 	"value": 45,
 	"type": "session",
 	"success": false
-	"role": "persona"
 }
 ]
 `,

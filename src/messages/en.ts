@@ -114,7 +114,7 @@ const en = {
 		contexts: {
 			title: "Contexts",
 			tooltip:
-				"The context behind a scenario. (ex. an angry customer, an frantic caller)",
+				"The context behind a scenario. (ex. an angry customer, a frantic caller)",
 		},
 		modules: {
 			title: "Modules",
@@ -243,8 +243,11 @@ const en = {
 	ContextForm: {
 		name: "Name",
 		description: "Description",
-		user: "User Context",
-		persona: "Character Context",
+		type: {
+			title: "Type",
+			character: "Character",
+			scenario: "Scenario",
+		},
 	},
 	Scenario: {
 		edit: "Edit this scenario",

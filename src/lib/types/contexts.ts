@@ -1,10 +1,11 @@
 import { z } from "zod";
 
+export const contextTypes = ["character", "scenario"] as const;
+
 export const ContextDataSchema = z.object({
 	name: z.string(),
 	description: z.string(),
-	user: z.string(),
-	persona: z.string(),
+	type: z.enum(["character", "scenario"]),
 });
 export type ContextDataType = z.infer<typeof ContextDataSchema>;
 

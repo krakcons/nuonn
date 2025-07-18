@@ -35,7 +35,9 @@ export const Chat = ({
 }) => {
 	const t = useTranslations("Chat");
 
-	const { sendMessage, status, messages } = useChat({
+	console.log("INITIAL MESSAGES", initialMessages);
+
+	const { sendMessage, status, messages, setMessages, id } = useChat({
 		transport: new DefaultChatTransport({
 			// @ts-ignore
 			fetch: (_, options) => {
@@ -46,6 +48,12 @@ export const Chat = ({
 			},
 		}),
 	});
+
+	useEffect(() => {
+		setMessages(initialMessages);
+	}, [id]);
+
+	console.log("MESSAGES", messages);
 
 	const form = useAppForm({
 		defaultValues: {
@@ -74,22 +82,22 @@ export const Chat = ({
 	const reversedMessages = messages.slice().reverse();
 
 	useEffect(() => {
-		if (
-			status !== "ready" ||
-			!onChange ||
-			// Require messages to change
-			messages.length === initialMessages?.length
-		)
-			return;
+		if (status !== "ready") return;
 
-		onChange(messages);
+		onChange?.(messages);
 
-		const parsedMessages = messages.map((m) => parseAssistantMessage(m)!);
-		// If the latest response has a non-success evaluation, don't send the next message
+		const parsedMessages = messages
+			.map((m) => parseAssistantMessage(m))
+			.filter(Boolean);
+
+		const lastMessage = parsedMessages.find(
+			(_, i) => i === parsedMessages.length - 1,
+		);
 		if (
-			!parsedMessages[parsedMessages.length - 1].evaluations.find(
-				(e) => !e.success,
-			)
+			lastMessage &&
+			lastMessage.evaluations.length > 0 &&
+			// If cant find an error message, send onComplete
+			!lastMessage.evaluations.find((e) => !e.success)
 		) {
 			onComplete?.();
 		}
@@ -166,6 +174,7 @@ export const Chat = ({
 					}
 
 					const json = parseAssistantMessage(m);
+					console.log("JSON", json);
 					if (!json) return null;
 
 					return (

@@ -1,6 +1,10 @@
 import { useAppForm } from "@/components/ui/form";
 import { useTranslations } from "@/lib/locale";
-import { ContextDataSchema, type ContextDataType } from "@/lib/types/contexts";
+import {
+	ContextDataSchema,
+	contextTypes,
+	type ContextDataType,
+} from "@/lib/types/contexts";
 
 export const ContextForm = ({
 	defaultValues,
@@ -11,7 +15,12 @@ export const ContextForm = ({
 }) => {
 	const t = useTranslations("ContextForm");
 	const form = useAppForm({
-		defaultValues,
+		defaultValues: {
+			name: "",
+			description: "",
+			type: "character",
+			...defaultValues,
+		} as ContextDataType,
 		validators: {
 			onSubmit: ContextDataSchema,
 		},
@@ -29,19 +38,21 @@ export const ContextForm = ({
 					children={(field) => <field.TextField label={t.name} />}
 				/>
 				<form.AppField
-					name="description"
+					name="type"
 					children={(field) => (
-						<field.TextAreaField label={t.description} />
+						<field.SelectField
+							label={t.type.title}
+							options={contextTypes.map((type) => ({
+								value: type,
+								label: t.type[type],
+							}))}
+						/>
 					)}
 				/>
 				<form.AppField
-					name="user"
-					children={(field) => <field.TextAreaField label={t.user} />}
-				/>
-				<form.AppField
-					name="persona"
+					name="description"
 					children={(field) => (
-						<field.TextAreaField label={t.persona} />
+						<field.TextAreaField label={t.description} />
 					)}
 				/>
 				<form.SubmitButton />

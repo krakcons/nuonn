@@ -170,7 +170,7 @@ const fr: Messages = {
 	},
 	ModuleForm: {
 		name: "Nom",
-		description: "Description",
+		description: "Descriptif",
 		apiKey: {
 			label: "Clé API",
 			placeholder: "Sélectionner une clé API",
@@ -256,9 +256,12 @@ const fr: Messages = {
 	},
 	ContextForm: {
 		name: "Nom",
-		description: "Description",
-		user: "Contexte utilisateur",
-		persona: "Contexte du personnage",
+		description: "Descriptif",
+		type: {
+			title: "Type",
+			character: "Caractère",
+			scenario: "Scénario",
+		},
 	},
 	Scenario: {
 		edit: "Modifier ce scénario",
@@ -273,7 +276,7 @@ const fr: Messages = {
 	},
 	ScenarioForm: {
 		name: "Nom",
-		description: "Description",
+		description: "Descriptif",
 		role: "Rôle",
 		goals: "Objectifs",
 		evaluation: "Évaluation",

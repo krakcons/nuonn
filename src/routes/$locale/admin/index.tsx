@@ -37,22 +37,28 @@ function RouteComponent() {
 			contextIds: [],
 		} as ChatInputType,
 	});
-	const formData = form.state.values;
-	const instructions = scenarios.find((s) => s.id === formData.scenarioId)
-		?.data.instructions;
 
 	return (
 		<Page>
 			<div className="flex flex-col items-center justify-end h-[calc(100svh-100px)] gap-4">
 				<div className="max-w-2xl w-full flex flex-col">
-					<Chat
-						{...formData}
-						onChange={() => {
-							setDisabled(true);
-						}}
-						complete={complete}
-						onComplete={() => setComplete(true)}
-						instructions={instructions}
+					<form.Subscribe
+						selector={(state) => state.values}
+						children={(values) => (
+							<Chat
+								{...values}
+								onChange={() => {
+									setDisabled(true);
+								}}
+								complete={complete}
+								onComplete={() => setComplete(true)}
+								instructions={
+									scenarios.find(
+										(s) => s.id === values.scenarioId,
+									)?.data.instructions
+								}
+							/>
+						)}
 					/>
 					<form.AppForm>
 						<form
