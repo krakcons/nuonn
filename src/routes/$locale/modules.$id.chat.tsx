@@ -3,9 +3,14 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useScorm } from "@/lib/scorm";
 import { useEffect, useMemo, useState } from "react";
 import { Chat } from "@/components/Chat";
+import { getChatModuleResponseFn } from "@/lib/handlers/chat";
+import z from "zod";
 
 export const Route = createFileRoute("/$locale/modules/$id/chat")({
 	component: RouteComponent,
+	validateSearch: z.object({
+		preview: z.boolean().optional(),
+	}),
 	loader: async ({ params: { id } }) => {
 		const chatModule = await getModuleFn({
 			data: { id },
@@ -21,6 +26,7 @@ export const Route = createFileRoute("/$locale/modules/$id/chat")({
 
 function RouteComponent() {
 	const { chatModule } = Route.useLoaderData();
+	const { preview = false } = Route.useSearch();
 	const { sendEvent, messages: scormMessages } = useScorm();
 	const [complete, setComplete] = useState(false);
 
@@ -47,7 +53,7 @@ function RouteComponent() {
 			)?.response?.result === "completed";
 		return {
 			data,
-			isLoading: !data,
+			isLoading: preview ? false : !data,
 			initialMessages,
 			isComplete,
 		};
@@ -63,16 +69,7 @@ function RouteComponent() {
 				initialMessages={
 					initialMessages ? JSON.parse(initialMessages) : []
 				}
-				scenarioId={chatModule.data.scenarioId}
-				personaId={
-					chatModule.data.personaIds[
-						Math.floor(
-							Math.random() * chatModule.data.personaIds.length,
-						)
-					]
-				}
 				complete={complete || isComplete}
-				contextIds={chatModule.data.contextIds}
 				instructions={chatModule.instructions}
 				onChange={(messages) => {
 					sendEvent("LMSSetValue", {
@@ -87,6 +84,14 @@ function RouteComponent() {
 						value: "completed",
 					});
 				}}
+				onMessage={(body) =>
+					getChatModuleResponseFn({
+						data: {
+							...body,
+							moduleId: chatModule.id,
+						},
+					})
+				}
 			/>
 		</div>
 	);

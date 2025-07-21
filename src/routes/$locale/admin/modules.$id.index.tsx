@@ -129,6 +129,7 @@ function RouteComponent() {
 						params={{ id }}
 						from={Route.fullPath}
 						className={buttonVariants()}
+						search={{ preview: true }}
 						target="_blank"
 					>
 						<Play />

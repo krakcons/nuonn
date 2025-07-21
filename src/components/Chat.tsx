@@ -1,7 +1,6 @@
 import { useAppForm } from "@/components/ui/form";
 import { type UIMessage, useChat } from "@ai-sdk/react";
 import { z } from "zod";
-import { getChatResponseFn } from "@/lib/handlers/chat";
 import { useEffect } from "react";
 import { useTranslations } from "@/lib/locale";
 import { Check, ChevronsUpDown, Info } from "lucide-react";
@@ -16,35 +15,27 @@ import { DefaultChatTransport } from "ai";
 
 export const Chat = ({
 	initialMessages = [],
-	scenarioId,
-	personaId,
-	contextIds,
 	instructions,
-	onChange,
 	complete,
+	onChange,
+	onMessage,
 	onComplete,
 }: {
 	initialMessages?: UIMessage[];
-	scenarioId: string;
-	personaId: string;
-	contextIds?: string[];
 	instructions?: string;
-	onChange?: (messages: UIMessage[]) => void;
 	complete: boolean;
+	onChange?: (messages: UIMessage[]) => void;
+	onMessage: (body: any) => Promise<any>;
 	onComplete?: () => void;
 }) => {
 	const t = useTranslations("Chat");
-
-	console.log("INITIAL MESSAGES", initialMessages);
 
 	const { sendMessage, status, messages, setMessages, id } = useChat({
 		transport: new DefaultChatTransport({
 			// @ts-ignore
 			fetch: (_, options) => {
 				const body = JSON.parse(options!.body! as string);
-				return getChatResponseFn({
-					data: body,
-				});
+				return onMessage(body);
 			},
 		}),
 	});
@@ -52,8 +43,6 @@ export const Chat = ({
 	useEffect(() => {
 		setMessages(initialMessages);
 	}, [id]);
-
-	console.log("MESSAGES", messages);
 
 	const form = useAppForm({
 		defaultValues: {
@@ -63,18 +52,9 @@ export const Chat = ({
 			onSubmit: z.object({ content: z.string().min(1) }),
 		},
 		onSubmit: ({ value: { content }, formApi }) => {
-			sendMessage(
-				{
-					text: content,
-				},
-				{
-					body: {
-						personaId,
-						scenarioId,
-						contextIds,
-					},
-				},
-			);
+			sendMessage({
+				text: content,
+			});
 			formApi.reset();
 		},
 	});
@@ -174,7 +154,6 @@ export const Chat = ({
 					}
 
 					const json = parseAssistantMessage(m);
-					console.log("JSON", json);
 					if (!json) return null;
 
 					return (
