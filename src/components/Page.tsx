@@ -2,9 +2,17 @@ import { cn } from "@/lib/utils";
 import { Separator } from "./ui/separator";
 import { LocaleToggle } from "./LocaleToggle";
 
-export const Page = ({ children }: { children: React.ReactNode }) => {
+export const Page = ({
+	children,
+	className,
+}: {
+	children: React.ReactNode;
+	className?: string;
+}) => {
 	return (
-		<div className={cn("p-4 gap-4 flex w-full flex-col")}>{children}</div>
+		<div className={cn("p-4 gap-4 flex w-full flex-col", className)}>
+			{children}
+		</div>
 	);
 };
 

@@ -7,6 +7,7 @@ import {
 	createOrUpdateModuleFn,
 	deleteModuleFn,
 	getModuleFn,
+	getModuleUsageDataFn,
 } from "@/lib/handlers/modules";
 import { getPersonasFn } from "@/lib/handlers/personas";
 import { getScenariosFn } from "@/lib/handlers/scenarios";
@@ -22,20 +23,37 @@ import { Download, Play, Trash } from "lucide-react";
 import { toast } from "sonner";
 import JSZip from "jszip";
 import { useTranslations } from "@/lib/locale";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
+import {
+	ChartConfig,
+	ChartContainer,
+	ChartTooltip,
+	ChartTooltipContent,
+} from "@/components/ui/chart";
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import { useMemo, useState } from "react";
 
 export const Route = createFileRoute("/$locale/admin/modules/$id/")({
 	component: RouteComponent,
 	loader: async ({ params: { id } }) => {
-		const module = await getModuleFn({
+		const moduleData = await getModuleFn({
 			data: { id },
 		});
-		if (!module) throw notFound();
+		if (!moduleData) throw notFound();
 		return Promise.all([
-			module,
+			moduleData,
 			getScenariosFn(),
 			getContextsFn(),
 			getPersonasFn(),
 			getApiKeysFn(),
+			getModuleUsageDataFn({ data: { id } }),
 		]);
 	},
 });
@@ -70,10 +88,22 @@ const imsManifest = ({ id, data }: ModuleType) => `
 </manifest>
 `;
 
+const chartConfig = {
+	tokens: {
+		label: "Tokens",
+		color: "#2563eb",
+	},
+	cost: {
+		label: "Cost",
+		color: "#60c589",
+	},
+} satisfies ChartConfig;
+
 function RouteComponent() {
+	const [activeChart, setActiveChart] = useState<"cost" | "tokens">("cost");
 	const router = useRouter();
 	const navigate = Route.useNavigate();
-	const [chatModule, scenarios, contexts, personas, apiKeys] =
+	const [chatModule, scenarios, contexts, personas, apiKeys, usageData] =
 		Route.useLoaderData();
 	const { id, data } = chatModule;
 	const t = useTranslations("Module");
@@ -116,8 +146,21 @@ function RouteComponent() {
 		link.click();
 	};
 
+	const total = useMemo(
+		() => ({
+			tokens: usageData.reduce((acc, curr) => acc + curr.tokens, 0),
+			cost: usageData.reduce((acc, curr) => acc + curr.cost, 0),
+		}),
+		[],
+	);
+
+	const getDate = (date: string) => {
+		const [year, month, day] = date.split("-");
+		return new Date(year, month - 1, day);
+	};
+
 	return (
-		<Page>
+		<Page className="gap-0">
 			<PageHeader title={data.name} description={t.edit}>
 				<div className="flex gap-2">
 					<Button variant="outline" onClick={download}>
@@ -150,25 +193,128 @@ function RouteComponent() {
 					</Button>
 				</div>
 			</PageHeader>
-			<ModuleForm
-				key={id}
-				defaultValues={{
-					...data,
-					apiKeyId: chatModule.apiKeyId,
-				}}
-				onSubmit={({ value }) =>
-					updateModule.mutateAsync({
-						data: {
-							...value,
-							id,
-						},
-					})
-				}
-				scenarioOptions={scenarios}
-				personaOptions={personas}
-				contextOptions={contexts}
-				apiKeyOptions={apiKeys}
-			/>
+			<Tabs defaultValue="info">
+				<TabsList>
+					<TabsTrigger value="info">Information</TabsTrigger>
+					<TabsTrigger value="usage">Usage</TabsTrigger>
+				</TabsList>
+				<TabsContent value="info" className="pt-4">
+					<ModuleForm
+						key={id}
+						defaultValues={{
+							...data,
+							apiKeyId: chatModule.apiKeyId,
+						}}
+						onSubmit={({ value }) =>
+							updateModule.mutateAsync({
+								data: {
+									...value,
+									id,
+								},
+							})
+						}
+						scenarioOptions={scenarios}
+						personaOptions={personas}
+						contextOptions={contexts}
+						apiKeyOptions={apiKeys}
+					/>
+				</TabsContent>
+				<TabsContent value="usage">
+					<Card className="py-0">
+						<CardHeader className="flex flex-col items-stretch border-b !p-0 sm:flex-row">
+							<div className="flex flex-1 flex-col justify-center gap-1 px-6 pt-4 pb-3 sm:!py-0">
+								<CardTitle>Usage Data</CardTitle>
+								<CardDescription>
+									Shows the usage of the module by day and the
+									cost.
+								</CardDescription>
+							</div>
+							<div className="flex">
+								{["cost", "tokens"].map((key) => {
+									const chart =
+										key as keyof typeof chartConfig;
+									return (
+										<button
+											key={chart}
+											data-active={activeChart === chart}
+											className="data-[active=true]:bg-muted/50 relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l sm:border-t-0 sm:border-l sm:px-8 sm:py-6"
+											onClick={() =>
+												setActiveChart(chart)
+											}
+										>
+											<span className="text-muted-foreground text-xs">
+												{chartConfig[chart].label}
+											</span>
+											<span className="text-lg leading-none font-bold sm:text-3xl">
+												{total[
+													key as keyof typeof total
+												].toLocaleString()}
+											</span>
+										</button>
+									);
+								})}
+							</div>
+						</CardHeader>
+						<CardContent className="px-2 sm:p-6">
+							<ChartContainer
+								config={chartConfig}
+								className="aspect-auto h-[250px] w-full"
+							>
+								<BarChart
+									accessibilityLayer
+									data={usageData}
+									margin={{
+										left: 12,
+										right: 12,
+									}}
+								>
+									<CartesianGrid vertical={false} />
+									<XAxis
+										dataKey="date"
+										tickLine={false}
+										axisLine={false}
+										tickMargin={8}
+										minTickGap={32}
+										tickFormatter={(value) => {
+											const date = getDate(value);
+											return date.toLocaleDateString(
+												"en-US",
+												{
+													month: "short",
+													day: "numeric",
+												},
+											);
+										}}
+									/>
+									<ChartTooltip
+										content={
+											<ChartTooltipContent
+												className="w-[150px]"
+												nameKey="views"
+												labelFormatter={(value) => {
+													const date = getDate(value);
+													return date.toLocaleDateString(
+														"en-US",
+														{
+															month: "short",
+															day: "numeric",
+															year: "numeric",
+														},
+													);
+												}}
+											/>
+										}
+									/>
+									<Bar
+										dataKey={activeChart}
+										fill={`var(--color-${activeChart})`}
+									/>
+								</BarChart>
+							</ChartContainer>
+						</CardContent>
+					</Card>
+				</TabsContent>
+			</Tabs>
 		</Page>
 	);
 }
