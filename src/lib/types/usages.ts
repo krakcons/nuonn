@@ -5,6 +5,5 @@ export const UsageDataSchema = z.object({
 	outputTokens: z.number(),
 	totalTokens: z.number(),
 	model: z.string(),
-	referrer: z.string().optional(),
 });
 export type UsageDataType = z.infer<typeof UsageDataSchema>;

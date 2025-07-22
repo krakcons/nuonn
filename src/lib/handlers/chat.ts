@@ -15,7 +15,11 @@ import { z } from "zod";
 import type { ScenarioType } from "../types/scenarios";
 import type { PersonaType } from "../types/personas";
 import type { ContextType } from "../types/contexts";
-import { getWebRequest } from "@tanstack/react-start/server";
+import {
+	getRequestHeader,
+	getRequestHeaders,
+	getWebRequest,
+} from "@tanstack/react-start/server";
 
 const getPrompt = ({
 	scenario,
@@ -192,25 +196,23 @@ export const getChatModuleResponseFn = createServerFn({
 			}),
 			messages: convertToModelMessages(messages),
 		});
-		const tokens = await result.usage;
 
-		console.log("TOKENS", tokens);
-
-		//if (chatModule) {
-		//	await db.insert(usages).values({
-		//		id: Bun.randomUUIDv7(),
-		//		organizationId: chatModule.organizationId,
-		//		apiKeyId: chatModule.apiKeyId,
-		//		moduleId: chatModule.id,
-		//		data: {
-		//			inputTokens: tokens.inputTokens,
-		//			outputTokens: tokens.outputTokens,
-		//			totalTokens: tokens.totalTokens,
-		//			model: "gpt-4o",
-		//			referrer: getWebRequest().referrer,
-		//		},
-		//	});
-		//}
-
-		return result.toUIMessageStreamResponse();
+		return result.toUIMessageStreamResponse({
+			messageMetadata: async ({ part }) => {
+				if (part.type === "finish") {
+					await db.insert(usages).values({
+						id: Bun.randomUUIDv7(),
+						organizationId: chatModule.organizationId,
+						apiKeyId: chatModule.apiKeyId,
+						moduleId: chatModule.id,
+						data: {
+							inputTokens: part.totalUsage.inputTokens,
+							outputTokens: part.totalUsage.outputTokens,
+							totalTokens: part.totalUsage.totalTokens,
+							model: "gpt-4o",
+						},
+					});
+				}
+			},
+		});
 	});
