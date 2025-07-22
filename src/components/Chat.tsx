@@ -12,20 +12,26 @@ import {
 import { Button } from "./ui/button";
 import { parseAssistantMessage } from "@/lib/ai";
 import { DefaultChatTransport } from "ai";
+import {
+	getChatModuleResponseFn,
+	getChatPlaygroundResponseFn,
+} from "@/lib/handlers/chat";
 
 export const Chat = ({
 	initialMessages = [],
 	instructions,
 	complete,
+	type,
+	additionalBody,
 	onChange,
-	onMessage,
 	onComplete,
 }: {
 	initialMessages?: UIMessage[];
 	instructions?: string;
 	complete: boolean;
+	type: "module" | "playground";
+	additionalBody?: Record<string, any>;
 	onChange?: (messages: UIMessage[]) => void;
-	onMessage: (body: any) => Promise<any>;
 	onComplete?: () => void;
 }) => {
 	const t = useTranslations("Chat");
@@ -35,7 +41,21 @@ export const Chat = ({
 			// @ts-ignore
 			fetch: (_, options) => {
 				const body = JSON.parse(options!.body! as string);
-				return onMessage(body);
+				if (type === "module") {
+					return getChatModuleResponseFn({
+						data: {
+							...body,
+							...additionalBody,
+						},
+					});
+				} else {
+					return getChatPlaygroundResponseFn({
+						data: {
+							...body,
+							...additionalBody,
+						},
+					});
+				}
 			},
 		}),
 	});

@@ -1,4 +1,7 @@
-import { createRouter as createTanstackRouter } from "@tanstack/react-router";
+import {
+	createRouter as createTanstackRouter,
+	DefaultGlobalNotFound,
+} from "@tanstack/react-router";
 import { routerWithQueryClient } from "@tanstack/react-router-with-query";
 import * as TanstackQuery from "./root-provider";
 
@@ -19,6 +22,7 @@ export const createRouter = () => {
 			},
 			scrollRestoration: true,
 			defaultPreloadStaleTime: 0,
+			defaultNotFoundComponent: DefaultGlobalNotFound,
 		}),
 		TanstackQuery.getContext().queryClient,
 	);

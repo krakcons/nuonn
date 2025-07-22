@@ -9,7 +9,6 @@ import { useState } from "react";
 import { getContextsFn } from "@/lib/handlers/contexts";
 import { useTranslations } from "@/lib/locale";
 import { Chat } from "@/components/Chat";
-import { getChatPlaygroundResponseFn } from "@/lib/handlers/chat";
 
 export const Route = createFileRoute("/$locale/admin/")({
 	component: RouteComponent,
@@ -47,16 +46,12 @@ function RouteComponent() {
 						selector={(state) => state.values}
 						children={(values) => (
 							<Chat
-								onMessage={(body) =>
-									getChatPlaygroundResponseFn({
-										data: {
-											...body,
-											scenarioId: values.scenarioId,
-											personaId: values.personaId,
-											contextIds: values.contextIds,
-										},
-									})
-								}
+								type="playground"
+								additionalBody={{
+									scenarioId: values.scenarioId,
+									personaId: values.personaId,
+									contextIds: values.contextIds,
+								}}
 								onChange={() => {
 									setDisabled(true);
 								}}

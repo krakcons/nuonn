@@ -66,6 +66,10 @@ function RouteComponent() {
 	return (
 		<div className="p-8 h-screen max-w-2xl w-full mx-auto">
 			<Chat
+				type="module"
+				additionalBody={{
+					moduleId: chatModule.id,
+				}}
 				initialMessages={
 					initialMessages ? JSON.parse(initialMessages) : []
 				}
@@ -84,14 +88,6 @@ function RouteComponent() {
 						value: "completed",
 					});
 				}}
-				onMessage={(body) =>
-					getChatModuleResponseFn({
-						data: {
-							...body,
-							moduleId: chatModule.id,
-						},
-					})
-				}
 			/>
 		</div>
 	);
