@@ -1,6 +1,6 @@
 import { ChatInputSchema, ChatResponseSchema } from "@/lib/ai";
 import { streamText, Output, convertToModelMessages } from "ai";
-import { openai } from "@ai-sdk/openai";
+import { createOpenAI, openai } from "@ai-sdk/openai";
 import { createServerFn } from "@tanstack/react-start";
 import {
 	contexts,
@@ -164,6 +164,9 @@ export const getChatModuleResponseFn = createServerFn({
 	.handler(async ({ data: { messages, moduleId } }) => {
 		const chatModule = await db.query.modules.findFirst({
 			where: eq(modules.id, moduleId),
+			with: {
+				apiKey: true,
+			},
 		});
 		if (!chatModule) throw new Error("Module not found");
 
@@ -186,6 +189,10 @@ export const getChatModuleResponseFn = createServerFn({
 			scenario,
 			persona,
 			contexts: chatContexts,
+		});
+
+		const openai = createOpenAI({
+			apiKey: chatModule.apiKey.key,
 		});
 
 		const result = streamText({

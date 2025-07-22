@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 import * as authSchema from "./auth";
 import type { ContextDataType } from "../types/contexts";
@@ -75,6 +75,13 @@ export const modules = sqliteTable("modules", {
 	...dates,
 });
 
+export const moduleRelations = relations(modules, ({ one }) => ({
+	apiKey: one(apiKeys, {
+		fields: [modules.apiKeyId],
+		references: [apiKeys.id],
+	}),
+}));
+
 export const tableSchemas = {
 	...authSchema,
 	// CONTENT
@@ -86,4 +93,6 @@ export const tableSchemas = {
 	modules,
 };
 
-export const relationSchemas = {};
+export const relationSchemas = {
+	moduleRelations,
+};
