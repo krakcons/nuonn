@@ -3,7 +3,6 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useScorm } from "@/lib/scorm";
 import { useEffect, useMemo, useState } from "react";
 import { Chat } from "@/components/Chat";
-import { getChatModuleResponseFn } from "@/lib/handlers/chat";
 import z from "zod";
 
 export const Route = createFileRoute("/$locale/modules/$id/chat")({

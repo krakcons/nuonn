@@ -166,10 +166,10 @@ const fr: Messages = {
 			usage: "Utilisation",
 		},
 		usage: {
-			title: "Jetons et données sur les coûts",
+			title: "Données sur le coût total et les jetons",
 			description:
 				"Affiche l'utilisation des jetons et des coûts du module par jour",
-			cost: "Coût",
+			cost: "Coût total",
 			tokens: "Jetons",
 		},
 	},

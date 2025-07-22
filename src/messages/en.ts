@@ -161,9 +161,9 @@ const en = {
 			usage: "Usage",
 		},
 		usage: {
-			title: "Tokens/Cost Data",
+			title: "Total Cost/Tokens Data",
 			description: "Shows the token and cost usage of the module by day",
-			cost: "Cost",
+			cost: "Total Cost",
 			tokens: "Tokens",
 		},
 	},

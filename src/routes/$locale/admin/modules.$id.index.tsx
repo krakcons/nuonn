@@ -269,9 +269,11 @@ function RouteComponent() {
 												{chartConfig[chart].label}
 											</span>
 											<span className="text-lg leading-none font-bold sm:text-3xl">
-												{total[
-													key as keyof typeof total
-												].toLocaleString()}
+												{key === "cost"
+													? `$${total["cost"].toFixed(
+															2,
+														)}`
+													: total["tokens"]}
 											</span>
 										</button>
 									);
@@ -313,7 +315,7 @@ function RouteComponent() {
 										content={
 											<ChartTooltipContent
 												className="w-[150px]"
-												nameKey="views"
+												nameKey="cost"
 												labelFormatter={(value) => {
 													const date = getDate(value);
 													return date.toLocaleDateString(
