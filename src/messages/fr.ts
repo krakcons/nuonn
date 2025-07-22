@@ -161,6 +161,17 @@ const fr: Messages = {
 		preview: "Aperçu",
 		toast: "Module mis à jour avec succès",
 		deleteToast: "Module supprimé avec succès",
+		tabs: {
+			info: "Renseignements",
+			usage: "Utilisation",
+		},
+		usage: {
+			title: "Données sur le coût total et les jetons",
+			description:
+				"Affiche l'utilisation des jetons et des coûts du module par jour",
+			cost: "Coût total",
+			tokens: "Jetons",
+		},
 	},
 	ModuleCreate: {
 		title: "Créer un Module",

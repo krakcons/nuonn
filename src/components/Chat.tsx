@@ -1,7 +1,6 @@
 import { useAppForm } from "@/components/ui/form";
 import { type UIMessage, useChat } from "@ai-sdk/react";
 import { z } from "zod";
-import { getChatResponseFn } from "@/lib/handlers/chat";
 import { useEffect } from "react";
 import { useTranslations } from "@/lib/locale";
 import { Check, ChevronsUpDown, Info } from "lucide-react";
@@ -13,38 +12,50 @@ import {
 import { Button } from "./ui/button";
 import { parseAssistantMessage } from "@/lib/ai";
 import { DefaultChatTransport } from "ai";
+import {
+	getChatModuleResponseFn,
+	getChatPlaygroundResponseFn,
+} from "@/lib/handlers/chat";
 
 export const Chat = ({
 	initialMessages = [],
-	scenarioId,
-	personaId,
-	contextIds,
 	instructions,
-	onChange,
 	complete,
+	type,
+	additionalBody,
+	onChange,
 	onComplete,
 }: {
 	initialMessages?: UIMessage[];
-	scenarioId: string;
-	personaId: string;
-	contextIds?: string[];
 	instructions?: string;
-	onChange?: (messages: UIMessage[]) => void;
 	complete: boolean;
+	type: "module" | "playground";
+	additionalBody?: Record<string, any>;
+	onChange?: (messages: UIMessage[]) => void;
 	onComplete?: () => void;
 }) => {
 	const t = useTranslations("Chat");
-
-	console.log("INITIAL MESSAGES", initialMessages);
 
 	const { sendMessage, status, messages, setMessages, id } = useChat({
 		transport: new DefaultChatTransport({
 			// @ts-ignore
 			fetch: (_, options) => {
 				const body = JSON.parse(options!.body! as string);
-				return getChatResponseFn({
-					data: body,
-				});
+				if (type === "module") {
+					return getChatModuleResponseFn({
+						data: {
+							...body,
+							...additionalBody,
+						},
+					});
+				} else {
+					return getChatPlaygroundResponseFn({
+						data: {
+							...body,
+							...additionalBody,
+						},
+					});
+				}
 			},
 		}),
 	});
@@ -52,8 +63,6 @@ export const Chat = ({
 	useEffect(() => {
 		setMessages(initialMessages);
 	}, [id]);
-
-	console.log("MESSAGES", messages);
 
 	const form = useAppForm({
 		defaultValues: {
@@ -63,18 +72,9 @@ export const Chat = ({
 			onSubmit: z.object({ content: z.string().min(1) }),
 		},
 		onSubmit: ({ value: { content }, formApi }) => {
-			sendMessage(
-				{
-					text: content,
-				},
-				{
-					body: {
-						personaId,
-						scenarioId,
-						contextIds,
-					},
-				},
-			);
+			sendMessage({
+				text: content,
+			});
 			formApi.reset();
 		},
 	});
@@ -174,7 +174,6 @@ export const Chat = ({
 					}
 
 					const json = parseAssistantMessage(m);
-					console.log("JSON", json);
 					if (!json) return null;
 
 					return (

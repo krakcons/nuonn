@@ -46,7 +46,12 @@ function RouteComponent() {
 						selector={(state) => state.values}
 						children={(values) => (
 							<Chat
-								{...values}
+								type="playground"
+								additionalBody={{
+									scenarioId: values.scenarioId,
+									personaId: values.personaId,
+									contextIds: values.contextIds,
+								}}
 								onChange={() => {
 									setDisabled(true);
 								}}

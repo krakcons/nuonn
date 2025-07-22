@@ -1,10 +1,11 @@
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 import * as authSchema from "./auth";
 import type { ContextDataType } from "../types/contexts";
 import type { PersonaDataType } from "../types/personas";
 import type { ScenarioDataType } from "../types/scenarios";
 import type { ModuleDataType } from "../types/modules";
+import type { UsageDataType } from "../types/usages";
 export * from "./auth";
 
 // Enums
@@ -57,6 +58,15 @@ export const apiKeys = sqliteTable("api_keys", {
 	...dates,
 });
 
+export const usages = sqliteTable("usages", {
+	id: text().primaryKey(),
+	organizationId: text().notNull(),
+	apiKeyId: text().notNull(),
+	moduleId: text().notNull(),
+	data: text({ mode: "json" }).$type<UsageDataType>().notNull(),
+	...dates,
+});
+
 export const modules = sqliteTable("modules", {
 	id: text().primaryKey(),
 	organizationId: text().notNull(),
@@ -65,6 +75,13 @@ export const modules = sqliteTable("modules", {
 	...dates,
 });
 
+export const moduleRelations = relations(modules, ({ one }) => ({
+	apiKey: one(apiKeys, {
+		fields: [modules.apiKeyId],
+		references: [apiKeys.id],
+	}),
+}));
+
 export const tableSchemas = {
 	...authSchema,
 	// CONTENT
@@ -72,7 +89,10 @@ export const tableSchemas = {
 	scenarios,
 	contexts,
 	apiKeys,
+	usages,
 	modules,
 };
 
-export const relationSchemas = {};
+export const relationSchemas = {
+	moduleRelations,
+};

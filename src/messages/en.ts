@@ -156,6 +156,16 @@ const en = {
 		preview: "Preview",
 		toast: "Module updated successfully",
 		deleteToast: "Module deleted successfully",
+		tabs: {
+			info: "Information",
+			usage: "Usage",
+		},
+		usage: {
+			title: "Total Cost/Tokens Data",
+			description: "Shows the token and cost usage of the module by day",
+			cost: "Total Cost",
+			tokens: "Tokens",
+		},
 	},
 	ModuleCreate: {
 		title: "Create Module",
