@@ -22,7 +22,7 @@ import {
 import { Download, Play, Trash } from "lucide-react";
 import { toast } from "sonner";
 import JSZip from "jszip";
-import { useTranslations } from "@/lib/locale";
+import { useLocale, useTranslations } from "@/lib/locale";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
 	Card,
@@ -39,9 +39,14 @@ import {
 } from "@/components/ui/chart";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import { useMemo, useState } from "react";
+import z from "zod";
 
 export const Route = createFileRoute("/$locale/admin/modules/$id/")({
 	component: RouteComponent,
+	validateSearch: z.object({
+		tab: z.enum(["info", "usage"]).optional(),
+		activeChart: z.enum(["cost", "tokens"]).optional(),
+	}),
 	loader: async ({ params: { id } }) => {
 		const moduleData = await getModuleFn({
 			data: { id },
@@ -88,26 +93,27 @@ const imsManifest = ({ id, data }: ModuleType) => `
 </manifest>
 `;
 
-const chartConfig = {
-	tokens: {
-		label: "Tokens",
-		color: "#2563eb",
-	},
-	cost: {
-		label: "Cost",
-		color: "#60c589",
-	},
-} satisfies ChartConfig;
-
 function RouteComponent() {
-	const [activeChart, setActiveChart] = useState<"cost" | "tokens">("cost");
+	const { tab = "info", activeChart = "cost" } = Route.useSearch();
 	const router = useRouter();
 	const navigate = Route.useNavigate();
 	const [chatModule, scenarios, contexts, personas, apiKeys, usageData] =
 		Route.useLoaderData();
 	const { id, data } = chatModule;
+	const locale = useLocale();
 	const t = useTranslations("Module");
 	const tActions = useTranslations("Actions");
+
+	const chartConfig = {
+		tokens: {
+			label: t.usage.tokens,
+			color: "#2563eb",
+		},
+		cost: {
+			label: t.usage.cost,
+			color: "#60c589",
+		},
+	} satisfies ChartConfig;
 
 	const updateModule = useMutation({
 		mutationFn: createOrUpdateModuleFn,
@@ -156,7 +162,7 @@ function RouteComponent() {
 
 	const getDate = (date: string) => {
 		const [year, month, day] = date.split("-");
-		return new Date(year, month - 1, day);
+		return new Date(Number(year), Number(month) - 1, Number(day));
 	};
 
 	return (
@@ -193,10 +199,20 @@ function RouteComponent() {
 					</Button>
 				</div>
 			</PageHeader>
-			<Tabs defaultValue="info">
+			<Tabs
+				defaultValue={tab}
+				onValueChange={(value: "info" | "usage") =>
+					navigate({
+						search: (prev) => ({
+							...prev,
+							tab: value === "info" ? undefined : value,
+						}),
+					})
+				}
+			>
 				<TabsList>
-					<TabsTrigger value="info">Information</TabsTrigger>
-					<TabsTrigger value="usage">Usage</TabsTrigger>
+					<TabsTrigger value="info">{t.tabs.info}</TabsTrigger>
+					<TabsTrigger value="usage">{t.tabs.usage}</TabsTrigger>
 				</TabsList>
 				<TabsContent value="info" className="pt-4">
 					<ModuleForm
@@ -223,10 +239,9 @@ function RouteComponent() {
 					<Card className="py-0">
 						<CardHeader className="flex flex-col items-stretch border-b !p-0 sm:flex-row">
 							<div className="flex flex-1 flex-col justify-center gap-1 px-6 pt-4 pb-3 sm:!py-0">
-								<CardTitle>Usage Data</CardTitle>
+								<CardTitle>{t.usage.title}</CardTitle>
 								<CardDescription>
-									Shows the usage of the module by day and the
-									cost.
+									{t.usage.description}
 								</CardDescription>
 							</div>
 							<div className="flex">
@@ -239,7 +254,15 @@ function RouteComponent() {
 											data-active={activeChart === chart}
 											className="data-[active=true]:bg-muted/50 relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l sm:border-t-0 sm:border-l sm:px-8 sm:py-6"
 											onClick={() =>
-												setActiveChart(chart)
+												navigate({
+													search: (prev) => ({
+														...prev,
+														activeChart:
+															chart === "cost"
+																? undefined
+																: chart,
+													}),
+												})
 											}
 										>
 											<span className="text-muted-foreground text-xs">
@@ -278,7 +301,7 @@ function RouteComponent() {
 										tickFormatter={(value) => {
 											const date = getDate(value);
 											return date.toLocaleDateString(
-												"en-US",
+												locale,
 												{
 													month: "short",
 													day: "numeric",
@@ -294,7 +317,7 @@ function RouteComponent() {
 												labelFormatter={(value) => {
 													const date = getDate(value);
 													return date.toLocaleDateString(
-														"en-US",
+														locale,
 														{
 															month: "short",
 															day: "numeric",
