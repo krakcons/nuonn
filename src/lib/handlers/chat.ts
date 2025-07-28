@@ -1,8 +1,9 @@
-import { ChatInputSchema, ChatResponseSchema } from "@/lib/ai";
+import { ChatPlaygroundInputSchema, ChatResponseSchema } from "@/lib/ai";
 import { streamText, Output, convertToModelMessages } from "ai";
 import { createOpenAI, openai } from "@ai-sdk/openai";
 import { createServerFn } from "@tanstack/react-start";
 import {
+	behaviours,
 	contexts,
 	modules,
 	personas,
@@ -15,20 +16,18 @@ import { z } from "zod";
 import type { ScenarioType } from "../types/scenarios";
 import type { PersonaType } from "../types/personas";
 import type { ContextType } from "../types/contexts";
-import {
-	getRequestHeader,
-	getRequestHeaders,
-	getWebRequest,
-} from "@tanstack/react-start/server";
+import { BehaviourType } from "../types/behaviours";
 
 const getPrompt = ({
 	scenario,
 	persona,
 	contexts,
+	behaviour,
 }: {
 	scenario: ScenarioType;
 	persona: PersonaType;
 	contexts?: ContextType[];
+	behaviour: BehaviourType;
 }) =>
 	[
 		// INTRO
@@ -50,6 +49,15 @@ Languages: Only respond in the language(s) specified in the character: ${persona
 - Only reference knowledge thats established in your character
 - Maintain character consistency throughout the conversation
 - If asked about something outside your character's knowledge, respond as that character would`,
+
+		// BEHAVIOUR
+		`Here is the character behaviour: ${JSON.stringify(behaviour.data)}`,
+		`You will modulate your behavior dynamically based on the character behaviour`,
+		`You must distort expressions of facts about yourself and your situation proportionate to the dishonesty parameter.`,
+		`You must develop rapport with the user in a manner consistent with the rapportBuilding out of 100.`,
+		`You must decrease rapport with the PUT in a manner consistent with the rapportLoss out of 100.`,
+		`Your willingness to share information will increase as rapport with the user increases.`,
+		`You will track the current rapport value and maintain it throughout the conversation.`,
 
 		// USER
 		`The user is playing the following:
@@ -108,31 +116,38 @@ export const getChatPlaygroundResponseFn = createServerFn({
 	response: "raw",
 })
 	.validator(
-		ChatInputSchema.extend({
+		ChatPlaygroundInputSchema.extend({
 			messages: z.any(),
 		}),
 	)
 	.handler(
-		async ({ data: { messages, scenarioId, personaId, contextIds } }) => {
-			const [scenario, persona, chatContexts] = await Promise.all([
-				db.query.scenarios.findFirst({
-					where: eq(scenarios.id, scenarioId),
-				}),
-				db.query.personas.findFirst({
-					where: eq(personas.id, personaId),
-				}),
-				contextIds &&
-					db.query.contexts.findMany({
-						where: inArray(contexts.id, contextIds),
+		async ({
+			data: { messages, scenarioId, personaId, contextIds, behaviourId },
+		}) => {
+			const [scenario, persona, chatContexts, behaviour] =
+				await Promise.all([
+					db.query.scenarios.findFirst({
+						where: eq(scenarios.id, scenarioId),
 					}),
-			]);
-			if (!scenario || !persona)
-				throw new Error("Invalid scenario or persona");
+					db.query.personas.findFirst({
+						where: eq(personas.id, personaId),
+					}),
+					contextIds &&
+						db.query.contexts.findMany({
+							where: inArray(contexts.id, contextIds),
+						}),
+					db.query.behaviours.findFirst({
+						where: eq(behaviours.id, behaviourId),
+					}),
+				]);
+			if (!scenario || !persona || !behaviour)
+				throw new Error("Invalid scenario, persona, or behaviour");
 
 			const prompt = getPrompt({
 				scenario,
 				persona,
 				contexts: chatContexts,
+				behaviour,
 			});
 
 			const result = streamText({
@@ -170,7 +185,7 @@ export const getChatModuleResponseFn = createServerFn({
 		});
 		if (!chatModule) throw new Error("Module not found");
 
-		const [scenario, persona, chatContexts] = await Promise.all([
+		const [scenario, persona, chatContexts, behaviour] = await Promise.all([
 			db.query.scenarios.findFirst({
 				where: eq(scenarios.id, chatModule.data.scenarioId),
 			}),
@@ -181,14 +196,18 @@ export const getChatModuleResponseFn = createServerFn({
 				db.query.contexts.findMany({
 					where: inArray(contexts.id, chatModule.data.contextIds),
 				}),
+			db.query.behaviours.findFirst({
+				where: eq(behaviours.id, chatModule.data.behaviourIds[0]),
+			}),
 		]);
-		if (!scenario || !persona)
-			throw new Error("Invalid scenario or persona");
+		if (!scenario || !persona || !behaviour)
+			throw new Error("Invalid scenario, persona, or behaviour");
 
 		const prompt = getPrompt({
 			scenario,
 			persona,
 			contexts: chatContexts,
+			behaviour,
 		});
 
 		const openai = createOpenAI({

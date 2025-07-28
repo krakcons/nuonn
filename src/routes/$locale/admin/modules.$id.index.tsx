@@ -38,8 +38,9 @@ import {
 	ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import z from "zod";
+import { getBehavioursFn } from "@/lib/handlers/behaviours";
 
 export const Route = createFileRoute("/$locale/admin/modules/$id/")({
 	component: RouteComponent,
@@ -59,6 +60,7 @@ export const Route = createFileRoute("/$locale/admin/modules/$id/")({
 			getPersonasFn(),
 			getApiKeysFn(),
 			getModuleUsageDataFn({ data: { id } }),
+			getBehavioursFn(),
 		]);
 	},
 });
@@ -97,8 +99,15 @@ function RouteComponent() {
 	const { tab = "info", activeChart = "cost" } = Route.useSearch();
 	const router = useRouter();
 	const navigate = Route.useNavigate();
-	const [chatModule, scenarios, contexts, personas, apiKeys, usageData] =
-		Route.useLoaderData();
+	const [
+		chatModule,
+		scenarios,
+		contexts,
+		personas,
+		apiKeys,
+		usageData,
+		behaviours,
+	] = Route.useLoaderData();
 	const { id, data } = chatModule;
 	const locale = useLocale();
 	const t = useTranslations("Module");
@@ -232,6 +241,7 @@ function RouteComponent() {
 						scenarioOptions={scenarios}
 						personaOptions={personas}
 						contextOptions={contexts}
+						behaviourOptions={behaviours}
 						apiKeyOptions={apiKeys}
 					/>
 				</TabsContent>

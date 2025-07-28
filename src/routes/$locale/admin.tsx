@@ -31,6 +31,7 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { getOrganizationsFn, getSessionFn } from "@/lib/handlers/auth";
+import { getBehavioursFn } from "@/lib/handlers/behaviours";
 import { getContextsFn } from "@/lib/handlers/contexts";
 import { getModulesFn } from "@/lib/handlers/modules";
 import { getPersonasFn } from "@/lib/handlers/personas";
@@ -56,6 +57,7 @@ import {
 	Key,
 	MessagesSquare,
 	Plus,
+	Smile,
 	User,
 } from "lucide-react";
 import { z } from "zod";
@@ -84,17 +86,25 @@ export const Route = createFileRoute("/$locale/admin")({
 			});
 		}
 
-		const [personas, scenarios, organizations, contexts, modules] =
-			await Promise.all([
-				getPersonasFn(),
-				getScenariosFn(),
-				getOrganizationsFn(),
-				getContextsFn(),
-				getModulesFn(),
-			]);
+		const [
+			personas,
+			behaviours,
+			scenarios,
+			organizations,
+			contexts,
+			modules,
+		] = await Promise.all([
+			getPersonasFn(),
+			getBehavioursFn(),
+			getScenariosFn(),
+			getOrganizationsFn(),
+			getContextsFn(),
+			getModulesFn(),
+		]);
 
 		return {
 			personas,
+			behaviours,
 			scenarios,
 			organizations,
 			contexts,
@@ -116,6 +126,7 @@ function RouteComponent() {
 	const navigate = useNavigate();
 	const {
 		personas,
+		behaviours,
 		scenarios,
 		organizations,
 		user,
@@ -239,6 +250,54 @@ function RouteComponent() {
 														<User />
 														<p className="truncate">
 															{persona.data.name}
+														</p>
+													</SidebarMenuButton>
+												)}
+											</Link>
+										</SidebarMenuItem>
+									))}
+								</SidebarMenu>
+							</SidebarGroupContent>
+						</SidebarGroup>
+						<SidebarGroup>
+							<SidebarGroupLabel className="flex justify-between gap-2 pr-7">
+								{t.behaviours.title}
+								<Tooltip>
+									<TooltipTrigger>
+										<HelpCircle className="size-4" />
+									</TooltipTrigger>
+									<TooltipContent>
+										{t.behaviours.tooltip}
+									</TooltipContent>
+								</Tooltip>
+							</SidebarGroupLabel>
+							<Link
+								to="/$locale/admin/behaviours/create"
+								from={Route.fullPath}
+							>
+								<SidebarGroupAction>
+									<Plus />
+								</SidebarGroupAction>
+							</Link>
+							<SidebarGroupContent>
+								<SidebarMenu>
+									{behaviours.map((behaviour) => (
+										<SidebarMenuItem key={behaviour.id}>
+											<Link
+												to="/$locale/admin/behaviours/$id"
+												from={Route.fullPath}
+												params={{ id: behaviour.id }}
+											>
+												{({ isActive }) => (
+													<SidebarMenuButton
+														isActive={isActive}
+													>
+														<Smile />
+														<p className="truncate">
+															{
+																behaviour.data
+																	.name
+															}
 														</p>
 													</SidebarMenuButton>
 												)}

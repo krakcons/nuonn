@@ -6,6 +6,7 @@ import type { ScenarioType } from "@/lib/types/scenarios";
 import { z } from "zod";
 import type { ApiKeyType } from "@/lib/types/apiKeys";
 import { useTranslations } from "@/lib/locale";
+import { BehaviourType } from "@/lib/types/behaviours";
 
 export const ModuleForm = ({
 	defaultValues,
@@ -14,6 +15,7 @@ export const ModuleForm = ({
 	scenarioOptions,
 	personaOptions,
 	contextOptions,
+	behaviourOptions,
 }: {
 	defaultValues?: ModuleDataType & { apiKeyId: string };
 	onSubmit: ({
@@ -25,6 +27,7 @@ export const ModuleForm = ({
 	scenarioOptions: ScenarioType[];
 	personaOptions: PersonaType[];
 	contextOptions: ContextType[];
+	behaviourOptions: BehaviourType[];
 }) => {
 	const t = useTranslations("ModuleForm");
 	const form = useAppForm({
@@ -32,6 +35,7 @@ export const ModuleForm = ({
 			contextIds: [],
 			personaIds: [],
 			referrers: [],
+			behaviourIds: [],
 			...defaultValues,
 		} as ModuleDataType & { apiKeyId: string },
 		validators: {
@@ -41,7 +45,6 @@ export const ModuleForm = ({
 		},
 		onSubmit,
 	});
-	console.log(form.state.values);
 
 	return (
 		<form.AppForm>
@@ -112,6 +115,20 @@ export const ModuleForm = ({
 						/>
 					)}
 				/>
+				<form.AppField
+					name="behaviourIds"
+					children={(field) => (
+						<field.MultiSelectField
+							placeholder={t.behaviours.placeholder}
+							label={t.behaviours.label}
+							options={behaviourOptions.map((b) => ({
+								label: b.data.name,
+								value: b.id,
+							}))}
+						/>
+					)}
+				/>
+
 				<form.SubmitButton />
 			</form>
 		</form.AppForm>

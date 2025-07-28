@@ -2,30 +2,35 @@ import { useAppForm } from "@/components/ui/form";
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 import { Page } from "@/components/Page";
-import { ChatInputSchema, type ChatInputType } from "@/lib/ai";
+import {
+	ChatPlaygroundInputSchema,
+	type ChatPlaygroundInputType,
+} from "@/lib/ai";
 import { getPersonasFn } from "@/lib/handlers/personas";
 import { getScenariosFn } from "@/lib/handlers/scenarios";
 import { useState } from "react";
 import { getContextsFn } from "@/lib/handlers/contexts";
 import { useTranslations } from "@/lib/locale";
 import { Chat } from "@/components/Chat";
+import { getBehavioursFn } from "@/lib/handlers/behaviours";
 
 export const Route = createFileRoute("/$locale/admin/")({
 	component: RouteComponent,
 	validateSearch: z.object({
-		options: ChatInputSchema.optional(),
+		options: ChatPlaygroundInputSchema.optional(),
 	}),
 	loader: async () => {
 		return Promise.all([
 			getPersonasFn(),
 			getScenariosFn(),
 			getContextsFn(),
+			getBehavioursFn(),
 		]);
 	},
 });
 
 function RouteComponent() {
-	const [personas, scenarios, contexts] = Route.useLoaderData();
+	const [personas, scenarios, contexts, behaviors] = Route.useLoaderData();
 	const [disabled, setDisabled] = useState(false);
 	const t = useTranslations("Chat");
 	const [complete, setComplete] = useState(false);
@@ -34,8 +39,9 @@ function RouteComponent() {
 		defaultValues: {
 			scenarioId: scenarios.length ? scenarios[0].id : null,
 			personaId: personas.length ? personas[0].id : null,
+			behaviourId: behaviors.length ? behaviors[0].id : null,
 			contextIds: [],
-		} as ChatInputType,
+		} as ChatPlaygroundInputType,
 	});
 
 	return (
@@ -50,6 +56,7 @@ function RouteComponent() {
 								additionalBody={{
 									scenarioId: values.scenarioId,
 									personaId: values.personaId,
+									behaviourId: values.behaviourId,
 									contextIds: values.contextIds,
 								}}
 								onChange={() => {
@@ -110,6 +117,22 @@ function RouteComponent() {
 											...personas.map((p) => ({
 												label: p.data.name,
 												value: p.id,
+											})),
+										]}
+									/>
+								)}
+							/>
+							<form.AppField
+								name="behaviorId"
+								children={(field) => (
+									<field.SelectField
+										disabled={disabled}
+										label={t.behaviour.title}
+										placeholder={t.behaviour.description}
+										options={[
+											...behaviors.map((b) => ({
+												label: b.data.name,
+												value: b.id,
 											})),
 										]}
 									/>

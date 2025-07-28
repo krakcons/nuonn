@@ -7,6 +7,7 @@ export const ModuleDataSchema = z.object({
 	scenarioId: z.string(),
 	contextIds: z.string().array(),
 	personaIds: z.string().array().min(1),
+	behaviourIds: z.string().array().min(1),
 });
 export type ModuleDataType = z.infer<typeof ModuleDataSchema>;
 

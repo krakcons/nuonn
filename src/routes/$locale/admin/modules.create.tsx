@@ -1,6 +1,7 @@
 import { ModuleForm } from "@/components/forms/ModuleForm";
 import { Page, PageHeader } from "@/components/Page";
 import { getApiKeysFn } from "@/lib/handlers/apiKeys";
+import { getBehavioursFn } from "@/lib/handlers/behaviours";
 import { getContextsFn } from "@/lib/handlers/contexts";
 import { createOrUpdateModuleFn } from "@/lib/handlers/modules";
 import { getPersonasFn } from "@/lib/handlers/personas";
@@ -17,13 +18,15 @@ export const Route = createFileRoute("/$locale/admin/modules/create")({
 			getContextsFn(),
 			getPersonasFn(),
 			getApiKeysFn(),
+			getBehavioursFn(),
 		]);
 	},
 });
 
 function RouteComponent() {
 	const navigate = useNavigate();
-	const [scenarios, contexts, personas, apiKeys] = Route.useLoaderData();
+	const [scenarios, contexts, personas, apiKeys, behaviours] =
+		Route.useLoaderData();
 	const locale = useLocale();
 	const t = useTranslations("ModuleCreate");
 	const createModule = useMutation({
@@ -48,6 +51,7 @@ function RouteComponent() {
 						data: value,
 					})
 				}
+				behaviourOptions={behaviours}
 				scenarioOptions={scenarios}
 				personaOptions={personas}
 				contextOptions={contexts}

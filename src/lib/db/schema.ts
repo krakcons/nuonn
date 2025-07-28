@@ -6,6 +6,7 @@ import type { PersonaDataType } from "../types/personas";
 import type { ScenarioDataType } from "../types/scenarios";
 import type { ModuleDataType } from "../types/modules";
 import type { UsageDataType } from "../types/usages";
+import { BehaviourDataType } from "../types/behaviours";
 export * from "./auth";
 
 // Enums
@@ -32,6 +33,13 @@ export const personas = sqliteTable("personas", {
 	id: text().primaryKey(),
 	organizationId: text().notNull(),
 	data: text({ mode: "json" }).$type<PersonaDataType>().notNull(),
+	...dates,
+});
+
+export const behaviours = sqliteTable("behaviours", {
+	id: text().primaryKey(),
+	organizationId: text().notNull(),
+	data: text({ mode: "json" }).$type<BehaviourDataType>().notNull(),
 	...dates,
 });
 
@@ -86,6 +94,7 @@ export const tableSchemas = {
 	...authSchema,
 	// CONTENT
 	personas,
+	behaviours,
 	scenarios,
 	contexts,
 	apiKeys,

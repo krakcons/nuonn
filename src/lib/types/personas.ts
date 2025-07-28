@@ -34,7 +34,6 @@ export const PersonaDataSchema = z.object({
 	likes: z.string().optional(),
 	dislikes: z.string().optional(),
 	backstory: z.string().optional(),
-	behaviour: z.string().optional(),
 	// Languages
 	languages: z
 		.object({

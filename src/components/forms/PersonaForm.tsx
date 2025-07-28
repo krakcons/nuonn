@@ -251,13 +251,6 @@ export const PersonaForm = ({
 					)}
 				/>
 				<form.AppField
-					name="behaviour"
-					children={(field) => (
-						<field.TextAreaField label={t.behaviour} optional />
-					)}
-				/>
-
-				<form.AppField
 					name="languages"
 					mode="array"
 					children={(field) => (

@@ -1,3 +1,5 @@
+import { behaviours } from "@/lib/db/schema";
+
 const en = {
 	// Common
 	Actions: {
@@ -106,6 +108,11 @@ const en = {
 			title: "Characters",
 			tooltip: "Characters are the role the AI plays in the scenarios.",
 		},
+		behaviours: {
+			title: "Behaviours",
+			tooltip:
+				"Behaviours are the AI's adjustable personality including rapport and dishonesty.",
+		},
 		scenarios: {
 			title: "Scenarios",
 			tooltip:
@@ -148,6 +155,10 @@ const en = {
 			title: "Character",
 			description: "Select character",
 		},
+		behaviour: {
+			title: "Behaviour",
+			description: "Select behaviour",
+		},
 		placeholder: "Type your message here...",
 	},
 	Module: {
@@ -184,6 +195,10 @@ const en = {
 		personas: {
 			label: "Characters",
 			placeholder: "Select the characters",
+		},
+		behaviours: {
+			label: "Character Behaviours",
+			placeholder: "Select the character behaviours",
 		},
 	},
 	Persona: {
@@ -318,6 +333,24 @@ const en = {
 			title: "Success Value",
 			description: "The value that represents success (ex. True, 1, >70)",
 		},
+	},
+	Behaviour: {
+		edit: "Edit this behaviour",
+		toast: "Behaviour updated successfully",
+		deleteToast: "Behaviour deleted successfully",
+	},
+	BehaviourForm: {
+		name: "Name",
+		description: "Description",
+		rapportBuilding: "Rapport Building",
+		rapportLoss: "Rapport Loss",
+		dishonesty: "Dishonesty",
+	},
+	BehaviourCreate: {
+		title: "Create Behaviour",
+		description:
+			"Create a new behaviour that can be used in a scenario for a character",
+		toast: "Behaviour created successfully",
 	},
 	ApiKey: {
 		title: "API Key",

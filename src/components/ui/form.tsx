@@ -32,6 +32,7 @@ import { Loader2 } from "lucide-react";
 import { useTranslations } from "@/lib/locale";
 import type { SelectProps } from "@radix-ui/react-select";
 import { MultiSelect, type MultiSelectProps } from "./multi-select";
+import { Slider } from "./slider";
 const { fieldContext, useFieldContext, formContext, useFormContext } =
 	createFormHookContexts();
 
@@ -109,6 +110,35 @@ const TextField = (props: React.ComponentProps<"input"> & DefaultOptions) => {
 				value={field.state.value}
 				onChange={(e) => field.handleChange(e.target.value)}
 				{...props}
+			/>
+			<Description {...props} />
+			<Error errors={field.getMeta().errors} />
+		</Field>
+	);
+};
+
+const SliderField = (
+	props: React.ComponentProps<"input"> &
+		DefaultOptions & {
+			min?: number;
+			max?: number;
+		},
+) => {
+	const field = useFieldContext<number>();
+	return (
+		<Field>
+			<div className="flex flex-row items-center justify-between gap-2 w-full">
+				<Title {...props} htmlFor={field.name} />
+				<p className="text-muted-foreground">{field.state.value}</p>
+			</div>
+			<Slider
+				id={field.name}
+				name={field.name}
+				value={[field.state.value]}
+				onValueChange={(value) => field.handleChange(value[0])}
+				min={props.min}
+				max={props.max}
+				step={1}
 			/>
 			<Description {...props} />
 			<Error errors={field.getMeta().errors} />
@@ -407,6 +437,7 @@ const { useAppForm } = createFormHook({
 	formContext,
 	fieldComponents: {
 		TextField,
+		SliderField,
 		TextAreaField,
 		SelectField,
 		MultiSelectField,

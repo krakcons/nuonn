@@ -22,16 +22,18 @@ export const MessageSchema = z.object({
 	content: z.string(),
 });
 
-export const ChatInputSchema = z.object({
+export const ChatPlaygroundInputSchema = z.object({
 	scenarioId: z.string(),
 	personaId: z.string(),
+	behaviourId: z.string(),
 	contextIds: z.string().array().optional(),
 });
-export type ChatInputType = z.infer<typeof ChatInputSchema>;
+export type ChatPlaygroundInputType = z.infer<typeof ChatPlaygroundInputSchema>;
 
 export const ChatResponseSchema = z.object({
 	content: z.string(),
 	evaluations: DataOutputSchema.array(),
+	rapport: z.number(),
 });
 export type ChatResponseType = z.infer<typeof ChatResponseSchema>;
 
