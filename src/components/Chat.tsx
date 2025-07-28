@@ -1,7 +1,7 @@
 import { useAppForm } from "@/components/ui/form";
 import { type UIMessage, useChat } from "@ai-sdk/react";
 import { z } from "zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "@/lib/locale";
 import { Check, ChevronsUpDown, Info } from "lucide-react";
 import {
@@ -23,6 +23,7 @@ export const Chat = ({
 	complete,
 	type,
 	additionalBody,
+	onStart,
 	onChange,
 	onComplete,
 }: {
@@ -31,10 +32,12 @@ export const Chat = ({
 	complete: boolean;
 	type: "module" | "playground";
 	additionalBody?: Record<string, any>;
+	onStart?: () => void;
 	onChange?: (messages: UIMessage[]) => void;
 	onComplete?: () => void;
 }) => {
 	const t = useTranslations("Chat");
+	const [started, setStarted] = useState(false);
 
 	const { sendMessage, status, messages, setMessages, id } = useChat({
 		transport: new DefaultChatTransport({
@@ -72,6 +75,10 @@ export const Chat = ({
 			onSubmit: z.object({ content: z.string().min(1) }),
 		},
 		onSubmit: ({ value: { content }, formApi }) => {
+			if (!started) {
+				setStarted(true);
+				onStart?.();
+			}
 			sendMessage({
 				text: content,
 			});

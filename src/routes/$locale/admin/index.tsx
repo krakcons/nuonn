@@ -59,7 +59,7 @@ function RouteComponent() {
 									behaviourId: values.behaviourId,
 									contextIds: values.contextIds,
 								}}
-								onChange={() => {
+								onStart={() => {
 									setDisabled(true);
 								}}
 								complete={complete}
@@ -123,7 +123,7 @@ function RouteComponent() {
 								)}
 							/>
 							<form.AppField
-								name="behaviorId"
+								name="behaviourId"
 								children={(field) => (
 									<field.SelectField
 										disabled={disabled}
