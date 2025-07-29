@@ -23,9 +23,9 @@ export const MessageSchema = z.object({
 });
 
 export const ChatPlaygroundInputSchema = z.object({
-	scenarioId: z.string(),
-	personaId: z.string(),
-	behaviourId: z.string(),
+	scenarioId: z.string({ error: "Scenario is required" }),
+	personaId: z.string({ error: "Persona is required" }),
+	behaviourId: z.string({ error: "Behaviour is required" }),
 	contextIds: z.string().array().optional(),
 });
 export type ChatPlaygroundInputType = z.infer<typeof ChatPlaygroundInputSchema>;

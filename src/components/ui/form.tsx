@@ -209,7 +209,7 @@ const SelectField = ({
 				defaultValue={field.state.value}
 				{...props}
 			>
-				<SelectTrigger className="gap-1" id={field.name}>
+				<SelectTrigger className="gap-1 w-full" id={field.name}>
 					<SelectValue placeholder={placeholder} />
 				</SelectTrigger>
 				<SelectContent>

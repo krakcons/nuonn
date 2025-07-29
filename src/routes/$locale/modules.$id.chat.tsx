@@ -4,6 +4,7 @@ import { useScorm } from "@/lib/scorm";
 import { useEffect, useMemo, useState } from "react";
 import { Chat } from "@/components/Chat";
 import z from "zod";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const Route = createFileRoute("/$locale/modules/$id/chat")({
 	component: RouteComponent,
@@ -63,31 +64,33 @@ function RouteComponent() {
 	}
 
 	return (
-		<div className="p-8 h-screen max-w-2xl w-full mx-auto">
-			<Chat
-				type="module"
-				additionalBody={{
-					moduleId: chatModule.id,
-				}}
-				initialMessages={
-					initialMessages ? JSON.parse(initialMessages) : []
-				}
-				complete={complete || isComplete}
-				instructions={chatModule.instructions}
-				onChange={(messages) => {
-					sendEvent("LMSSetValue", {
-						element: "cmi.core.suspend_data",
-						value: JSON.stringify(messages),
-					});
-				}}
-				onComplete={() => {
-					setComplete(true);
-					sendEvent("LMSSetValue", {
-						element: "cmi.core.lesson_status",
-						value: "completed",
-					});
-				}}
-			/>
+		<div className="h-screen flex flex-col justify-end">
+			<div className="max-h-screen">
+				<Chat
+					type="module"
+					additionalBody={{
+						moduleId: chatModule.id,
+					}}
+					initialMessages={
+						initialMessages ? JSON.parse(initialMessages) : []
+					}
+					complete={complete || isComplete}
+					instructions={chatModule.instructions}
+					onChange={(messages) => {
+						sendEvent("LMSSetValue", {
+							element: "cmi.core.suspend_data",
+							value: JSON.stringify(messages),
+						});
+					}}
+					onComplete={() => {
+						setComplete(true);
+						sendEvent("LMSSetValue", {
+							element: "cmi.core.lesson_status",
+							value: "completed",
+						});
+					}}
+				/>
+			</div>
 		</div>
 	);
 }

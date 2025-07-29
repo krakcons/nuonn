@@ -177,6 +177,7 @@ export const getChatModuleResponseFn = createServerFn({
 			}),
 	)
 	.handler(async ({ data: { messages, moduleId } }) => {
+		console.log(messages);
 		const chatModule = await db.query.modules.findFirst({
 			where: eq(modules.id, moduleId),
 			with: {

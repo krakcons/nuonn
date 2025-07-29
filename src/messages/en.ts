@@ -1,5 +1,3 @@
-import { behaviours } from "@/lib/db/schema";
-
 const en = {
 	// Common
 	Actions: {
@@ -143,6 +141,8 @@ const en = {
 		random: "Random",
 		instructions: "Instructions",
 		completed: "You have successfully completed this scenario.",
+		title: "Chat Playground",
+		description: "Create and test a custom module configuration",
 		scenario: {
 			title: "Scenario",
 			description: "Select scenario",

@@ -16,6 +16,7 @@ import {
 	getChatModuleResponseFn,
 	getChatPlaygroundResponseFn,
 } from "@/lib/handlers/chat";
+import { ScrollArea } from "./ui/scroll-area";
 
 export const Chat = ({
 	initialMessages = [],
@@ -23,6 +24,7 @@ export const Chat = ({
 	complete,
 	type,
 	additionalBody,
+	disabled,
 	onStart,
 	onChange,
 	onComplete,
@@ -32,6 +34,7 @@ export const Chat = ({
 	complete: boolean;
 	type: "module" | "playground";
 	additionalBody?: Record<string, any>;
+	disabled?: boolean;
 	onStart?: () => void;
 	onChange?: (messages: UIMessage[]) => void;
 	onComplete?: () => void;
@@ -42,7 +45,7 @@ export const Chat = ({
 	const { sendMessage, status, messages, setMessages, id } = useChat({
 		transport: new DefaultChatTransport({
 			// @ts-ignore
-			fetch: (_, options) => {
+			fetch: (_: any, options: any) => {
 				const body = JSON.parse(options!.body! as string);
 				if (type === "module") {
 					return getChatModuleResponseFn({
@@ -111,112 +114,117 @@ export const Chat = ({
 	}, [messages, status]);
 
 	return (
-		<div className="flex h-full justify-start gap-2 overflow-y-auto p-4 scroll-p-8 flex-col-reverse w-full">
-			{instructions && (
-				<div className="border flex flex-col gap-2">
-					<Collapsible defaultOpen>
-						<CollapsibleTrigger asChild>
-							<Button
-								variant="ghost"
-								size="sm"
-								className="w-full flex items-center justify-between"
-							>
-								<p className="flex items-center gap-2">
-									<Info className="size-4" />
-									{t.instructions}
-								</p>
-								<ChevronsUpDown className="size-4" />
-							</Button>
-						</CollapsibleTrigger>
-						<CollapsibleContent className="pt-2 text-sm text-muted-foreground p-2 whitespace-pre-line">
-							{instructions}
-						</CollapsibleContent>
-					</Collapsible>
-				</div>
-			)}
-			<form.AppForm>
-				<form
-					onSubmit={(e) => e.preventDefault()}
-					className="flex flex-col gap-4"
-				>
-					<form.AppField
-						name="content"
-						children={(field) => (
-							<field.TextAreaField
-								placeholder={t.placeholder}
-								label=""
-								className="resize-none z-20"
-								disabled={complete}
-								onKeyDown={(e) => {
-									if (e.key === "Enter" && !e.shiftKey) {
-										e.preventDefault();
-										console.log("submit", status);
-										if (status === "ready")
-											form.handleSubmit();
-									}
-								}}
-							/>
-						)}
-					/>
-				</form>
-			</form.AppForm>
-			{complete && (
-				<div className="flex flex-col gap-8 py-8">
-					<div className="text-center">
-						<p className="text-2xl font-bold">{t.completed}</p>
+		<ScrollArea className="h-full">
+			<div className="flex h-full justify-start p-4 gap-2 flex-col-reverse w-full max-w-2xl mx-auto">
+				{instructions && (
+					<div className="border flex flex-col gap-2">
+						<Collapsible defaultOpen>
+							<CollapsibleTrigger asChild>
+								<Button
+									variant="ghost"
+									size="sm"
+									className="w-full flex items-center justify-between"
+								>
+									<p className="flex items-center gap-2">
+										<Info className="size-4" />
+										{t.instructions}
+									</p>
+									<ChevronsUpDown className="size-4" />
+								</Button>
+							</CollapsibleTrigger>
+							<CollapsibleContent className="pt-2 text-sm text-muted-foreground p-2 whitespace-pre-line">
+								{instructions}
+							</CollapsibleContent>
+						</Collapsible>
 					</div>
-				</div>
-			)}
-			<div className="flex flex-col-reverse gap-8 py-8">
-				{reversedMessages.map((m) => {
-					if (m.role === "user") {
+				)}
+				<form.AppForm>
+					<form
+						onSubmit={(e) => e.preventDefault()}
+						className="flex flex-col gap-4"
+					>
+						<form.AppField
+							name="content"
+							children={(field) => (
+								<field.TextAreaField
+									placeholder={t.placeholder}
+									label=""
+									className="resize-none z-20"
+									disabled={complete || disabled}
+									onKeyDown={(e) => {
+										if (e.key === "Enter" && !e.shiftKey) {
+											e.preventDefault();
+											console.log("submit", status);
+											if (status === "ready")
+												form.handleSubmit();
+										}
+									}}
+								/>
+							)}
+						/>
+					</form>
+				</form.AppForm>
+				{complete && (
+					<div className="flex flex-col gap-8 py-8">
+						<div className="text-center">
+							<p className="text-2xl font-bold">{t.completed}</p>
+						</div>
+					</div>
+				)}
+				<div className="flex flex-col-reverse gap-8 py-8">
+					{reversedMessages.map((m) => {
+						if (m.role === "user") {
+							return (
+								<div
+									key={m.id}
+									className="self-end bg-blue-500 text-white px-3 py-2 sm:max-w-[70%] max-w-[90%] whitespace-pre-line"
+								>
+									{
+										m.parts.find((p) => p.type === "text")
+											?.text
+									}
+								</div>
+							);
+						}
+
+						const json = parseAssistantMessage(m);
+						if (!json) return null;
+
 						return (
 							<div
 								key={m.id}
-								className="self-end bg-blue-500 text-white px-3 py-2 sm:max-w-[70%] max-w-[90%] whitespace-pre-line"
+								className="self-start flex-col flex gap-2"
 							>
-								{m.parts.find((p) => p.type === "text")?.text}
+								<p className="whitespace-pre-line">
+									{json?.content}
+								</p>
+								{json.evaluations &&
+									json.evaluations.length > 0 && (
+										<div className="border px-3 py-2 flex flex-col gap-2">
+											{json.rapport && (
+												<p className="flex items-center gap-2">
+													Rapport ({json.rapport})
+												</p>
+											)}
+											{json.evaluations &&
+												json.evaluations.map((s, i) => (
+													<p
+														key={i}
+														className="flex items-center gap-2"
+													>
+														{s.success && (
+															<Check className="size-4" />
+														)}
+														{s.name} ({s.value})
+													</p>
+												))}
+										</div>
+									)}
 							</div>
 						);
-					}
-
-					const json = parseAssistantMessage(m);
-					if (!json) return null;
-
-					return (
-						<div
-							key={m.id}
-							className="self-start flex-col flex gap-2"
-						>
-							<p className="whitespace-pre-line">
-								{json?.content}
-							</p>
-							{json.evaluations &&
-								json.evaluations.length > 0 && (
-									<div className="border px-3 py-2 flex flex-col gap-2">
-										{json.rapport && (
-											<p className="flex items-center gap-2">
-												Rapport ({json.rapport})
-											</p>
-										)}
-										{json.evaluations &&
-											json.evaluations.map((s, i) => (
-												<p
-													key={i}
-													className="flex items-center gap-2"
-												>
-													{s.success && (
-														<Check className="size-4" />
-													)}
-													{s.name} ({s.value})
-												</p>
-											))}
-									</div>
-								)}
-						</div>
-					);
-				})}
+					})}
+				</div>
 			</div>
-		</div>
+		</ScrollArea>
 	);
 };
