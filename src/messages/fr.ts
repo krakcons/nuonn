@@ -111,6 +111,11 @@ const fr: Messages = {
 			tooltip:
 				"Les personnages sont le rôle que joue l'IA dans les scénarios.",
 		},
+		behaviours: {
+			title: "Comportements",
+			tooltip:
+				"Les comportements sont la personnalité ajustable de l'IA, y compris le rapport et la malhonnêteté.",
+		},
 		scenarios: {
 			title: "Scénarios",
 			tooltip:
@@ -141,6 +146,9 @@ const fr: Messages = {
 		random: "Aléatoire",
 		instructions: "Instructions",
 		completed: "Vous avez terminé avec succès ce scénario.",
+		title: "Terrain de jeu Chat",
+		description:
+			"Créer et tester une configuration de module personnalisée",
 		scenario: {
 			title: "Scénario",
 			description: "Sélectionner un scénario",
@@ -152,6 +160,10 @@ const fr: Messages = {
 		persona: {
 			title: "Caractère",
 			description: "Sélectionnez le personnage",
+		},
+		behaviour: {
+			title: "Comportement",
+			description: "Sélectionnez le comportement",
 		},
 		placeholder: "Tapez votre message ici...",
 	},
@@ -197,6 +209,10 @@ const fr: Messages = {
 		personas: {
 			label: "Personnages",
 			placeholder: "Sélectionnez les personnages",
+		},
+		behaviours: {
+			label: "Comportements de caractère",
+			placeholder: "Sélectionnez les comportements des personnages",
 		},
 	},
 	Persona: {
@@ -334,6 +350,24 @@ const fr: Messages = {
 			description:
 				"La valeur qui représente le succès (ex. Vrai, 1, >70)",
 		},
+	},
+	Behaviour: {
+		edit: "Modifier ce comportement",
+		toast: "Comportement mis à jour avec succès",
+		deleteToast: "Comportement supprimé avec succès",
+	},
+	BehaviourForm: {
+		name: "Nom",
+		description: "Descriptif",
+		rapportBuilding: "Rapport sur l'immeuble",
+		rapportLoss: "Rapport de perte",
+		dishonesty: "Malhonnêteté",
+	},
+	BehaviourCreate: {
+		title: "Créer un comportement",
+		description:
+			"Créer un nouveau comportement qui peut être utilisé dans un scénario pour un personnage",
+		toast: "Comportement créé avec succès",
 	},
 	ApiKey: {
 		title: "Clé API",
