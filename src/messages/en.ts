@@ -172,10 +172,12 @@ const en = {
 			usage: "Usage",
 		},
 		usage: {
-			title: "Total Cost/Tokens Data",
+			title: "Usage Data",
 			description: "Shows the token and cost usage of the module by day",
 			cost: "Total Cost",
-			tokens: "Tokens",
+			tokens: "Total Tokens",
+			averageCost: "Average Cost",
+			averageTokens: "Average Tokens",
 		},
 	},
 	ModuleCreate: {

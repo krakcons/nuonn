@@ -46,7 +46,9 @@ export const Route = createFileRoute("/$locale/admin/modules/$id/")({
 	component: RouteComponent,
 	validateSearch: z.object({
 		tab: z.enum(["info", "usage"]).optional(),
-		activeChart: z.enum(["cost", "tokens"]).optional(),
+		activeChart: z
+			.enum(["cost", "tokens", "averageCost", "averageTokens"])
+			.optional(),
 	}),
 	loader: async ({ params: { id } }) => {
 		const moduleData = await getModuleFn({
@@ -122,6 +124,14 @@ function RouteComponent() {
 			label: t.usage.cost,
 			color: "#60c589",
 		},
+		averageCost: {
+			label: t.usage.averageCost,
+			color: "#f59e0b",
+		},
+		averageTokens: {
+			label: t.usage.averageTokens,
+			color: "#f59e0b",
+		},
 	} satisfies ChartConfig;
 
 	const updateModule = useMutation({
@@ -165,6 +175,12 @@ function RouteComponent() {
 		() => ({
 			tokens: usageData.reduce((acc, curr) => acc + curr.tokens, 0),
 			cost: usageData.reduce((acc, curr) => acc + curr.cost, 0),
+			averageCost:
+				usageData.reduce((acc, curr) => acc + curr.averageCost, 0) /
+				usageData.length,
+			averageTokens:
+				usageData.reduce((acc, curr) => acc + curr.averageTokens, 0) /
+				usageData.length,
 		}),
 		[],
 	);
@@ -247,22 +263,27 @@ function RouteComponent() {
 				</TabsContent>
 				<TabsContent value="usage">
 					<Card className="py-0">
-						<CardHeader className="flex flex-col items-stretch border-b !p-0 sm:flex-row">
-							<div className="flex flex-1 flex-col justify-center gap-1 px-6 pt-4 pb-3 sm:!py-0">
+						<CardHeader className="flex flex-col items-stretch border-b !p-0 lg:flex-row">
+							<div className="flex flex-1 flex-col justify-center gap-1 px-6 pt-4 pb-3 lg:!py-0">
 								<CardTitle>{t.usage.title}</CardTitle>
 								<CardDescription>
 									{t.usage.description}
 								</CardDescription>
 							</div>
 							<div className="flex">
-								{["cost", "tokens"].map((key) => {
+								{[
+									"cost",
+									"tokens",
+									"averageCost",
+									"averageTokens",
+								].map((key) => {
 									const chart =
 										key as keyof typeof chartConfig;
 									return (
 										<button
 											key={chart}
 											data-active={activeChart === chart}
-											className="data-[active=true]:bg-muted/50 relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l sm:border-t-0 sm:border-l sm:px-8 sm:py-6"
+											className="data-[active=true]:bg-muted/50 relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l lg:border-t-0 lg:border-l lg:px-8 lg:py-6"
 											onClick={() =>
 												navigate({
 													search: (prev) => ({
@@ -278,12 +299,15 @@ function RouteComponent() {
 											<span className="text-muted-foreground text-xs">
 												{chartConfig[chart].label}
 											</span>
-											<span className="text-lg leading-none font-bold sm:text-3xl">
-												{key === "cost"
-													? `$${total["cost"].toFixed(
-															2,
+											<span className="text-lg leading-none font-bold lg:text-3xl">
+												{key === "cost" ||
+												key === "averageCost"
+													? `$${total[key].toFixed(
+															key === "cost"
+																? 2
+																: 4,
 														)}`
-													: total["tokens"]}
+													: Math.floor(total[key])}
 											</span>
 										</button>
 									);
@@ -325,7 +349,6 @@ function RouteComponent() {
 										content={
 											<ChartTooltipContent
 												className="w-[150px]"
-												nameKey="cost"
 												labelFormatter={(value) => {
 													const date = getDate(value);
 													return date.toLocaleDateString(

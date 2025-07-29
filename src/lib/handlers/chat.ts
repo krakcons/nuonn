@@ -225,21 +225,25 @@ export const getChatModuleResponseFn = createServerFn({
 		});
 
 		return result.toUIMessageStreamResponse({
-			messageMetadata: async ({ part }) => {
+			messageMetadata: ({ part }) => {
 				if (part.type === "finish") {
-					await db.insert(usages).values({
-						id: Bun.randomUUIDv7(),
-						organizationId: chatModule.organizationId,
-						apiKeyId: chatModule.apiKeyId,
-						moduleId: chatModule.id,
-						data: {
-							inputTokens: part.totalUsage.inputTokens,
-							outputTokens: part.totalUsage.outputTokens,
-							totalTokens: part.totalUsage.totalTokens,
-							model: "gpt-4o",
-						},
-					});
+					return {
+						inputTokens: part.totalUsage.inputTokens,
+						outputTokens: part.totalUsage.outputTokens,
+						totalTokens: part.totalUsage.totalTokens,
+						model: "gpt-4o",
+					};
 				}
+			},
+			onFinish: async ({ responseMessage }) => {
+				if (!responseMessage.metadata) return;
+				await db.insert(usages).values({
+					id: Bun.randomUUIDv7(),
+					organizationId: chatModule.organizationId,
+					apiKeyId: chatModule.apiKeyId,
+					moduleId: chatModule.id,
+					data: responseMessage.metadata,
+				});
 			},
 		});
 	});

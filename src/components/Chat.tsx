@@ -94,6 +94,7 @@ export const Chat = ({
 	useEffect(() => {
 		if (status !== "ready") return;
 
+		console.log(messages);
 		onChange?.(messages);
 
 		const parsedMessages = messages

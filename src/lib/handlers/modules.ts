@@ -79,6 +79,8 @@ export const getModuleUsageDataFn = createServerFn()
 		return Object.keys(usageData).map((date) => ({
 			date,
 			...usageData[date],
+			averageCost: usageData[date].cost / usageData[date].count,
+			averageTokens: usageData[date].tokens / usageData[date].count,
 		}));
 	});
 
