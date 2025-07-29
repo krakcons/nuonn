@@ -4,7 +4,6 @@ import { useScorm } from "@/lib/scorm";
 import { useEffect, useMemo, useState } from "react";
 import { Chat } from "@/components/Chat";
 import z from "zod";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const Route = createFileRoute("/$locale/modules/$id/chat")({
 	component: RouteComponent,

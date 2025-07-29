@@ -1,7 +1,7 @@
 import { useAppForm } from "@/components/ui/form";
 import { type UIMessage, useChat } from "@ai-sdk/react";
 import { z } from "zod";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "@/lib/locale";
 import { Check, ChevronsUpDown, Info } from "lucide-react";
 import {
@@ -25,6 +25,7 @@ export const Chat = ({
 	type,
 	additionalBody,
 	disabled,
+	tokenLimit,
 	onStart,
 	onChange,
 	onComplete,
@@ -35,6 +36,7 @@ export const Chat = ({
 	type: "module" | "playground";
 	additionalBody?: Record<string, any>;
 	disabled?: boolean;
+	tokenLimit?: number;
 	onStart?: () => void;
 	onChange?: (messages: UIMessage[]) => void;
 	onComplete?: () => void;
@@ -42,7 +44,7 @@ export const Chat = ({
 	const t = useTranslations("Chat");
 	const [started, setStarted] = useState(false);
 
-	const { sendMessage, status, messages, setMessages, id } = useChat({
+	const { sendMessage, status, messages, setMessages, id, error } = useChat({
 		transport: new DefaultChatTransport({
 			// @ts-ignore
 			fetch: (_: any, options: any) => {
@@ -151,7 +153,7 @@ export const Chat = ({
 									placeholder={t.placeholder}
 									label=""
 									className="resize-none z-20"
-									disabled={complete || disabled}
+									disabled={complete || disabled || !!error}
 									onKeyDown={(e) => {
 										if (e.key === "Enter" && !e.shiftKey) {
 											e.preventDefault();
@@ -169,6 +171,15 @@ export const Chat = ({
 					<div className="flex flex-col gap-8 py-8">
 						<div className="text-center">
 							<p className="text-2xl font-bold">{t.completed}</p>
+						</div>
+					</div>
+				)}
+				{error && (
+					<div className="flex flex-col gap-8 py-8">
+						<div className="text-center">
+							<p className="text-2xl font-bold text-destructive">
+								{error.message}
+							</p>
 						</div>
 					</div>
 				)}

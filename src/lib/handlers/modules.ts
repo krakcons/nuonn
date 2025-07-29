@@ -5,6 +5,7 @@ import { z } from "zod";
 import { protectedMiddleware } from "./auth";
 import { modules, scenarios, usages } from "../db/schema";
 import { ModuleDataSchema } from "../types/modules";
+import { prices } from "../prices";
 
 export const getModulesFn = createServerFn()
 	.middleware([protectedMiddleware])
@@ -36,9 +37,6 @@ export const getModuleFn = createServerFn()
 		return { ...courseModule, instructions: scenario?.data.instructions };
 	});
 
-const prices = {
-	"gpt-4o": 0.000005,
-};
 export const getModuleUsageDataFn = createServerFn()
 	.validator(
 		z.object({

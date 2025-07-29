@@ -1,5 +1,5 @@
 import { ChatPlaygroundInputSchema, ChatResponseSchema } from "@/lib/ai";
-import { streamText, Output, convertToModelMessages } from "ai";
+import { streamText, Output, convertToModelMessages, UIMessage } from "ai";
 import { createOpenAI, openai } from "@ai-sdk/openai";
 import { createServerFn } from "@tanstack/react-start";
 import {
@@ -17,6 +17,7 @@ import type { ScenarioType } from "../types/scenarios";
 import type { PersonaType } from "../types/personas";
 import type { ContextType } from "../types/contexts";
 import { BehaviourType } from "../types/behaviours";
+import { prices } from "../prices";
 
 const getPrompt = ({
 	scenario,
@@ -173,11 +174,10 @@ export const getChatModuleResponseFn = createServerFn({
 				moduleId: z.string(),
 			})
 			.extend({
-				messages: z.any(),
+				messages: z.any().array(),
 			}),
 	)
 	.handler(async ({ data: { messages, moduleId } }) => {
-		console.log(messages);
 		const chatModule = await db.query.modules.findFirst({
 			where: eq(modules.id, moduleId),
 			with: {
@@ -185,6 +185,19 @@ export const getChatModuleResponseFn = createServerFn({
 			},
 		});
 		if (!chatModule) throw new Error("Module not found");
+
+		if (chatModule.data.costLimit) {
+			const uiMessages = messages as UIMessage[];
+			const cost = uiMessages.reduce((acc, m) => {
+				if (!m.metadata) return acc;
+				return (
+					acc + m.metadata?.totalTokens * prices[m.metadata?.model]
+				);
+			}, 0);
+			if (cost >= Number(chatModule.data.costLimit)) {
+				throw new Error("Cost limit exceeded");
+			}
+		}
 
 		const [scenario, persona, chatContexts, behaviour] = await Promise.all([
 			db.query.scenarios.findFirst({

@@ -202,6 +202,11 @@ const en = {
 			label: "Character Behaviours",
 			placeholder: "Select the character behaviours",
 		},
+		limit: {
+			label: "Cost Limit",
+			placeholder:
+				"Enter the the maximum cost for a single use of this module",
+		},
 	},
 	Persona: {
 		edit: "Edit this character",

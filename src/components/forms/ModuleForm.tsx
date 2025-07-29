@@ -7,6 +7,8 @@ import { z } from "zod";
 import type { ApiKeyType } from "@/lib/types/apiKeys";
 import { useTranslations } from "@/lib/locale";
 import { BehaviourType } from "@/lib/types/behaviours";
+import { DollarSign } from "lucide-react";
+import { prices } from "@/lib/prices";
 
 export const ModuleForm = ({
 	defaultValues,
@@ -128,7 +130,27 @@ export const ModuleForm = ({
 						/>
 					)}
 				/>
-
+				<form.AppField
+					name="costLimit"
+					children={(field) => (
+						<div className="relative flex items-center gap-4">
+							<DollarSign className="absolute size-4 left-2 top-8" />
+							<field.TextField
+								className="pl-8"
+								label={
+									t.limit.label +
+									(field.state.value
+										? ` (Tokens: ${Math.round(Number(field.state.value) / prices["gpt-4o"])})`
+										: "")
+								}
+								description={t.limit.placeholder}
+								type="number"
+								min={0}
+								step={0.01}
+							/>
+						</div>
+					)}
+				/>
 				<form.SubmitButton />
 			</form>
 		</form.AppForm>
