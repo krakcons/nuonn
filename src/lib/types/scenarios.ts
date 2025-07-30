@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const EvaluationSchema = z.object({
+export const EvaluationSchema = z.object({
 	name: z.string(),
 	description: z.string(),
 	type: z.enum(["message", "session"]),
@@ -8,6 +8,7 @@ const EvaluationSchema = z.object({
 	successValue: z.string(),
 	measure: z.string(),
 });
+export type EvaluationType = z.infer<typeof EvaluationSchema>;
 
 export const ScenarioDataSchema = z.object({
 	name: z.string(),

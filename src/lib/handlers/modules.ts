@@ -34,7 +34,7 @@ export const getModuleFn = createServerFn()
 		const scenario = await db.query.scenarios.findFirst({
 			where: eq(scenarios.id, courseModule.data.scenarioId),
 		});
-		return { ...courseModule, instructions: scenario?.data.instructions };
+		return { ...courseModule, scenario };
 	});
 
 export const getModuleUsageDataFn = createServerFn()

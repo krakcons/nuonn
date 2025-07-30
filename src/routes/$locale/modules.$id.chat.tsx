@@ -4,6 +4,22 @@ import { useScorm } from "@/lib/scorm";
 import { useEffect, useMemo, useState } from "react";
 import { Chat } from "@/components/Chat";
 import z from "zod";
+import {
+	Sidebar,
+	SidebarInset,
+	SidebarProvider,
+	SidebarMenu,
+	SidebarMenuItem,
+	SidebarHeader,
+	SidebarMenuButton,
+	SidebarContent,
+	SidebarGroup,
+	SidebarGroupLabel,
+	SidebarGroupContent,
+	useSidebar,
+} from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
+import { Check, ListTodo } from "lucide-react";
 
 export const Route = createFileRoute("/$locale/modules/$id/chat")({
 	component: RouteComponent,
@@ -22,6 +38,19 @@ export const Route = createFileRoute("/$locale/modules/$id/chat")({
 		};
 	},
 });
+
+const SidebarIcon = () => {
+	const { toggleSidebar } = useSidebar();
+	return (
+		<Button
+			size="icon"
+			onClick={() => toggleSidebar()}
+			className="absolute top-4 right-4"
+		>
+			<ListTodo className="size-4" />
+		</Button>
+	);
+};
 
 function RouteComponent() {
 	const { chatModule } = Route.useLoaderData();
@@ -63,10 +92,10 @@ function RouteComponent() {
 	}
 
 	return (
-		<div className="h-screen flex flex-col justify-end">
-			<div className="max-h-screen">
+		<SidebarProvider>
+			<SidebarInset className="relative">
+				<SidebarIcon />
 				<Chat
-					type="module"
 					additionalBody={{
 						moduleId: chatModule.id,
 					}}
@@ -74,7 +103,6 @@ function RouteComponent() {
 						initialMessages ? JSON.parse(initialMessages) : []
 					}
 					complete={complete || isComplete}
-					instructions={chatModule.instructions}
 					onChange={(messages) => {
 						sendEvent("LMSSetValue", {
 							element: "cmi.core.suspend_data",
@@ -89,7 +117,64 @@ function RouteComponent() {
 						});
 					}}
 				/>
-			</div>
-		</div>
+			</SidebarInset>
+			<Sidebar side="right" variant="sidebar">
+				<SidebarHeader>
+					<h4>{chatModule.scenario?.data.name}</h4>
+					<div className="bg-zinc-300 h-4 overflow-hidden">
+						<div
+							style={{ width: `${100 * 0.75}%` }}
+							className="h-full bg-primary"
+						/>
+					</div>
+				</SidebarHeader>
+				<SidebarContent>
+					<SidebarGroup>
+						<SidebarGroupLabel>USER EVALUATIONS</SidebarGroupLabel>
+						<SidebarGroupContent>
+							<SidebarMenu>
+								{chatModule.scenario?.data.user.evaluations.map(
+									(s, i) => (
+										<SidebarMenuItem key={i}>
+											<SidebarMenuButton
+												isActive={true}
+												className="justify-between"
+											>
+												{s.name}
+												<Check />
+											</SidebarMenuButton>
+										</SidebarMenuItem>
+									),
+								)}
+							</SidebarMenu>
+						</SidebarGroupContent>
+					</SidebarGroup>
+					<SidebarGroup>
+						<SidebarGroupLabel>
+							PERSONA EVALUATIONS
+						</SidebarGroupLabel>
+						<SidebarGroupContent>
+							<SidebarMenu>
+								{chatModule.scenario?.data.persona.evaluations.map(
+									(s, i) => (
+										<SidebarMenuItem key={i}>
+											<SidebarMenuButton isActive={false}>
+												{s.name}
+											</SidebarMenuButton>
+										</SidebarMenuItem>
+									),
+								)}
+							</SidebarMenu>
+						</SidebarGroupContent>
+					</SidebarGroup>
+					<SidebarGroup>
+						<SidebarGroupLabel>INSTRUCTIONS</SidebarGroupLabel>
+						<SidebarGroupContent className="px-2">
+							{chatModule.scenario?.data.instructions}
+						</SidebarGroupContent>
+					</SidebarGroup>
+				</SidebarContent>
+			</Sidebar>
+		</SidebarProvider>
 	);
 }

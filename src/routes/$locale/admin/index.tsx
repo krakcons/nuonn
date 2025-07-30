@@ -1,164 +1,146 @@
-import { useAppForm } from "@/components/ui/form";
-import { createFileRoute } from "@tanstack/react-router";
-import { z } from "zod";
-import { Page, PageHeader } from "@/components/Page";
-import {
-	ChatPlaygroundInputSchema,
-	type ChatPlaygroundInputType,
-} from "@/lib/ai";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Page, PageHeader, PageSubHeader } from "@/components/Page";
+import { useTranslations } from "@/lib/locale";
+import { getBehavioursFn } from "@/lib/handlers/behaviours";
+import { getContextsFn } from "@/lib/handlers/contexts";
+import { getModulesFn } from "@/lib/handlers/modules";
 import { getPersonasFn } from "@/lib/handlers/personas";
 import { getScenariosFn } from "@/lib/handlers/scenarios";
-import { useState } from "react";
-import { getContextsFn } from "@/lib/handlers/contexts";
-import { useTranslations } from "@/lib/locale";
-import { Chat } from "@/components/Chat";
-import { getBehavioursFn } from "@/lib/handlers/behaviours";
+import {
+	Card,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
 
 export const Route = createFileRoute("/$locale/admin/")({
 	component: RouteComponent,
-	validateSearch: z.object({
-		options: ChatPlaygroundInputSchema.optional(),
-	}),
-	loader: async () => {
-		return Promise.all([
+	loader: () =>
+		Promise.all([
 			getPersonasFn(),
+			getBehavioursFn(),
 			getScenariosFn(),
 			getContextsFn(),
-			getBehavioursFn(),
-		]);
-	},
+			getModulesFn(),
+		]),
 });
 
 function RouteComponent() {
-	const [personas, scenarios, contexts, behaviors] = Route.useLoaderData();
-	const [disabled, setDisabled] = useState(false);
-	const t = useTranslations("Chat");
-	const [complete, setComplete] = useState(false);
-
-	const form = useAppForm({
-		defaultValues: {
-			scenarioId: scenarios.length ? scenarios[0].id : undefined,
-			personaId: personas.length ? personas[0].id : undefined,
-			behaviourId: behaviors.length ? behaviors[0].id : undefined,
-			contextIds: [],
-		} as ChatPlaygroundInputType,
-		validators: {
-			onMount: ChatPlaygroundInputSchema,
-			onSubmit: ChatPlaygroundInputSchema,
-		},
-	});
+	const t = useTranslations("Dashboard");
+	const tSidebar = useTranslations("AdminSidebar");
+	const [personas, behaviours, scenarios, contexts, modules] =
+		Route.useLoaderData();
 
 	return (
-		<Page className="h-full justify-between">
-			<PageHeader title={t.title} description={t.description}>
-				<form.AppForm>
-					<form
-						onSubmit={(e) => e.preventDefault()}
-						className="flex gap-2 pt-4 overflow-x-auto min-h-24 w-full"
-					>
-						<form.AppField
-							name="scenarioId"
-							children={(field) => (
-								<div className="flex-1">
-									<field.SelectField
-										disabled={disabled}
-										label={t.scenario.title}
-										placeholder={t.scenario.description}
-										options={scenarios.map((s) => ({
-											label: s.data.name,
-											value: s.id,
-										}))}
-									/>
-								</div>
-							)}
-						/>
-						<form.AppField
-							name="contextIds"
-							children={(field) => (
-								<div className="flex-1">
-									<field.MultiSelectField
-										disabled={disabled}
-										label={t.context.title}
-										placeholder={t.context.description}
-										value={field.state.value}
-										options={contexts.map((c) => ({
-											label: c.data.name,
-											value: c.id,
-										}))}
-									/>
-								</div>
-							)}
-						/>
-						<form.AppField
-							name="personaId"
-							children={(field) => (
-								<div className="flex-1">
-									<field.SelectField
-										disabled={disabled}
-										label={t.persona.title}
-										placeholder={t.persona.description}
-										options={[
-											...personas.map((p) => ({
-												label: p.data.name,
-												value: p.id,
-											})),
-										]}
-									/>
-								</div>
-							)}
-						/>
-						<form.AppField
-							name="behaviourId"
-							children={(field) => (
-								<div className="flex-1">
-									<field.SelectField
-										disabled={disabled}
-										label={t.behaviour.title}
-										placeholder={t.behaviour.description}
-										options={[
-											...behaviors.map((b) => ({
-												label: b.data.name,
-												value: b.id,
-											})),
-										]}
-									/>
-								</div>
-							)}
-						/>
-					</form>
-				</form.AppForm>
-			</PageHeader>
-			<div className="max-h-[calc(100svh-340px)]">
-				<form.Subscribe
-					selector={(state) => ({
-						values: state.values,
-						isValid: state.isValid,
-					})}
-					children={({ values, isValid }) => (
-						<Chat
-							disabled={!isValid}
-							type="playground"
-							additionalBody={{
-								scenarioId: values.scenarioId,
-								personaId: values.personaId,
-								behaviourId: values.behaviourId,
-								contextIds: values.contextIds,
-							}}
-							onStart={() => {
-								form.handleSubmit();
-								setDisabled(true);
-							}}
-							complete={complete}
-							onComplete={() => setComplete(true)}
-							instructions={
-								scenarios.find(
-									(s) => s.id === values.scenarioId,
-								)?.data.instructions
-							}
-						/>
-					)}
-				/>
-			</div>
+		<Page>
+			<PageHeader title={t.title} description={t.description} />
+			<PageSubHeader
+				title={tSidebar.modules.title}
+				description={tSidebar.modules.tooltip}
+			/>
+			{modules.map((module) => (
+				<Link
+					key={module.id}
+					to="/$locale/admin/modules/$id"
+					from={Route.fullPath}
+					params={{ id: module.id }}
+				>
+					<Card>
+						<CardHeader>
+							<CardTitle>{module.data.name}</CardTitle>
+							<CardDescription>
+								{module.data.description}
+							</CardDescription>
+						</CardHeader>
+					</Card>
+				</Link>
+			))}
+			<PageSubHeader
+				className="mt-2"
+				title={tSidebar.personas.title}
+				description={tSidebar.personas.tooltip}
+			/>
+			{personas.map((persona) => (
+				<Link
+					key={persona.id}
+					to="/$locale/admin/characters/$id"
+					from={Route.fullPath}
+					params={{ id: persona.id }}
+				>
+					<Card>
+						<CardHeader>
+							<CardTitle>{persona.data.name}</CardTitle>
+							<CardDescription></CardDescription>
+						</CardHeader>
+					</Card>
+				</Link>
+			))}
+			<PageSubHeader
+				className="mt-2"
+				title={tSidebar.behaviours.title}
+				description={tSidebar.behaviours.tooltip}
+			/>
+			{behaviours.map((behaviour) => (
+				<Link
+					key={behaviour.id}
+					to="/$locale/admin/behaviours/$id"
+					from={Route.fullPath}
+					params={{ id: behaviour.id }}
+				>
+					<Card>
+						<CardHeader>
+							<CardTitle>{behaviour.data.name}</CardTitle>
+							<CardDescription>
+								{behaviour.data.description}
+							</CardDescription>
+						</CardHeader>
+					</Card>
+				</Link>
+			))}
+			<PageSubHeader
+				className="mt-2"
+				title={tSidebar.scenarios.title}
+				description={tSidebar.scenarios.tooltip}
+			/>
+			{scenarios.map((scenario) => (
+				<Link
+					key={scenario.id}
+					to="/$locale/admin/scenarios/$id"
+					from={Route.fullPath}
+					params={{ id: scenario.id }}
+				>
+					<Card>
+						<CardHeader>
+							<CardTitle>{scenario.data.name}</CardTitle>
+							<CardDescription>
+								{scenario.data.description}
+							</CardDescription>
+						</CardHeader>
+					</Card>
+				</Link>
+			))}
+			<PageSubHeader
+				className="mt-2"
+				title={tSidebar.contexts.title}
+				description={tSidebar.contexts.tooltip}
+			/>
+			{contexts.map((context) => (
+				<Link
+					key={context.id}
+					to="/$locale/admin/contexts/$id"
+					from={Route.fullPath}
+					params={{ id: context.id }}
+				>
+					<Card>
+						<CardHeader>
+							<CardTitle>{context.data.name}</CardTitle>
+							<CardDescription>
+								{context.data.description}
+							</CardDescription>
+						</CardHeader>
+					</Card>
+				</Link>
+			))}
 		</Page>
 	);
 }

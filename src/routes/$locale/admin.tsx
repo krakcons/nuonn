@@ -55,7 +55,7 @@ import {
 	FileVideo,
 	HelpCircle,
 	Key,
-	MessagesSquare,
+	LayoutDashboard,
 	Plus,
 	Smile,
 	User,
@@ -160,8 +160,8 @@ function RouteComponent() {
 												<SidebarMenuButton
 													isActive={isActive}
 												>
-													<MessagesSquare />
-													{t.chat}
+													<LayoutDashboard />
+													{t.dashboard}
 												</SidebarMenuButton>
 											)}
 										</Link>

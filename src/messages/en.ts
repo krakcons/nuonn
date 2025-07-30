@@ -127,7 +127,6 @@ const en = {
 				"Modules are an exportable course based on a scenario, characters, and contexts.",
 		},
 		editing: "Editing",
-		chat: "Chat Playground",
 		settings: "Settings",
 		apiKeys: "API Keys",
 	},
@@ -137,28 +136,13 @@ const en = {
 			"Nuonn is a chat creation tool for AI communication scenarios and evaluations.",
 		getStarted: "Get Started",
 	},
+	Dashboard: {
+		title: "Dashboard",
+		description: "Manage your AI chats and evaluations.",
+	},
 	Chat: {
-		random: "Random",
 		instructions: "Instructions",
 		completed: "You have successfully completed this scenario.",
-		title: "Chat Playground",
-		description: "Create and test a custom module configuration",
-		scenario: {
-			title: "Scenario",
-			description: "Select scenario",
-		},
-		context: {
-			title: "Contexts",
-			description: "Select contexts",
-		},
-		persona: {
-			title: "Character",
-			description: "Select character",
-		},
-		behaviour: {
-			title: "Behaviour",
-			description: "Select behaviour",
-		},
 		placeholder: "Type your message here...",
 	},
 	Module: {

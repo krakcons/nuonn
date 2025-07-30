@@ -143,28 +143,8 @@ const fr: Messages = {
 		getStarted: "Commencer",
 	},
 	Chat: {
-		random: "Aléatoire",
 		instructions: "Instructions",
 		completed: "Vous avez terminé avec succès ce scénario.",
-		title: "Terrain de jeu Chat",
-		description:
-			"Créer et tester une configuration de module personnalisée",
-		scenario: {
-			title: "Scénario",
-			description: "Sélectionner un scénario",
-		},
-		context: {
-			title: "Contextes",
-			description: "Sélectionner les contextes",
-		},
-		persona: {
-			title: "Caractère",
-			description: "Sélectionnez le personnage",
-		},
-		behaviour: {
-			title: "Comportement",
-			description: "Sélectionnez le comportement",
-		},
 		placeholder: "Tapez votre message ici...",
 	},
 	Module: {
