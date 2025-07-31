@@ -19,9 +19,9 @@ import {
 	useSidebar,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { Check, ListTodo, Square, SquareCheck } from "lucide-react";
+import { ListTodo, Square, SquareCheck } from "lucide-react";
 import { useTranslations } from "@/lib/locale";
-import { ChatResponseType } from "@/lib/ai";
+import { ChatEvaluationResponseType } from "@/lib/ai";
 import { EvaluationType } from "@/lib/types/scenarios";
 
 export const Route = createFileRoute("/$locale/modules/$id/chat")({
@@ -63,7 +63,7 @@ const EvaluationMenuItem = ({
 	responseEvaluation,
 }: {
 	evaluation: EvaluationType;
-	responseEvaluation?: ChatResponseType["evaluations"][0];
+	responseEvaluation?: ChatEvaluationResponseType["evaluations"][0];
 }) => {
 	const t = useTranslations("Chat");
 	return (
@@ -102,8 +102,10 @@ function RouteComponent() {
 	const { sendEvent, messages: scormMessages } = useScorm();
 	const [complete, setComplete] = useState(false);
 	const [responseEvaluations, setResponseEvaluations] =
-		useState<ChatResponseType["evaluations"]>();
+		useState<ChatEvaluationResponseType["evaluations"]>();
 	const t = useTranslations("Chat");
+
+	console.log(responseEvaluations);
 
 	useEffect(() => {
 		sendEvent("LMSInitialize");

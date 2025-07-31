@@ -30,27 +30,38 @@ export const ChatPlaygroundInputSchema = z.object({
 });
 export type ChatPlaygroundInputType = z.infer<typeof ChatPlaygroundInputSchema>;
 
+export type ChatMetadata = {
+	inputTokens: number;
+	outputTokens: number;
+	totalTokens: number;
+	model: string;
+};
+
 export const ChatResponseSchema = z.object({
 	content: z.string(),
-	evaluations: DataOutputSchema.array(),
 	rapport: z.number(),
 });
 export type ChatResponseType = z.infer<typeof ChatResponseSchema>;
 
+export const ChatEvaluationResponseSchema = z.object({
+	evaluations: DataOutputSchema.array(),
+});
+export type ChatEvaluationResponseType = z.infer<
+	typeof ChatEvaluationResponseSchema
+>;
+
 export const parseAssistantMessage = (
 	message: UIMessage,
-): ChatResponseType | undefined => {
-	const text = message.parts.find((p) => p.type === "text")?.text;
-	const parsedMessage = parsePartialJson(text);
-
-	const { value, state } = parsedMessage as {
-		value: ChatResponseType | null;
-		state: string;
+):
+	| {
+			content: string;
+			evaluations: ChatEvaluationResponseType["evaluations"];
+	  }
+	| undefined => {
+	return {
+		content: message.parts.find((p) => p.type === "text")?.text ?? "",
+		evaluations:
+			message.parts.find((p) => p.type === "data-evaluations")?.data
+				.evaluations ?? [],
 	};
-
-	if (value && ["repaired-parse", "successful-parse"].includes(state)) {
-		return value;
-	}
-
-	return undefined;
 };

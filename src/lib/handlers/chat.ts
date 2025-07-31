@@ -1,5 +1,20 @@
-import { ChatPlaygroundInputSchema, ChatResponseSchema } from "@/lib/ai";
-import { streamText, Output, convertToModelMessages, UIMessage } from "ai";
+import {
+	ChatEvaluationResponseSchema,
+	ChatMetadata,
+	ChatPlaygroundInputSchema,
+	ChatResponseSchema,
+} from "@/lib/ai";
+import {
+	streamText,
+	Output,
+	convertToModelMessages,
+	UIMessage,
+	tool,
+	createUIMessageStream,
+	createUIMessageStreamResponse,
+	streamObject,
+	generateObject,
+} from "ai";
 import { createOpenAI, openai } from "@ai-sdk/openai";
 import { createServerFn } from "@tanstack/react-start";
 import {
@@ -56,7 +71,7 @@ Languages: Only respond in the language(s) specified in the character: ${persona
 		`You will modulate your behavior dynamically based on the character behaviour`,
 		`You must distort expressions of facts about yourself and your situation proportionate to the dishonesty parameter.`,
 		`You must develop rapport with the user in a manner consistent with the rapportBuilding out of 100.`,
-		`You must decrease rapport with the PUT in a manner consistent with the rapportLoss out of 100.`,
+		`You must decrease rapport with the user in a manner consistent with the rapportLoss out of 100.`,
 		`Your willingness to share information will increase as rapport with the user increases.`,
 		`You will track the current rapport value and maintain it throughout the conversation.`,
 
@@ -77,7 +92,10 @@ Description: ${c.data.description}
 `,
 )}
 `,
+	].join(" ");
 
+const getEvaluationPrompt = ({ scenario }: { scenario: ScenarioType }) =>
+	[
 		`Evaluation Framework:
 Character Evaluations: ${JSON.stringify(scenario.data.persona.evaluations, null, 2)}
 User Evaluations: ${JSON.stringify(scenario.data.user.evaluations, null, 2)}
@@ -92,6 +110,7 @@ Format the evaluations as a JSON object with the following fields:
 - name: The name of the evaluation
 - value: The value of the evaluation based on the measure
 - type: The type of evaluation (message or session)
+- role: The role of the evaluation (user or persona)
 - success: Whether the evaluation was successful based on the success value (true or false)
 
 Example:
@@ -100,13 +119,8 @@ Example:
 	"name": "Politeness",
 	"value": 0.8,
 	"type": "message",
+	"role": "user",
 	"success": true
-},
-{
-	"name": "Stress",
-	"value": 45,
-	"type": "session",
-	"success": false
 }
 ]
 `,
@@ -227,36 +241,96 @@ export const getChatModuleResponseFn = createServerFn({
 		const openai = createOpenAI({
 			apiKey: chatModule.apiKey.key,
 		});
+		let metadata: ChatMetadata = {
+			inputTokens: 0,
+			outputTokens: 0,
+			totalTokens: 0,
+			model: "gpt-4o",
+		};
 
-		const result = streamText({
-			model: openai("gpt-4o"),
-			system: prompt,
-			experimental_output: Output.object({
-				schema: ChatResponseSchema,
-			}),
-			messages: convertToModelMessages(messages),
+		const stream = createUIMessageStream({
+			execute: async ({ writer }) => {
+				const chatStream = streamText({
+					model: openai("gpt-4o"),
+					messages: convertToModelMessages(messages),
+					system: prompt,
+				});
+				writer.merge(
+					chatStream.toUIMessageStream({
+						messageMetadata: ({ part }) => {
+							if (
+								part.type === "finish" &&
+								part.totalUsage &&
+								part.totalUsage.totalTokens &&
+								part.totalUsage.inputTokens &&
+								part.totalUsage.outputTokens
+							) {
+								metadata = {
+									...metadata,
+									inputTokens:
+										metadata.inputTokens +
+										part.totalUsage.inputTokens,
+									outputTokens:
+										metadata.outputTokens +
+										part.totalUsage.outputTokens,
+									totalTokens:
+										metadata.totalTokens +
+										part.totalUsage.totalTokens,
+								};
+							}
+						},
+						onFinish: async () => {
+							const evaluation = await generateObject({
+								model: openai("gpt-4o"),
+								messages: convertToModelMessages(messages),
+								system: getEvaluationPrompt({
+									scenario,
+								}),
+								schema: ChatEvaluationResponseSchema,
+							});
+							if (
+								evaluation.usage.inputTokens &&
+								evaluation.usage.outputTokens &&
+								evaluation.usage.totalTokens
+							) {
+								metadata = {
+									...metadata,
+									inputTokens:
+										metadata.inputTokens +
+										evaluation.usage.inputTokens,
+									outputTokens:
+										metadata.outputTokens +
+										evaluation.usage.outputTokens,
+									totalTokens:
+										metadata.totalTokens +
+										evaluation.usage.totalTokens,
+								};
+							}
+							writer.write({
+								type: "message-metadata",
+								messageMetadata: metadata,
+							});
+							writer.write({
+								type: "data-evaluations",
+								data: evaluation.object,
+							});
+						},
+					}),
+				);
+			},
 		});
 
-		return result.toUIMessageStreamResponse({
-			messageMetadata: ({ part }) => {
-				if (part.type === "finish") {
-					return {
-						inputTokens: part.totalUsage.inputTokens,
-						outputTokens: part.totalUsage.outputTokens,
-						totalTokens: part.totalUsage.totalTokens,
-						model: "gpt-4o",
-					};
-				}
-			},
-			onFinish: async ({ responseMessage }) => {
-				if (!responseMessage.metadata) return;
-				await db.insert(usages).values({
-					id: Bun.randomUUIDv7(),
-					organizationId: chatModule.organizationId,
-					apiKeyId: chatModule.apiKeyId,
-					moduleId: chatModule.id,
-					data: responseMessage.metadata,
-				});
-			},
+		return createUIMessageStreamResponse({
+			stream,
+			//onFinish: async ({ responseMessage }) => {
+			//	if (!responseMessage.metadata) return;
+			//	await db.insert(usages).values({
+			//		id: Bun.randomUUIDv7(),
+			//		organizationId: chatModule.organizationId,
+			//		apiKeyId: chatModule.apiKeyId,
+			//		moduleId: chatModule.id,
+			//		data: responseMessage.metadata,
+			//	});
+			//},
 		});
 	});

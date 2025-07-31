@@ -3,8 +3,7 @@ import { type UIMessage, useChat } from "@ai-sdk/react";
 import { z } from "zod";
 import { useEffect, useState } from "react";
 import { useTranslations } from "@/lib/locale";
-import { Check } from "lucide-react";
-import { ChatResponseType, parseAssistantMessage } from "@/lib/ai";
+import { parseAssistantMessage, ChatEvaluationResponseType } from "@/lib/ai";
 import { DefaultChatTransport } from "ai";
 import { getChatModuleResponseFn } from "@/lib/handlers/chat";
 
@@ -25,7 +24,7 @@ export const Chat = ({
 	onStart?: () => void;
 	onChange?: (messages: UIMessage[]) => void;
 	onEvaluationChange?: (
-		evaluations?: ChatResponseType["evaluations"],
+		evaluations?: ChatEvaluationResponseType["evaluations"],
 	) => void;
 	onComplete?: () => void;
 }) => {
@@ -84,7 +83,9 @@ export const Chat = ({
 		const lastMessage = parsedMessages.find(
 			(_, i) => i === parsedMessages.length - 1,
 		);
+
 		onEvaluationChange?.(lastMessage?.evaluations);
+
 		if (
 			lastMessage &&
 			lastMessage.evaluations.length > 0 &&
