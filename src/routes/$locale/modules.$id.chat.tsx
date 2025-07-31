@@ -105,12 +105,14 @@ function RouteComponent() {
 		useState<ChatEvaluationResponseType["evaluations"]>();
 	const t = useTranslations("Chat");
 
-	console.log(responseEvaluations);
-
 	useEffect(() => {
 		sendEvent("LMSInitialize");
 		sendEvent("LMSGetValue", "cmi.core.suspend_data");
 		sendEvent("LMSGetValue", "cmi.core.lesson_status");
+		sendEvent("LMSSetValue", {
+			element: "cmi.core.lesson_status",
+			value: "incomplete",
+		});
 	}, []);
 
 	const { initialMessages, isComplete, isLoading } = useMemo(() => {
@@ -156,9 +158,21 @@ function RouteComponent() {
 							value: JSON.stringify(messages),
 						});
 					}}
-					onEvaluationChange={(evaluations) =>
-						evaluations && setResponseEvaluations(evaluations)
-					}
+					onEvaluationChange={(evaluations) => {
+						if (evaluations) {
+							setResponseEvaluations(evaluations);
+							sendEvent("LMSSetValue", {
+								element: "cmi.core.score.raw",
+								value: String(
+									evaluations.filter((e) => e.success).length,
+								),
+							});
+							sendEvent("LMSSetValue", {
+								element: "cmi.core.score.max",
+								value: String(evaluations.length),
+							});
+						}
+					}}
 					onComplete={() => {
 						setComplete(true);
 						sendEvent("LMSSetValue", {
