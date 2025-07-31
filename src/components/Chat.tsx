@@ -6,6 +6,7 @@ import { useTranslations } from "@/lib/locale";
 import { parseAssistantMessage, ChatEvaluationResponseType } from "@/lib/ai";
 import { DefaultChatTransport } from "ai";
 import { getChatModuleResponseFn } from "@/lib/handlers/chat";
+import { useBlocker } from "@tanstack/react-router";
 
 export const Chat = ({
 	initialMessages = [],
@@ -95,6 +96,11 @@ export const Chat = ({
 			onComplete?.();
 		}
 	}, [messages, status]);
+
+	useBlocker({
+		shouldBlockFn: () => false,
+		enableBeforeUnload: () => status === "streaming",
+	});
 
 	return (
 		<div className="flex h-full justify-start px-4 pt-4 pb-8 gap-2 flex-col-reverse w-full max-w-2xl mx-auto overflow-y-auto">
