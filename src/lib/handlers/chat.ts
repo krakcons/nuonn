@@ -126,58 +126,6 @@ Example:
 `,
 	].join(" ");
 
-export const getChatPlaygroundResponseFn = createServerFn({
-	method: "POST",
-	response: "raw",
-})
-	.validator(
-		ChatPlaygroundInputSchema.extend({
-			messages: z.any(),
-		}),
-	)
-	.handler(
-		async ({
-			data: { messages, scenarioId, personaId, contextIds, behaviourId },
-		}) => {
-			const [scenario, persona, chatContexts, behaviour] =
-				await Promise.all([
-					db.query.scenarios.findFirst({
-						where: eq(scenarios.id, scenarioId),
-					}),
-					db.query.personas.findFirst({
-						where: eq(personas.id, personaId),
-					}),
-					contextIds &&
-						db.query.contexts.findMany({
-							where: inArray(contexts.id, contextIds),
-						}),
-					db.query.behaviours.findFirst({
-						where: eq(behaviours.id, behaviourId),
-					}),
-				]);
-			if (!scenario || !persona || !behaviour)
-				throw new Error("Invalid scenario, persona, or behaviour");
-
-			const prompt = getPrompt({
-				scenario,
-				persona,
-				contexts: chatContexts,
-				behaviour,
-			});
-
-			const result = streamText({
-				model: openai("gpt-4o"),
-				system: prompt,
-				experimental_output: Output.object({
-					schema: ChatResponseSchema,
-				}),
-				messages: convertToModelMessages(messages),
-			});
-
-			return result.toUIMessageStreamResponse();
-		},
-	);
-
 export const getChatModuleResponseFn = createServerFn({
 	method: "POST",
 	response: "raw",
@@ -213,30 +161,35 @@ export const getChatModuleResponseFn = createServerFn({
 			}
 		}
 
-		const [scenario, persona, chatContexts, behaviour] = await Promise.all([
-			db.query.scenarios.findFirst({
-				where: eq(scenarios.id, chatModule.data.scenarioId),
-			}),
-			db.query.personas.findFirst({
-				where: eq(personas.id, chatModule.data.personaIds[0]),
-			}),
-			chatModule.data.contextIds &&
-				db.query.contexts.findMany({
-					where: inArray(contexts.id, chatModule.data.contextIds),
+		const [scenario, personaList, chatContexts, behaviourList] =
+			await Promise.all([
+				db.query.scenarios.findFirst({
+					where: eq(scenarios.id, chatModule.data.scenarioId),
 				}),
-			db.query.behaviours.findFirst({
-				where: eq(behaviours.id, chatModule.data.behaviourIds[0]),
-			}),
-		]);
-		if (!scenario || !persona || !behaviour)
+				db.query.personas.findMany({
+					where: inArray(personas.id, chatModule.data.personaIds),
+				}),
+				chatModule.data.contextIds &&
+					db.query.contexts.findMany({
+						where: inArray(contexts.id, chatModule.data.contextIds),
+					}),
+				db.query.behaviours.findMany({
+					where: inArray(behaviours.id, chatModule.data.behaviourIds),
+				}),
+			]);
+		if (!scenario || !personaList || !behaviourList)
 			throw new Error("Invalid scenario, persona, or behaviour");
 
-		const prompt = getPrompt({
-			scenario,
-			persona,
-			contexts: chatContexts,
-			behaviour,
-		});
+		const existingMetadata = messages.find(
+			(m) => m.metadata && Object.keys(m.metadata).length > 0,
+		)?.metadata;
+		const persona =
+			personaList.find((p) => p.id === existingMetadata?.personaId) ??
+			personaList[Math.floor(Math.random() * personaList.length)];
+
+		const behaviour =
+			behaviourList.find((b) => b.id === existingMetadata?.behaviourId) ??
+			behaviourList[Math.floor(Math.random() * behaviourList.length)];
 
 		const openai = createOpenAI({
 			apiKey: chatModule.apiKey.key,
@@ -246,7 +199,16 @@ export const getChatModuleResponseFn = createServerFn({
 			outputTokens: 0,
 			totalTokens: 0,
 			model: "gpt-4o",
+			personaId: persona.id,
+			behaviourId: behaviour.id,
 		};
+
+		const prompt = getPrompt({
+			scenario,
+			persona,
+			contexts: chatContexts,
+			behaviour,
+		});
 
 		const stream = createUIMessageStream({
 			execute: async ({ writer }) => {

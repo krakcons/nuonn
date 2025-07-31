@@ -35,6 +35,8 @@ export type ChatMetadata = {
 	outputTokens: number;
 	totalTokens: number;
 	model: string;
+	personaId: string;
+	behaviourId: string;
 };
 
 export const ChatResponseSchema = z.object({
