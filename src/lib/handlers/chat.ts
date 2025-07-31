@@ -280,19 +280,18 @@ export const getChatModuleResponseFn = createServerFn({
 					}),
 				);
 			},
+			onFinish: async () => {
+				await db.insert(usages).values({
+					id: Bun.randomUUIDv7(),
+					organizationId: chatModule.organizationId,
+					apiKeyId: chatModule.apiKeyId,
+					moduleId: chatModule.id,
+					data: metadata,
+				});
+			},
 		});
 
 		return createUIMessageStreamResponse({
 			stream,
-			//onFinish: async ({ responseMessage }) => {
-			//	if (!responseMessage.metadata) return;
-			//	await db.insert(usages).values({
-			//		id: Bun.randomUUIDv7(),
-			//		organizationId: chatModule.organizationId,
-			//		apiKeyId: chatModule.apiKeyId,
-			//		moduleId: chatModule.id,
-			//		data: responseMessage.metadata,
-			//	});
-			//},
 		});
 	});
