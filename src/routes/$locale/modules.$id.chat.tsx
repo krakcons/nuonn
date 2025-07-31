@@ -19,7 +19,10 @@ import {
 	useSidebar,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { Check, ListTodo } from "lucide-react";
+import { Check, ListTodo, Square, SquareCheck } from "lucide-react";
+import { useTranslations } from "@/lib/locale";
+import { ChatResponseType } from "@/lib/ai";
+import { EvaluationType } from "@/lib/types/scenarios";
 
 export const Route = createFileRoute("/$locale/modules/$id/chat")({
 	component: RouteComponent,
@@ -30,11 +33,14 @@ export const Route = createFileRoute("/$locale/modules/$id/chat")({
 		const chatModule = await getModuleFn({
 			data: { id },
 		});
-		if (!chatModule) {
+		if (!chatModule || !chatModule.scenario) {
 			throw notFound();
 		}
 		return {
-			chatModule,
+			chatModule: {
+				...chatModule,
+				scenario: chatModule.scenario,
+			},
 		};
 	},
 });
@@ -52,11 +58,52 @@ const SidebarIcon = () => {
 	);
 };
 
+const EvaluationMenuItem = ({
+	evaluation,
+	responseEvaluation,
+}: {
+	evaluation: EvaluationType;
+	responseEvaluation?: ChatResponseType["evaluations"][0];
+}) => {
+	const t = useTranslations("Chat");
+	return (
+		<SidebarMenuItem>
+			<SidebarMenuButton
+				isActive={responseEvaluation?.success}
+				className="justify-between"
+			>
+				<span className="flex items-center gap-2">
+					{responseEvaluation?.success ? (
+						<SquareCheck className="size-4" />
+					) : (
+						<Square className="size-4" />
+					)}
+					{evaluation.name}
+				</span>
+				{responseEvaluation?.value && (
+					<p className="text-muted-foreground">
+						{responseEvaluation.value}
+					</p>
+				)}
+			</SidebarMenuButton>
+			<p className="px-2 text-xs text-muted-foreground">
+				{evaluation.description}
+			</p>
+			<p className="px-2 text-xs text-muted-foreground">
+				{t.sidebar.successValue} {evaluation.successValue}
+			</p>
+		</SidebarMenuItem>
+	);
+};
+
 function RouteComponent() {
 	const { chatModule } = Route.useLoaderData();
 	const { preview = false } = Route.useSearch();
 	const { sendEvent, messages: scormMessages } = useScorm();
 	const [complete, setComplete] = useState(false);
+	const [responseEvaluations, setResponseEvaluations] =
+		useState<ChatResponseType["evaluations"]>();
+	const t = useTranslations("Chat");
 
 	useEffect(() => {
 		sendEvent("LMSInitialize");
@@ -96,9 +143,7 @@ function RouteComponent() {
 			<SidebarInset className="relative">
 				<SidebarIcon />
 				<Chat
-					additionalBody={{
-						moduleId: chatModule.id,
-					}}
+					moduleId={chatModule.id}
 					initialMessages={
 						initialMessages ? JSON.parse(initialMessages) : []
 					}
@@ -109,6 +154,9 @@ function RouteComponent() {
 							value: JSON.stringify(messages),
 						});
 					}}
+					onEvaluationChange={(evaluations) =>
+						evaluations && setResponseEvaluations(evaluations)
+					}
 					onComplete={() => {
 						setComplete(true);
 						sendEvent("LMSSetValue", {
@@ -123,52 +171,66 @@ function RouteComponent() {
 					<h4>{chatModule.scenario?.data.name}</h4>
 					<div className="bg-zinc-300 h-4 overflow-hidden">
 						<div
-							style={{ width: `${100 * 0.75}%` }}
+							style={{
+								width: `${
+									responseEvaluations?.length
+										? 100 *
+											(responseEvaluations.filter(
+												(e) => e.success,
+											).length /
+												responseEvaluations.length)
+										: 0
+								}%`,
+							}}
 							className="h-full bg-primary"
 						/>
 					</div>
 				</SidebarHeader>
 				<SidebarContent>
 					<SidebarGroup>
-						<SidebarGroupLabel>USER EVALUATIONS</SidebarGroupLabel>
-						<SidebarGroupContent>
-							<SidebarMenu>
-								{chatModule.scenario?.data.user.evaluations.map(
-									(s, i) => (
-										<SidebarMenuItem key={i}>
-											<SidebarMenuButton
-												isActive={true}
-												className="justify-between"
-											>
-												{s.name}
-												<Check />
-											</SidebarMenuButton>
-										</SidebarMenuItem>
-									),
-								)}
-							</SidebarMenu>
-						</SidebarGroupContent>
-					</SidebarGroup>
-					<SidebarGroup>
-						<SidebarGroupLabel>
-							PERSONA EVALUATIONS
+						<SidebarGroupLabel className="tracking-widest">
+							{t.sidebar.userEvaluations}
 						</SidebarGroupLabel>
 						<SidebarGroupContent>
-							<SidebarMenu>
-								{chatModule.scenario?.data.persona.evaluations.map(
+							<SidebarMenu className="gap-4">
+								{chatModule.scenario?.data.user.evaluations.map(
 									(s, i) => (
-										<SidebarMenuItem key={i}>
-											<SidebarMenuButton isActive={false}>
-												{s.name}
-											</SidebarMenuButton>
-										</SidebarMenuItem>
+										<EvaluationMenuItem
+											key={i}
+											evaluation={s}
+											responseEvaluation={responseEvaluations?.find(
+												(e) => e.name === s.name,
+											)}
+										/>
 									),
 								)}
 							</SidebarMenu>
 						</SidebarGroupContent>
 					</SidebarGroup>
 					<SidebarGroup>
-						<SidebarGroupLabel>INSTRUCTIONS</SidebarGroupLabel>
+						<SidebarGroupLabel className="tracking-widest">
+							{t.sidebar.personaEvaluations}
+						</SidebarGroupLabel>
+						<SidebarGroupContent>
+							<SidebarMenu className="gap-4">
+								{chatModule.scenario?.data.persona.evaluations.map(
+									(s, i) => (
+										<EvaluationMenuItem
+											key={i}
+											evaluation={s}
+											responseEvaluation={responseEvaluations?.find(
+												(e) => e.name === s.name,
+											)}
+										/>
+									),
+								)}
+							</SidebarMenu>
+						</SidebarGroupContent>
+					</SidebarGroup>
+					<SidebarGroup>
+						<SidebarGroupLabel className="tracking-widest">
+							{t.sidebar.instructions}
+						</SidebarGroupLabel>
 						<SidebarGroupContent className="px-2">
 							{chatModule.scenario?.data.instructions}
 						</SidebarGroupContent>

@@ -144,6 +144,12 @@ const en = {
 		instructions: "Instructions",
 		completed: "You have successfully completed this scenario.",
 		placeholder: "Type your message here...",
+		sidebar: {
+			userEvaluations: "USER EVALUATIONS",
+			personaEvaluations: "PERSONA EVALUATIONS",
+			instructions: "INSTRUCTIONS",
+			successValue: "Success value:",
+		},
 	},
 	Module: {
 		edit: "Edit this module",

@@ -132,7 +132,6 @@ const fr: Messages = {
 				"Les modules sont un cours exportable basé sur un scénario, des personnages et des contextes.",
 		},
 		editing: "Édition",
-		chat: "Test de Discussion",
 		settings: "Paramètres",
 		apiKeys: "Clés API",
 	},
@@ -146,6 +145,12 @@ const fr: Messages = {
 		instructions: "Instructions",
 		completed: "Vous avez terminé avec succès ce scénario.",
 		placeholder: "Tapez votre message ici...",
+		sidebar: {
+			userEvaluations: "ÉVALUATIONS UTILISATEURS",
+			personaEvaluations: "ÉVALUATIONS PERSONNAUX",
+			instructions: "INSTRUCTIONS",
+			successValue: "Valeur de réussite :",
+		},
 	},
 	Module: {
 		edit: "Modifier ce module",
@@ -163,6 +168,8 @@ const fr: Messages = {
 				"Affiche l'utilisation des jetons et des coûts du module par jour",
 			cost: "Coût total",
 			tokens: "Jetons",
+			averageCost: "Coût moyen",
+			averageTokens: "Jetons moyens",
 		},
 	},
 	ModuleCreate: {
@@ -193,6 +200,11 @@ const fr: Messages = {
 		behaviours: {
 			label: "Comportements de caractère",
 			placeholder: "Sélectionnez les comportements des personnages",
+		},
+		limit: {
+			label: "Coût limité",
+			placeholder:
+				"Entrez le coût maximal pour un seul utilisation de ce module",
 		},
 	},
 	Persona: {

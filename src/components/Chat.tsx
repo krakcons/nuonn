@@ -4,25 +4,29 @@ import { z } from "zod";
 import { useEffect, useState } from "react";
 import { useTranslations } from "@/lib/locale";
 import { Check } from "lucide-react";
-import { parseAssistantMessage } from "@/lib/ai";
+import { ChatResponseType, parseAssistantMessage } from "@/lib/ai";
 import { DefaultChatTransport } from "ai";
 import { getChatModuleResponseFn } from "@/lib/handlers/chat";
 
 export const Chat = ({
 	initialMessages = [],
 	complete,
-	additionalBody,
+	moduleId,
 	disabled,
 	onStart,
 	onChange,
+	onEvaluationChange,
 	onComplete,
 }: {
 	initialMessages?: UIMessage[];
 	complete: boolean;
-	additionalBody?: Record<string, any>;
+	moduleId: string;
 	disabled?: boolean;
 	onStart?: () => void;
 	onChange?: (messages: UIMessage[]) => void;
+	onEvaluationChange?: (
+		evaluations?: ChatResponseType["evaluations"],
+	) => void;
 	onComplete?: () => void;
 }) => {
 	const t = useTranslations("Chat");
@@ -36,7 +40,7 @@ export const Chat = ({
 				return getChatModuleResponseFn({
 					data: {
 						...body,
-						...additionalBody,
+						moduleId,
 					},
 				});
 			},
@@ -71,7 +75,6 @@ export const Chat = ({
 	useEffect(() => {
 		if (status !== "ready") return;
 
-		console.log(messages);
 		onChange?.(messages);
 
 		const parsedMessages = messages
@@ -81,6 +84,7 @@ export const Chat = ({
 		const lastMessage = parsedMessages.find(
 			(_, i) => i === parsedMessages.length - 1,
 		);
+		onEvaluationChange?.(lastMessage?.evaluations);
 		if (
 			lastMessage &&
 			lastMessage.evaluations.length > 0 &&
@@ -92,11 +96,11 @@ export const Chat = ({
 	}, [messages, status]);
 
 	return (
-		<div className="flex h-full justify-start p-4 gap-2 flex-col-reverse w-full max-w-2xl mx-auto overflow-y-auto">
+		<div className="flex h-full justify-start px-4 pt-4 pb-8 gap-2 flex-col-reverse w-full max-w-2xl mx-auto overflow-y-auto">
 			<form.AppForm>
 				<form
 					onSubmit={(e) => e.preventDefault()}
-					className="flex flex-col gap-4"
+					className="flex flex-col gap-4 bg-sidebar"
 				>
 					<form.AppField
 						name="content"
@@ -152,35 +156,10 @@ export const Chat = ({
 					if (!json) return null;
 
 					return (
-						<div
-							key={m.id}
-							className="self-start flex-col flex gap-2"
-						>
+						<div key={m.id}>
 							<p className="whitespace-pre-line">
 								{json?.content}
 							</p>
-							{json.evaluations &&
-								json.evaluations.length > 0 && (
-									<div className="border px-3 py-2 flex flex-col gap-2">
-										{json.rapport && (
-											<p className="flex items-center gap-2">
-												Rapport ({json.rapport})
-											</p>
-										)}
-										{json.evaluations &&
-											json.evaluations.map((s, i) => (
-												<p
-													key={i}
-													className="flex items-center gap-2"
-												>
-													{s.success && (
-														<Check className="size-4" />
-													)}
-													{s.name} ({s.value})
-												</p>
-											))}
-									</div>
-								)}
 						</div>
 					);
 				})}
