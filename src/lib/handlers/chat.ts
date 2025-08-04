@@ -1,21 +1,13 @@
-import {
-	ChatEvaluationResponseSchema,
-	ChatMetadata,
-	ChatPlaygroundInputSchema,
-	ChatResponseSchema,
-} from "@/lib/ai";
+import { ChatEvaluationResponseSchema, ChatMetadata } from "@/lib/ai";
 import {
 	streamText,
-	Output,
 	convertToModelMessages,
 	UIMessage,
-	tool,
 	createUIMessageStream,
 	createUIMessageStreamResponse,
-	streamObject,
 	generateObject,
 } from "ai";
-import { createOpenAI, openai } from "@ai-sdk/openai";
+import { createOpenAI } from "@ai-sdk/openai";
 import { createServerFn } from "@tanstack/react-start";
 import {
 	behaviours,
@@ -50,21 +42,50 @@ const getPrompt = ({
 		`You are a roleplaying system. Respond as the character described below, within the context of the given scenario. Stay in character at all times.`,
 
 		// SCENARIO
-		`Scenario: ${scenario.data.name}
-Description: ${scenario.data.description}`,
+		`Scenario: ${scenario.data.name}`,
+		`Description: ${scenario.data.description}`,
+		"\n",
+
+		// Character Context
+		contexts &&
+			contexts.length > 0 &&
+			`Here are the scenario contexts:\n
+${contexts
+	.filter((c) => c.data.type === "scenario")
+	.map(
+		(c) => `
+Name: ${c.data.name}
+Description: ${c.data.description}
+`,
+	)}`,
 
 		// CHARACTER
-		`You are the Character in this scenario.
-Character: ${JSON.stringify(persona.data)}
-Role: ${scenario.data.persona.role}
-Goals: ${scenario.data.persona.goals}
-Languages: Only respond in the language(s) specified in the character: ${persona.data.languages || "English"}. Only switch languages if you speak it.`,
+		`You are the Character in this scenario.`,
+		`Character: ${JSON.stringify(persona.data)}`,
+		`Role: ${scenario.data.persona.role}`,
+		`Goals: ${scenario.data.persona.goals}`,
+		`Languages: Only respond in the language(s) specified in the character: ${JSON.stringify(persona.data.languages) || "English"}. Only switch languages if you speak it and default to the language of the user if you know it.`,
+		"\n",
 
-		`Constraints:
-- Only use information explicitly provided in the character and scenario
-- Only reference knowledge thats established in your character
-- Maintain character consistency throughout the conversation
-- If asked about something outside your character's knowledge, respond as that character would`,
+		// Character Context
+		contexts &&
+			contexts.length > 0 &&
+			`Here are the characters contexts:\n
+${contexts
+	.filter((c) => c.data.type === "character")
+	.map(
+		(c) => `
+Name: ${c.data.name}\n
+Description: ${c.data.description}\n
+`,
+	)}`,
+
+		`Constraints:`,
+		`- Only use information explicitly provided in the character and scenario`,
+		`- Only reference knowledge thats established in your character`,
+		`- Maintain character consistency throughout the conversation`,
+		`- If asked about something outside your character's knowledge, respond as that character would`,
+		"\n",
 
 		// BEHAVIOUR
 		`Here is the character behaviour: ${JSON.stringify(behaviour.data)}`,
@@ -74,25 +95,14 @@ Languages: Only respond in the language(s) specified in the character: ${persona
 		`You must decrease rapport with the user in a manner consistent with the rapportLoss out of 100.`,
 		`Your willingness to share information will increase as rapport with the user increases.`,
 		`You will track the current rapport value and maintain it throughout the conversation.`,
+		"\n",
 
 		// USER
-		`The user is playing the following:
-Role: ${scenario.data.user.role}
-Goals: ${scenario.data.user.goals}`,
-
-		// Context
-		contexts &&
-			contexts.length > 0 &&
-			`Adjust the characters responses based on the following contexts:
-${contexts.map(
-	(c, i) => `${i}:
-Type: ${c.data.type}
-Name: ${c.data.name}
-Description: ${c.data.description}
-`,
-)}
-`,
-	].join(" ");
+		`The user is playing the following:`,
+		`Role: ${scenario.data.user.role}`,
+		`Goals: ${scenario.data.user.goals}`,
+		"\n",
+	].join("\n");
 
 const getEvaluationPrompt = ({ scenario }: { scenario: ScenarioType }) =>
 	[
@@ -209,6 +219,8 @@ export const getChatModuleResponseFn = createServerFn({
 			contexts: chatContexts,
 			behaviour,
 		});
+
+		console.log(prompt);
 
 		const stream = createUIMessageStream({
 			execute: async ({ writer }) => {
