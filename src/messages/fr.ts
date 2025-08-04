@@ -143,13 +143,19 @@ const fr: Messages = {
 	},
 	Chat: {
 		instructions: "Instructions",
-		completed: "Vous avez terminé avec succès ce scénario.",
+		completed: "Vous avez terminé ce scénario.",
 		placeholder: "Tapez votre message ici...",
 		sidebar: {
 			userEvaluations: "ÉVALUATIONS UTILISATEURS",
 			personaEvaluations: "ÉVALUATIONS PERSONNAUX",
 			instructions: "INSTRUCTIONS",
 			successValue: "Valeur de réussite :",
+			giveUp: {
+				action: "Abandonner",
+				title: "Êtes-vous sûr de vouloir abandonner ?",
+				description:
+					"Cela arrêtera le chat à n'importe quel moment que vous êtes et vous échouerez.",
+			},
 		},
 	},
 	Module: {

@@ -142,13 +142,19 @@ const en = {
 	},
 	Chat: {
 		instructions: "Instructions",
-		completed: "You have successfully completed this scenario.",
+		completed: "You have completed this scenario.",
 		placeholder: "Type your message here...",
 		sidebar: {
 			userEvaluations: "USER EVALUATIONS",
 			personaEvaluations: "PERSONA EVALUATIONS",
 			instructions: "INSTRUCTIONS",
 			successValue: "Success value:",
+			giveUp: {
+				action: "Give up",
+				title: "Are you sure you want to give up?",
+				description:
+					"This will end the chat at whatever point you are at and you will fail.",
+			},
 		},
 	},
 	Module: {

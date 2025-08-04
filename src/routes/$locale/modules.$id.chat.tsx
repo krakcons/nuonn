@@ -17,12 +17,24 @@ import {
 	SidebarGroupLabel,
 	SidebarGroupContent,
 	useSidebar,
+	SidebarFooter,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { ListTodo, Square, SquareCheck } from "lucide-react";
 import { useTranslations } from "@/lib/locale";
 import { ChatEvaluationResponseType } from "@/lib/ai";
 import { EvaluationType } from "@/lib/types/scenarios";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export const Route = createFileRoute("/$locale/modules/$id/chat")({
 	component: RouteComponent,
@@ -104,15 +116,12 @@ function RouteComponent() {
 	const [responseEvaluations, setResponseEvaluations] =
 		useState<ChatEvaluationResponseType["evaluations"]>();
 	const t = useTranslations("Chat");
+	const tActions = useTranslations("Actions");
 
 	useEffect(() => {
 		sendEvent("LMSInitialize");
 		sendEvent("LMSGetValue", "cmi.core.suspend_data");
 		sendEvent("LMSGetValue", "cmi.core.lesson_status");
-		sendEvent("LMSSetValue", {
-			element: "cmi.core.lesson_status",
-			value: "incomplete",
-		});
 	}, []);
 
 	const { initialMessages, isComplete, isLoading } = useMemo(() => {
@@ -123,13 +132,14 @@ function RouteComponent() {
 				m.event.parameter === "cmi.core.suspend_data",
 		);
 		const initialMessages = data?.response?.result;
-		const isComplete =
+		const isComplete = ["completed", "passed", "failed"].includes(
 			scormMessages.find(
 				(m) =>
 					m.event.method === "LMSGetValue" &&
 					m.response &&
 					m.event.parameter === "cmi.core.lesson_status",
-			)?.response?.result === "completed";
+			)?.response?.result,
+		);
 		return {
 			data,
 			isLoading: preview ? false : !data,
@@ -137,6 +147,14 @@ function RouteComponent() {
 			isComplete,
 		};
 	}, [scormMessages]);
+
+	const handleGiveUp = () => {
+		setComplete(true);
+		sendEvent("LMSSetValue", {
+			element: "cmi.core.lesson_status",
+			value: "failed",
+		});
+	};
 
 	if (isLoading) {
 		return <div>Loading...</div>;
@@ -170,6 +188,10 @@ function RouteComponent() {
 							sendEvent("LMSSetValue", {
 								element: "cmi.core.score.max",
 								value: String(evaluations.length),
+							});
+							sendEvent("LMSSetValue", {
+								element: "cmi.core.lesson_status",
+								value: "incomplete",
 							});
 						}
 					}}
@@ -252,6 +274,45 @@ function RouteComponent() {
 						</SidebarGroupContent>
 					</SidebarGroup>
 				</SidebarContent>
+				<SidebarFooter>
+					{!(complete || isComplete) && (
+						<AlertDialog>
+							<AlertDialogTrigger asChild>
+								<Button variant="destructive">
+									{t.sidebar.giveUp.action}
+								</Button>
+							</AlertDialogTrigger>
+							<AlertDialogContent>
+								<AlertDialogHeader>
+									<AlertDialogTitle>
+										{t.sidebar.giveUp.title}
+									</AlertDialogTitle>
+									<AlertDialogDescription>
+										{t.sidebar.giveUp.description}
+									</AlertDialogDescription>
+								</AlertDialogHeader>
+								<AlertDialogFooter>
+									<AlertDialogCancel asChild>
+										<Button
+											variant="outline"
+											onClick={() => {}}
+										>
+											{tActions.cancel}
+										</Button>
+									</AlertDialogCancel>
+									<AlertDialogAction asChild>
+										<Button
+											variant="destructive"
+											onClick={handleGiveUp}
+										>
+											{t.sidebar.giveUp.action}
+										</Button>
+									</AlertDialogAction>
+								</AlertDialogFooter>
+							</AlertDialogContent>
+						</AlertDialog>
+					)}
+				</SidebarFooter>
 			</Sidebar>
 		</SidebarProvider>
 	);
